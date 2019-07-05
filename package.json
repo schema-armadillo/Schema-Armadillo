@@ -1,0 +1,19 @@
+{
+  "name": "schema-armadillo",
+  "version": "1.0.0",
+  "description": "An application that maps out your Mongoose Schema.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/schema-armadillo/Schema-Armadillo.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/schema-armadillo/Schema-Armadillo/issues"
+  },
+  "homepage": "https://github.com/schema-armadillo/Schema-Armadillo#readme"
+}
