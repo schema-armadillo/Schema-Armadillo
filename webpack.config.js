@@ -13,7 +13,7 @@ module.exports = {
         proxy: {
             '/api/': 'http://localhost:3000',
             '/auth/': 'http://localhost:3000'
-          }
+        }
     },
     mode: process.env.NODE_ENV,
     module: {
@@ -37,5 +37,6 @@ module.exports = {
             }
         ]
     }
+    plugins: [new webpack.HotModuleReplacementPlugin()]
 
 }
