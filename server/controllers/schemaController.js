@@ -68,7 +68,7 @@ const schemaController = {
           return res.status(400).json({ error: 'error from deleteSchema' });
         }
         console.log('schemaController => deleteSchema', result.rows);
-        return res.json(result.rows);
+        return res.status(200).json(result.rows);
       }
     );
   }
