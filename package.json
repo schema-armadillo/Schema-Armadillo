@@ -33,14 +33,15 @@
     "webpack-dev-server": "^3.7.2"
   },
   "dependencies": {
+    "body-parser": "^1.19.0",
+    "express": "^4.17.1",
     "nodemon": "^1.19.1",
+    "path": "^0.12.7",
+    "pg": "^7.11.0",
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
     "react-hot-loader": "^4.12.3",
     "react-router-dom": "^5.0.1",
-    "body-parser": "^1.19.0",
-    "express": "^4.17.1",
-    "path": "^0.12.7",
-    "pg": "^7.11.0"
+    "styled-components": "^4.3.2"
   }
 }
