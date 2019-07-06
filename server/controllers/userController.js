@@ -1,21 +1,53 @@
+const pool = require('./database');
+const jwt = require('jsonwebtoken');
+const bcrypt = require('bcrypt');
+
+
 const userController = {
   createUser: (req, res, next) => {
-    const user = req.body
-    bcrypt.hash(user.password, 10, (err, hashResponse) => {
+    const { username, password } = req.body
+    console.log(req.body)
+    bcrypt.hash(password, 10, (err, hashResponse) => {
+      console.log('inside hash: ', hashResponse);
       if (err) {
-        return res.status(500).json({
-          error: err
-        })
+        console.log('error thrown inside hash');
+        return res.status(500).send('error encrypting pw');
       } else {
-        createUser(user, hashResponse)
-        // send an object to the front end
+        res.locals.username = username
+        res.locals.password = hashResponse
+        return next();
       }
-    }).catch(error => {
-      res.status(500).json({
-        error: error
-      })
     })
   },
+  addUserToDB: (req, res) => {
+    console.log('inside add user to DB');
+    return pool.query(
+      `INSERT INTO users (username, password) VALUES ('${res.locals.username}', '${res.locals.password}') RETURNING user_id, username`)
+      .then((data) => {
+        console.log(data)
+        return res.status(200).json(data.rows[0])
+        // data.rows[0]
+      })
+      .catch( err => {
+        console.log('error adding user to DB')
+        return res.status(500).send('Error creating user. PLease try again.');
+      })
+  },
+
+
+  // addUserToDB: (req, res) => {
+  //   console.log('inside add user to DB');
+  //   pool.query(
+  //     `INSERT INTO users (username, password) VALUES ('${res.locals.username}', '${res.locals.password}') RETURNING user_id, username`, (err, data) => {
+  //       if (err) {
+  //         console.log('error adding user to DB')
+  //         throw new Error(err);
+  //       // return res.status(500).send('Error creating user. PLease try again.');
+  //       }
+  //       console.log(data)
+  //       return res.status(200).json(data.rows[0])
+  //     });
+  
 
   login: (req, res, next) => {
     const userReq = req.body
@@ -40,10 +72,13 @@ const getUser = (userReq) => {
     .then((data) => data.rows[0])
 }
 
-const createUser = (user, hashResponse) => {
+const addUserToDB = (req, res, next) => {
   return pool.query(
-    `INSERT INTO users (username, password) VALUES (${user.username}, ${hashResponse}) RETURNING user_id, username`)
-    .then((data) => data.rows[0])
+    `INSERT INTO users (username, password) VALUES (${res.locals.username}, ${res.locals.password}) RETURNING user_id, username`)
+    .then((data) => {
+      console.log(data)
+      return res.status(200).json(data.rows[0])
+    })
 }
 
 const passwordCheck = (passwordReq, foundUser) => {

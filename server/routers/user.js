@@ -9,8 +9,6 @@ const bcrypt = require('bcrypt');
 // prefixed with /user
 router.post('/login',userController.login)
 
-
-router.post('/create', userController.createUser)
-
+router.post('/create', userController.createUser, userController.addUserToDB)
 
 module.exports = router;
