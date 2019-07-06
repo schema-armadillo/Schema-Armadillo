@@ -27,20 +27,20 @@ const schemaController = {
       key,
       type,
       options_check,
-      unique,
-      required
+      unique_check,
+      required_check
     } = req.body;
 
     // query for the table
     pool.query(
-      'UPDATE Schemas SET schema_name=$1 key=$2 type=$3 options_check=$4 unique=$5 required=$6 WHERE user_id=$7 AND schema_id=$8',
+      'UPDATE Schemas SET schema_name=$1 key=$2 type=$3 options_check=$4 unique_check=$5 required_check=$6 WHERE user_id=$7 AND schema_id=$8',
       [
         schema_name,
         key,
         type,
         options_check,
-        unique,
-        required,
+        unique_check,
+        required_check,
         user_id,
         schema_id
       ],
