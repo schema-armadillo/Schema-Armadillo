@@ -1,7 +1,26 @@
 import React, { Component } from "react";
-import ".././styles/App.css";
+import ".././styles/Login.css";
 import { hot } from "react-hot-loader";
 import { Route, Link, BrowserRouter as Router, Redirect } from "react-router-dom";
+import styled from 'styled-components'
+
+const Form = styled.form`
+    display: flex;
+    flex-direction: column;
+    width: 450px;
+    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+    height: 450px;
+    padding-top: 150px;
+    align-items: center;
+    `
+
+const Input = styled.input`
+    width: 375px;
+    height: 50px;
+    margin: 30px;
+    padding: 10px;
+`
+
 
 class Login extends Component {
 
@@ -16,6 +35,8 @@ class Login extends Component {
         this.handleChangePassword = this.handleChangePassword.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
     }
+
+
 
     handleChangeEmail(event) {
         console.log(event.target.email)
@@ -34,12 +55,13 @@ class Login extends Component {
     render() {
         return (
             <div>
-                <p>hello!</p>
-                <form onSubmit={this.handleSubmit}>
-                    <input type="text" email={this.state.email} onChange={this.handleChangeEmail} />
-                    <input type="text" password={this.state.password} onChange={this.handleChangePassword} />
-                    <input type="submit" value="Submit" />
-                </form>
+                <Form onSubmit={this.handleSubmit}>
+                    <h1>Schema Armadillo</h1>
+                    <input className="emailField" type="text" placeholder="email" email={this.state.email} onChange={this.handleChangeEmail} />
+                    <input className="passwordField" type="password" placeholder="password" password={this.state.password} onChange={this.handleChangePassword} />
+                    <input className="submit" type="submit" value="Login" />
+                    <a href="./signup" className="signup">sign up</a>
+                </Form>
             </div>
         );
     }
