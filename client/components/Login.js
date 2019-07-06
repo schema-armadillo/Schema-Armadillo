@@ -18,6 +18,7 @@ class Login extends Component {
     }
 
     handleChangeEmail(event) {
+        console.log(event.target.email)
         this.setState({ email: event.target.email });
     }
 
