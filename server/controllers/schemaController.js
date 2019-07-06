@@ -4,11 +4,12 @@ const schemaController = {
   createSchema: (req, res, next) => {
     // extract all the form inputs. not there yet
     const { schemaName, keys } = req.body;
+    console.log('off the body: ', schemaName, keys);
 
     // check if table has already been made
     pool.query(
       // have to add more options
-      'CREATE TABLE IF NOT EXISTS Schemas (user_id INT, schema_name VARCHAR (50), schema_id INT, key VARCHAR(50), type VARCHAR(50), options, BOOLEAN, unique BOOLEAN, required BOOLEAN);',
+      'CREATE TABLE IF NOT EXISTS Schemas (user_id INT, schema_name VARCHAR (50), schema_id INT, key VARCHAR(50), type VARCHAR(50), options_check BOOLEAN DEFAULT FALSE, unique_check BOOLEAN DEFAULT FALSE, required_check BOOLEAN DEFAULT FALSE)',
       (err, result) => {
         if (err) {
           console.error('error in adding table.');
@@ -21,7 +22,7 @@ const schemaController = {
         // populate the table
         // iterate thru keys to create rows in the table
 
-        const queryText = 'INSERT INTO Schemas (user_id, schema_name, schema_id, key, type, options_check, unique, required) values ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING *;';
+        const queryText = 'INSERT INTO Schemas (user_id, schema_name, schema_id, key, type, options_check, unique_check, required_check) values ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING *;';
         keys.forEach((row, idx) => {
           const {
             userId,
@@ -41,6 +42,7 @@ const schemaController = {
             console.log('Row added to table.');
           });
         });
+        return next();
       },
     );
   },
