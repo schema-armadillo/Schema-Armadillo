@@ -20,6 +20,19 @@ const schemaController = {
         );
       }
     );
+  },
+  getSchema: (req, res, next) => {
+    // expecting to receive user_id and post_id from req.body
+    const { user_id, schema_id } = req.body;
+
+    // how are we going to name our schemas?
+    const schema_name = `schema${user_id}_${schema_id}_${schema_name}`;
+
+    // query for the table
+    pool.query(`select * from "${schema_name}"`, (err, result) => {
+      console.log('schemaController => getSchema', result.rows);
+      res.json(result.rows);
+    });
   }
 };
 
