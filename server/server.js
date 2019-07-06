@@ -1,8 +1,8 @@
 const express = require('express');
 const path = require('path');
 const bodyParser = require('body-parser');
-const user = require('./routers/user');
-const schema = require('./routers/schema');
+// const user = require('./routers/user');
+// const schema = require('./routers/schema');
 
 const app = express();
 const port = 3000;
@@ -16,11 +16,12 @@ app.use(
 
 // create routers for separate endpoints
 app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, '../index.html'));
+  res.sendFile(path.join(__dirname, '../client/index.html'));
+  // res.send('hello')
 });
 
-app.use('/user', user);
-app.use('/api', schema);
+// app.use('/user', user);
+// app.use('/api', schema);
 
 app.listen(port, () => {
   console.log(`Listening on port ${port}...`);
