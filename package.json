@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "nodemon server/server.js",
-    "build":"webpack --mode production",
+    "build": "webpack --mode production",
     "dev": "webpack-dev-server --mode development && node server/server.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -20,6 +20,11 @@
   },
   "homepage": "https://github.com/schema-armadillo/Schema-Armadillo#readme",
   "devDependencies": {
+    "@babel/preset-env": "^7.5.0",
+    "@babel/preset-react": "^7.0.0",
+    "babel-loader": "^8.0.6",
+    "css-loader": "^3.0.0",
+    "style-loader": "^0.23.1",
     "webpack-dev-server": "^3.7.2"
   }
 }
