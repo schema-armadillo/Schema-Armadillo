@@ -3,7 +3,7 @@ const pool = require('./database');
 const schemaController = {
   createSchema: (req, res, next) => {
     // extract all the form inputs
-    const { schemaname } = req.body;
+    const { schemaName } = req.body;
 
     // create the table
     pool.query(
