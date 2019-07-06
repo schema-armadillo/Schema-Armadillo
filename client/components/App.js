@@ -2,6 +2,8 @@ import React, { Component } from "react";
 import ".././styles/App.css";
 import { hot } from "react-hot-loader";
 import { Route, Link, BrowserRouter as Router, Redirect } from "react-router-dom";
+import Login from "./Login"
+import Signup from "./Signup"
 
 
 class App extends Component {
@@ -13,8 +15,8 @@ class App extends Component {
         return (
 
             <Router>
-                <Route path="/login" />
-                <Route path="/signup" />
+                <Route path="/login" component={Login} />
+                <Route path="/signup" component={Signup} />
                 <Route path="/dashboard" />
                 <Route path="/myschema" />
             </Router>
