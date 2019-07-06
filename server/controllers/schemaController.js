@@ -3,6 +3,12 @@ const pool = require('./database');
 const schemaController = {
   createSchema: (req, res, next) => {
     // extract all the form inputs. not there yet
+    // TODO NEED: userId, SchemaID
+    const testUserId = 999;
+    const testSchemaId = 999;
+
+    const userId = testUserId;
+    const schemaId = testSchemaId;
     const { schemaName, keys } = req.body;
     console.log('off the body: ', schemaName, keys);
 
@@ -25,15 +31,14 @@ const schemaController = {
         const queryText = 'INSERT INTO Schemas (user_id, schema_name, schema_id, key, type, options_check, unique_check, required_check) values ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING *;';
         keys.forEach((row, idx) => {
           const {
-            userId,
-            schemaId,
             key,
             type,
-            areThereOptions,
-            unique,
-            required,
           } = row;
-          const queryValues = [userId, schemaName, schemaId, key, type, areThereOptions, unique, required];
+          const areThereOptions = row.hasOwnProperty('options');
+          const isUnique = areThereOptions && row.options.hasOwnProperty('unique') ? row.options.unique : false;
+          const isRequired = areThereOptions && row.options.hasOwnProperty('required') ? row.options.required : false;
+          const queryValues = [userId, schemaName, 200, key, type, areThereOptions, isUnique, isRequired];
+          console.log('query values here: ', queryValues);
           pool.query(queryText, queryValues, (rowErr, result) => {
             if (rowErr) {
               console.log('error in adding row to DB');
