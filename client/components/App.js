@@ -13,13 +13,16 @@ class App extends Component {
     render() {
 
         return (
-
-            <Router>
-                <Route path="/login" component={Login} />
-                <Route path="/signup" component={Signup} />
-                <Route path="/dashboard" />
-                <Route path="/myschema" />
-            </Router>
+            <>
+                <div>Hey, this is working!</div>
+                <Router>
+                    <Route exact path="/" component={Login} />
+                    <Route path="/login" component={Login} />
+                    <Route path="/signup" component={Signup} />
+                    <Route path="/dashboard" />
+                    <Route path="/myschema" />
+                </Router>
+            </>
         )
     }
 
