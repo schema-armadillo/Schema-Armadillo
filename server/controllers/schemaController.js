@@ -2,15 +2,19 @@ const pool = require('./database');
 
 const schemaController = {
   getSchema: (req, res, next) => {
-    // expecting to receive user_id and post_id from req.body
+    // expecting to receive user_id and schema_id from req.body
     const { user_id, schema_id } = req.body;
-    // query for the table
+    // query the table using user_id and schema_id
     pool.query(
       'SELECT * FROM Schemas WHERE user_id=$1 AND schema_id=$2',
       [user_id, schema_id],
       (err, result) => {
+        if (err) {
+          console.error(err);
+          return res.status(400).json({ error: 'error from getSchema' });
+        }
         console.log('schemaController => getSchema', result.rows);
-        res.json(result.rows);
+        return res.status(200).json(result.rows);
       }
     );
   },
@@ -41,13 +45,17 @@ const schemaController = {
         schema_id
       ],
       (err, result) => {
+        if (err) {
+          console.error(err);
+          return res.status(400).json({ error: 'error from updateSchema' });
+        }
         console.log('schemaController => updateSchema', result.rows);
-        res.json(result.rows);
+        return res.status(200).json(result.rows);
       }
     );
   },
   deleteSchema: (req, res, next) => {
-    // expecting to receive user_id and post_id and other fields that we want to update from req.body
+    // expecting to receive user_id and post_id to find the rows that we want to delete
     const { user_id, schema_id } = req.body;
 
     // query for the table
@@ -55,8 +63,12 @@ const schemaController = {
       'DELETE FROM Schemas WHERE user_id=$1 AND schema_id=$2',
       [user_id, schema_id],
       (err, result) => {
+        if (err) {
+          console.error(err);
+          return res.status(400).json({ error: 'error from deleteSchema' });
+        }
         console.log('schemaController => deleteSchema', result.rows);
-        res.json(result.rows);
+        return res.json(result.rows);
       }
     );
   }
