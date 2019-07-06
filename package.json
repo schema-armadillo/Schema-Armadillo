@@ -4,6 +4,9 @@
   "description": "An application that maps out your Mongoose Schema.",
   "main": "index.js",
   "scripts": {
+    "start": "nodemon server/server.js",
+    "build":"webpack --mode production",
+    "dev": "webpack-dev-server --mode development && node server/server.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -15,5 +18,8 @@
   "bugs": {
     "url": "https://github.com/schema-armadillo/Schema-Armadillo/issues"
   },
-  "homepage": "https://github.com/schema-armadillo/Schema-Armadillo#readme"
+  "homepage": "https://github.com/schema-armadillo/Schema-Armadillo#readme",
+  "devDependencies": {
+    "webpack-dev-server": "^3.7.2"
+  }
 }
