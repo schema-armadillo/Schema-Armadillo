@@ -1,0 +1,14 @@
+.rowForm {
+    display: grid;
+    grid-template-columns: auto 30% 10% 10%;   
+}
+
+.select {
+    height: 50px;
+}
+
+.key {
+    /* width: 50px; */
+    height: 32px;
+    margin-right: 5px;
+}
