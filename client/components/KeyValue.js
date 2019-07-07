@@ -30,10 +30,14 @@ class KeyValue extends Component {
 
         this.handleChange = this.handleChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
+        this.handleChangeKey = this.handleChangeKey.bind(this);
+        this.handleInputChange = this.handleInputChange.bind(this)
     }
 
 
     handleSubmit(event) {
+        console.log('state on submit ', this.state)
+        this.props.updateRow(this.state.value, this.state.selectedOption.label, this.state.required)
         this.props.newRow();
         console.log('handle submit ', this.props.rows)
         event.preventDefault();
@@ -46,6 +50,10 @@ class KeyValue extends Component {
 
     handleChangeKey(event) {
         this.setState({ value: event.target.value })
+    }
+
+    handleInputChange(event) {
+        this.setState({ required: true })
     }
 
     render() {

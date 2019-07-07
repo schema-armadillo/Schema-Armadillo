@@ -10,20 +10,20 @@ import KeyValue from './KeyValue'
 class Dashboard extends Component {
 
     constructor(props) {
-        super(props),
-            this.state = {
-                value: '',
-                rows: [
-                    {
-                        key: null,
-                        type: null,
-                        required: false,
-                    },
-                ],
+        super(props);
+        this.state = {
+            value: '',
+            rows: [
+                {
+                    key: null,
+                    type: null,
+                },
+            ],
 
-            },
-            this.newRow = this.newRow.bind(this)
-        this.handleSubmit = this.handleSubmit.bind(this)
+        };
+        this.newRow = this.newRow.bind(this);
+        this.handleSubmit = this.handleSubmit.bind(this);
+        this.updateRow = this.updateRow.bind(this)
     }
 
 
@@ -36,20 +36,40 @@ class Dashboard extends Component {
         this.setState({ value: event.target.value });
     };
 
-    newRow(event) {
+    newRow() {
         let newRows = [...this.state.rows]
         newRows.push({
             key: null,
-            type: null,
-            required: false,
+            type: null
         })
         this.setState({ rows: newRows })
+    }
+
+    updateRow(key, type, required) {
+        console.log('in updateRow', key, type, required)
+        let row = [...this.state.rows]
+        console.log('row in updateRow ', row)
+        if (required === false) {
+            console.log('in updateRow false')
+            row[row.length - 1] = {
+                key: key,
+                type: type
+            }
+        } else {
+            console.log('in updateRow true')
+            row[row.length - 1] = {
+                key: key,
+                type: type,
+                required: true
+            }
+        }
+        this.setState({ rows: row })
     }
 
     render() {
         let rows = []
         for (let i = 0; i < this.state.rows.length; i++) {
-            rows.push(<KeyValue data={this.state.rows[i]} newRow={this.newRow} rows={this.state.rows} />)
+            rows.push(<KeyValue data={this.state.rows[i]} newRow={this.newRow} rows={this.state.rows} updateRow={this.updateRow} />)
         }
 
         return (
