@@ -8,21 +8,18 @@ import {
   Redirect
 } from 'react-router-dom';
 import Login from './Login';
-import Signup from './Signup';
+import Dashboard from './Dashboard';
 
 class App extends Component {
   render() {
     return (
-      <>
-        <div>Hey, this is working!</div>
-        <Router>
-          <Route exact path='/' component={Login} />
-          <Route path='/login' component={Login} />
-          <Route path='/signup' component={Signup} />
-          <Route path='/dashboard' />
-          <Route path='/myschema' />
-        </Router>
-      </>
+      <Router>
+        <Route exact path='/' component={Login} />
+        <Route path='/login' component={Login} />
+        <Route path='/signup' component={Login} />
+        <Route path='/dashboard' component={Dashboard} />
+        <Route path='/myschema' />
+      </Router>
     );
   }
 }
