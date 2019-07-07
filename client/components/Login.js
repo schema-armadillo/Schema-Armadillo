@@ -39,17 +39,31 @@ class Login extends Component {
 
 
     handleChangeEmail(event) {
-        console.log(event.target.email)
-        this.setState({ email: event.target.email });
+        console.log(event.target.value)
+        this.setState({ email: event.target.value });
     }
 
     handleChangePassword(event) {
-        this.setState({ password: event.target.password });
+        this.setState({ password: event.target.value });
     }
 
     handleSubmit(event) {
         console.log('A login was submitted: ' + this.state.email);
+        console.log('A login was submitted: ' + this.state.password);
         event.preventDefault();
+        fetch('/test', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(this.state)
+        })
+            .then(data => data.json())
+            .then(obj => {
+                console.log(obj)
+                this.history.pushState(null, obj.redirecturl)
+            })
+            .catch(err => console.log('login fetch err ', err))
     }
 
     render() {
@@ -57,8 +71,8 @@ class Login extends Component {
             <div>
                 <Form onSubmit={this.handleSubmit}>
                     <h1>Schema Armadillo</h1>
-                    <input className="emailField" type="text" placeholder="email" email={this.state.email} onChange={this.handleChangeEmail} />
-                    <input className="passwordField" type="password" placeholder="password" password={this.state.password} onChange={this.handleChangePassword} />
+                    <input className="emailField" type="text" placeholder="email" value={this.state.email} onChange={this.handleChangeEmail} />
+                    <input className="passwordField" type="password" placeholder="password" value={this.state.password} onChange={this.handleChangePassword} />
                     <input className="submit" type="submit" value="Login" />
                     <a href="./signup" className="signup">sign up</a>
                 </Form>
