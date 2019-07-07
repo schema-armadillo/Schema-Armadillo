@@ -4,6 +4,7 @@ body {
     justify-content: center;
     align-items: center;
     padding-top: 50px;
+    /* background-color: #4a4e69; */
 }
 
 .submit {
@@ -34,24 +35,25 @@ h1 {
     color: #4a4e69;
 }
 
-.emailField {
+.entry {
     width: 295px;
     height: 35px;   
-    margin: 20px;
     border-top-style: none;
     border-right-style: none;
     border-left-style: none;
     border-bottom-style: 1px #4a4e69 solid; 
 }
 
-.passwordField {
-    width: 295px;
-    height: 35px;   
+.emailField {
+    margin: 20px;
+}
+
+.passwordField {  
     margin: 10px;
-    border-top-style: none;
-    border-right-style: none;
-    border-left-style: none;
-    border-bottom-style: 1px #4a4e69 solid; 
+}
+
+.entry:focus {
+    outline: none;
 }
 
 .armadillo{

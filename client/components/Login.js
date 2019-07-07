@@ -2,7 +2,8 @@ import React, { Component } from "react";
 import ".././styles/Login.css";
 import { hot } from "react-hot-loader";
 import { Route, Link, BrowserRouter as Router, Redirect } from "react-router-dom";
-import styled from 'styled-components'
+import styled from 'styled-components';
+import armadillo from '../Armadillo-icon.jpg'
 
 const Form = styled.form`
     display: flex;
@@ -12,6 +13,7 @@ const Form = styled.form`
     height: 450px;
     padding-top: 150px;
     align-items: center;
+    background-color: white;
     `
 
 const Input = styled.input`
@@ -70,9 +72,10 @@ class Login extends Component {
         return (
             <div>
                 <Form onSubmit={this.handleSubmit}>
+                    {/* <img className="armadillo" src={armadillo} alt="armadillo logo" /> */}
                     <h1>Schema Armadillo</h1>
-                    <input className="emailField" type="text" placeholder="email" value={this.state.email} onChange={this.handleChangeEmail} />
-                    <input className="passwordField" type="password" placeholder="password" value={this.state.password} onChange={this.handleChangePassword} />
+                    <input className="entry emailField" type="text" placeholder="email" value={this.state.email} onChange={this.handleChangeEmail} />
+                    <input className="entry passwordField" type="password" placeholder="password" value={this.state.password} onChange={this.handleChangePassword} />
                     <input className="submit" type="submit" value="Login" />
                     <a href="./signup" className="signup">sign up</a>
                 </Form>
