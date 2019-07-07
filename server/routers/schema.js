@@ -8,5 +8,7 @@ console.log('routed to schema file');
 router.post('/schema', schemaController.createSchema, (req, res) => {
   res.status(200).send('Schema added to DB.');
 });
+router.delete('/schema', schemaController.deleteSchema);
+router.put('/schema', schemaController.updateSchema);
 
 module.exports = router;
