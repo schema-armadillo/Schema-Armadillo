@@ -14,7 +14,6 @@ const schemaController = {
     // need to establish body format for parsing.
     const { schemaName, keys } = req.body;
 
-
     // check if table has already been made
     pool.query(
       'CREATE TABLE IF NOT EXISTS Schemas (user_id INT, schema_name VARCHAR (50), schema_id INT, key VARCHAR(50), type VARCHAR(50), options_check BOOLEAN DEFAULT FALSE, unique_check BOOLEAN DEFAULT FALSE, required_check BOOLEAN DEFAULT FALSE)',
@@ -29,21 +28,34 @@ const schemaController = {
 
         // populate the table
 
-        const queryText = 'INSERT INTO Schemas (user_id, schema_name, schema_id, key, type, options_check, unique_check, required_check) values ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING *;';
+        const queryText =
+          'INSERT INTO Schemas (user_id, schema_name, schema_id, key, type, options_check, unique_check, required_check) values ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING *;';
         keys.forEach((row, idx) => {
-        // iterate thru keys to create rows in the table
+          // iterate thru keys to create rows in the table
 
-          const {
-            key,
-            type,
-          } = row;
+          const { key, type } = row;
           // see if there are options to be added to the table
           const areThereOptions = row.hasOwnProperty('options');
           // if options is false, this will already be false. if not, have to check if unique and required exist
-          const isUnique = areThereOptions && row.options.hasOwnProperty('unique') ? row.options.unique : false;
-          const isRequired = areThereOptions && row.options.hasOwnProperty('required') ? row.options.required : false;
+          const isUnique =
+            areThereOptions && row.options.hasOwnProperty('unique')
+              ? row.options.unique
+              : false;
+          const isRequired =
+            areThereOptions && row.options.hasOwnProperty('required')
+              ? row.options.required
+              : false;
           // init queryValues array to pass into query
-          const queryValues = [userId, schemaName, 200, key, type, areThereOptions, isUnique, isRequired];
+          const queryValues = [
+            userId,
+            schemaName,
+            200,
+            key,
+            type,
+            areThereOptions,
+            isUnique,
+            isRequired
+          ];
           console.log('query values here: ', queryValues);
           pool.query(queryText, queryValues, (rowErr, result) => {
             if (rowErr) {
@@ -54,7 +66,9 @@ const schemaController = {
           });
         });
         return next();
-      },
+      }
+    );
+  },
   getSchema: (req, res, next) => {
     // expecting to receive user_id and schema_id from req.body
     const { user_id, schema_id } = req.body;
@@ -125,7 +139,7 @@ const schemaController = {
         return res.status(200).json(result.rows);
       }
     );
-  },
+  }
 };
 
 module.exports = schemaController;
