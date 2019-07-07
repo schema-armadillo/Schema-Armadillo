@@ -8,12 +8,9 @@ import armadillo from '../Armadillo-icon.jpg'
 const Form = styled.form`
     display: flex;
     flex-direction: column;
-    width: 450px;
-    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
     height: 450px;
     padding-top: 150px;
     align-items: center;
-    background-color: white;
     `
 
 const Input = styled.input`
@@ -70,16 +67,25 @@ class Login extends Component {
 
     render() {
         return (
-            <div>
-                <Form onSubmit={this.handleSubmit}>
-                    {/* <img className="armadillo" src={armadillo} alt="armadillo logo" /> */}
-                    <h1>Schema Armadillo</h1>
-                    <input className="entry emailField" type="text" placeholder="email" value={this.state.email} onChange={this.handleChangeEmail} />
-                    <input className="entry passwordField" type="password" placeholder="password" value={this.state.password} onChange={this.handleChangePassword} />
-                    <input className="submit" type="submit" value="Login" />
-                    <a href="./signup" className="signup">sign up</a>
-                </Form>
-            </div>
+            <div className="container">
+                <div>
+                    <Form className="signupForm" onSubmit={this.handleSubmit}>
+                        <h1 className="signup">Sign up</h1>
+                        <input className="entry emailField" type="text" placeholder="email" />
+                        <input className="entry passwordField" type="password" placeholder="password" />
+                        <input className="signupButton" type="submit" value="Yeehaw!" />
+                    </Form>
+                </div>
+                <div>
+                    <Form className="loginForm" onSubmit={this.handleSubmit}>
+                        {/* <img className="armadillo" src={armadillo} alt="armadillo logo" /> */}
+                        <h1>Log in to Schema Armadillo</h1>
+                        <input className="entry emailField" type="text" placeholder="email" value={this.state.email} onChange={this.handleChangeEmail} />
+                        <input className="entry passwordField" type="password" placeholder="password" value={this.state.password} onChange={this.handleChangePassword} />
+                        <input className="loginButton" type="submit" value="Giddy-up!" />
+                    </Form>
+                </div>
+            </div >
         );
     }
 
