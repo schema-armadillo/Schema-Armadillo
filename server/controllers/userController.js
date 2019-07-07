@@ -31,8 +31,6 @@ const userController = {
 
   login: (req, res) => {
     const { username, password } = req.body
-    // let user;
-
     pool.query(`SELECT * FROM users WHERE username = '${username}'`)
       .then((data) => {
         console.log('data rows', data.rows[0])
@@ -45,8 +43,7 @@ const userController = {
             return res.send(err)
           }
           if (result) {
-            res.cookie('new', 'dasdasdasdasdasdad')
-            console.log('cookie sets')
+             res.cookie('new', createToken(result))
             return res.status(200).send('success')
           }
           else{
@@ -55,38 +52,10 @@ const userController = {
           }
         }) 
       })
-      // .then((user) => {
-      // res.cookie('token', createToken(user))
-      // res.cookie('new', 'dasdasdasdasdasdad')
-      //   return res.send('success')
-      // })
       .catch((err) => res.status(500).send(err))
-  }
+  },
+
 };
-
-
-
-
-//helper functtions
-
-// const getUser = (username) => {
-//   console.log(username);
-//    pool.query(`SELECT * FROM users WHERE username = '${username}'`)
-//     .then((data) =>{
-//       console.log('data rows',data.rows[0])
-//       return data.rows
-//     })
-// }
-
-// const passwordCheck = (passwordReq, foundUser) => {
-//   bcrypt.compare(passwordReq, foundUser, (err, result) => {
-//     console.log(result)
-//     if (err) {
-//       return false
-//     }
-//     return result
-//   })
-// }
 
 const createToken = (user) => {
   jwt.sign({ user }, 'secretkey', { expiresIn: 60 * 60 }, (err, token) => {
