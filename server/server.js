@@ -2,6 +2,8 @@ const express = require('express');
 const path = require('path');
 const bodyParser = require('body-parser');
  const user = require('./routers/user');
+ var cookieParser = require('cookie-parser');
+
 // const schema = require('./routers/schema');
 
 const app = express();
@@ -13,6 +15,8 @@ app.use(
     extended: true
   })
 );
+
+app.use(cookieParser())
 
 // create routers for separate endpoints
 app.get('/', (req, res) => {

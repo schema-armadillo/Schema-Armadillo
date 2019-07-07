@@ -23,37 +23,45 @@ const userController = {
         console.log(data)
         return res.status(200).json(data)
       })
-      .catch( err => {
+      .catch(err => {
         console.log('error adding user to DB')
         return res.status(500).send('Error creating user. PLease try again.');
       })
   },
 
   login: (req, res) => {
-    const {username,password} = req.body
-    let user;
+    const { username, password } = req.body
+    // let user;
 
     pool.query(`SELECT * FROM users WHERE username = '${username}'`)
-    .then((data) =>{
-      console.log('data rows',data.rows[0])
-      return data.rows[0]
-    })
-      .then((userFound) => {
-        user = userFound
-        console.log(user)
-        console.log('user has been found')
-
-       if(passwordCheck(password, userFound.password) === false){
-         console.log('there is an error')
-        return res.send('Error')
-       }
-      }).then(() => {
-      res.cookie('token', createToken(user))
-      res.cookie('new', 'dasdasdasdasdasdad')
-        return res.send('success')
+      .then((data) => {
+        console.log('data rows', data.rows[0])
+        return data.rows[0]
       })
+      .then((userFound) => {
+        console.log('user has been found')
+        bcrypt.compare(password, userFound.password, (err, result) => {
+          if (err) {
+            return res.send(err)
+          }
+          if (result) {
+            res.cookie('new', 'dasdasdasdasdasdad')
+            console.log('cookie sets')
+            return res.status(200).send('success')
+          }
+          else{
+            console.log('there is an error')
+            return res.status(500).send('Error')
+          }
+        }) 
+      })
+      // .then((user) => {
+      // res.cookie('token', createToken(user))
+      // res.cookie('new', 'dasdasdasdasdasdad')
+      //   return res.send('success')
+      // })
       .catch((err) => res.status(500).send(err))
-}
+  }
 };
 
 
@@ -70,17 +78,15 @@ const userController = {
 //     })
 // }
 
-const passwordCheck = (passwordReq, foundUser) => {
-  bcrypt.compare(passwordReq, foundUser, (err, result) => {
-    if (err) {
-      return false
-    }
-    if (result) {
-      return true
-    }
-    return false
-  })
-}
+// const passwordCheck = (passwordReq, foundUser) => {
+//   bcrypt.compare(passwordReq, foundUser, (err, result) => {
+//     console.log(result)
+//     if (err) {
+//       return false
+//     }
+//     return result
+//   })
+// }
 
 const createToken = (user) => {
   jwt.sign({ user }, 'secretkey', { expiresIn: 60 * 60 }, (err, token) => {
