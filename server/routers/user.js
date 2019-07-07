@@ -5,10 +5,13 @@ const pool = require('../controllers/database');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 
-
 // prefixed with /user
 router.post('/login',userController.login)
 
 router.post('/create', userController.createUser, userController.addUserToDB)
 
 module.exports = router;
+
+
+
+  

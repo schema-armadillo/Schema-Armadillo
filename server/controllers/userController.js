@@ -6,11 +6,8 @@ const bcrypt = require('bcrypt');
 const userController = {
   createUser: (req, res, next) => {
     const { username, password } = req.body
-    console.log(req.body)
     bcrypt.hash(password, 10, (err, hashResponse) => {
-      console.log('inside hash: ', hashResponse);
       if (err) {
-        console.log('error thrown inside hash');
         return res.status(500).send('error encrypting pw');
       } else {
         res.locals.username = username
@@ -20,13 +17,11 @@ const userController = {
     })
   },
   addUserToDB: (req, res) => {
-    console.log('inside add user to DB');
     return pool.query(
       `INSERT INTO users (username, password) VALUES ('${res.locals.username}', '${res.locals.password}') RETURNING user_id, username`)
       .then((data) => {
         console.log(data)
-        return res.status(200).json(data.rows[0])
-        // data.rows[0]
+        return res.status(200).json(data)
       })
       .catch( err => {
         console.log('error adding user to DB')
@@ -34,74 +29,62 @@ const userController = {
       })
   },
 
-
-  // addUserToDB: (req, res) => {
-  //   console.log('inside add user to DB');
-  //   pool.query(
-  //     `INSERT INTO users (username, password) VALUES ('${res.locals.username}', '${res.locals.password}') RETURNING user_id, username`, (err, data) => {
-  //       if (err) {
-  //         console.log('error adding user to DB')
-  //         throw new Error(err);
-  //       // return res.status(500).send('Error creating user. PLease try again.');
-  //       }
-  //       console.log(data)
-  //       return res.status(200).json(data.rows[0])
-  //     });
-  
-
-  login: (req, res, next) => {
-    const userReq = req.body
+  login: (req, res) => {
+    const {username,password} = req.body
     let user;
 
-    getUser(userReq)
+    pool.query(`SELECT * FROM users WHERE username = '${username}'`)
+    .then((data) =>{
+      console.log('data rows',data.rows[0])
+      return data.rows[0]
+    })
       .then((userFound) => {
-        user = userFound;
-        return passwordCheck(userReq.password, user)
+        user = userFound
+        console.log(user)
+        console.log('user has been found')
+
+       if(passwordCheck(password, userFound.password) === false){
+         console.log('there is an error')
+        return res.send('Error')
+       }
+      }).then(() => {
+      res.cookie('token', createToken(user))
+      res.cookie('new', 'dasdasdasdasdasdad')
+        return res.send('success')
       })
-      .then((res) => createToken(user))
-      .then((token) => {
-        res.cookie('token', token)
-      })
-    res.status(200).send()
-      .catch((err) => console.log(err))
-  }
+      .catch((err) => res.status(500).send(err))
+}
 };
 
-const getUser = (userReq) => {
-  return pool.query(`SELECT * FROM users WHERE username = ${userReq}`)
-    .then((data) => data.rows[0])
-}
 
-const addUserToDB = (req, res, next) => {
-  return pool.query(
-    `INSERT INTO users (username, password) VALUES (${res.locals.username}, ${res.locals.password}) RETURNING user_id, username`)
-    .then((data) => {
-      console.log(data)
-      return res.status(200).json(data.rows[0])
-    })
-}
+
+
+//helper functtions
+
+// const getUser = (username) => {
+//   console.log(username);
+//    pool.query(`SELECT * FROM users WHERE username = '${username}'`)
+//     .then((data) =>{
+//       console.log('data rows',data.rows[0])
+//       return data.rows
+//     })
+// }
 
 const passwordCheck = (passwordReq, foundUser) => {
   bcrypt.compare(passwordReq, foundUser, (err, result) => {
     if (err) {
-      return res.status(401).json({
-        failed: 'Unauthorized Access'
-      })
+      return false
     }
     if (result) {
-      return res.status(200).json({
-        success: 'Access Granted'
-      })
+      return true
     }
-    return res.status(401).json({
-      failed: 'Unauthorized Access'
-    })
+    return false
   })
 }
 
 const createToken = (user) => {
   jwt.sign({ user }, 'secretkey', { expiresIn: 60 * 60 }, (err, token) => {
-    res.json({ token })
+    return token
   })
 }
 
@@ -109,3 +92,4 @@ const createToken = (user) => {
 
 
 module.exports = userController;
+
