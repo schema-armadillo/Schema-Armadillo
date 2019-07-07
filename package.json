@@ -26,6 +26,7 @@
     "@babel/preset-react": "^7.0.0",
     "babel-loader": "^8.0.6",
     "css-loader": "^3.0.0",
+    "file-loader": "^4.0.0",
     "hot-module-replacement": "^3.0.3",
     "style-loader": "^0.23.1",
     "webpack": "^4.35.2",
@@ -34,6 +35,7 @@
   },
   "dependencies": {
     "body-parser": "^1.19.0",
+    "cors": "^2.8.5",
     "express": "^4.17.1",
     "nodemon": "^1.19.1",
     "path": "^0.12.7",
@@ -42,6 +44,7 @@
     "react-dom": "^16.8.6",
     "react-hot-loader": "^4.12.3",
     "react-router-dom": "^5.0.1",
+    "react-select": "^3.0.4",
     "styled-components": "^4.3.2"
   }
 }

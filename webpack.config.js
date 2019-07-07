@@ -14,7 +14,8 @@ module.exports = {
         proxy: {
             '/': 'http://localhost:3000',
             '/api/': 'http://localhost:3000',
-            '/auth/': 'http://localhost:3000'
+            '/auth/': 'http://localhost:3000',
+            '/test/': 'http://localhost:3000'
         }
     },
     mode: process.env.NODE_ENV,
@@ -36,7 +37,16 @@ module.exports = {
                     "style-loader", // creates style nodes from JS strings
                     "css-loader", // translates CSS into CommonJS
                 ]
-            }
+            },
+            {
+                test: /\.(png|jpe?g|gif)$/,
+                use: [
+                    {
+                        loader: 'file-loader',
+                        options: {},
+                    },
+                ],
+            },
         ]
     }
 }
