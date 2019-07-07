@@ -12,7 +12,7 @@ const schemaController = {
     // needs to be assigned something off body
     let schema_id;
     // need to establish body format for parsing.
-    const { schemaName, keys } = req.body;
+    const { schema_name, keys } = req.body;
 
     // check if table has already been made
     pool.query(
@@ -47,9 +47,9 @@ const schemaController = {
               : false;
           // init queryValues array to pass into query
           const queryValues = [
-            userId,
-            schemaName,
-            200,
+            user_id,
+            schema_name,
+            schema_id,
             key,
             type,
             areThereOptions,
