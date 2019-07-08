@@ -40,13 +40,13 @@ class Dashboard extends Component {
     // don't display it on page
     // need textarea to copy to clipboard
     let copyText = document.createElement('textarea');
-    copyText.innerHTML = this.state.result;
-    copyText.setAttribute('id', 'hideThis');
+    copyText.value = this.state.result;
     document.body.appendChild(copyText);
     console.log('Dashboard => handleCopySchema => copyText', copyText);
 
     copyText.select();
     document.execCommand('copy');
+    copyText.setAttribute('id', 'hideThis');
 
     // show message to the client
     let clipboardMessage = document.querySelector('.clipboard-message');
