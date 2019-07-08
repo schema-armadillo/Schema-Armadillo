@@ -12,8 +12,8 @@ const schemaController = {
     // needs to be assigned something off body
     let schema_id;
     // need to establish body format for parsing.
-    const { schema_name, keys } = req.body;
-
+    const { schemaName, rows } = req.body;
+    console.log('schemaController => createSchema', schemaName, rows);
     // check if table has already been made
     pool.query(
       'CREATE TABLE IF NOT EXISTS Schemas (user_id INT, schema_name VARCHAR (50), schema_id INT, key VARCHAR(50), type VARCHAR(50), options_check BOOLEAN DEFAULT FALSE, unique_check BOOLEAN DEFAULT FALSE, required_check BOOLEAN DEFAULT FALSE)',
@@ -30,8 +30,8 @@ const schemaController = {
 
         const queryText =
           'INSERT INTO Schemas (user_id, schema_name, schema_id, key, type, options_check, unique_check, required_check) values ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING *;';
-        keys.forEach((row, idx) => {
-          // iterate thru keys to create rows in the table
+        rows.forEach((row, idx) => {
+          // iterate thru rows to create rows in the table
 
           const { key, type } = row;
           // see if there are options to be added to the table
@@ -48,7 +48,7 @@ const schemaController = {
           // init queryValues array to pass into query
           const queryValues = [
             user_id,
-            schema_name,
+            schemaName,
             schema_id,
             key,
             type,
@@ -91,7 +91,7 @@ const schemaController = {
     const {
       user_id,
       schema_id,
-      schema_name,
+      schemaName,
       key,
       type,
       options_check,
@@ -101,9 +101,9 @@ const schemaController = {
 
     // query for the table
     pool.query(
-      'UPDATE Schemas SET schema_name=$1 key=$2 type=$3 options_check=$4 unique_check=$5 required_check=$6 WHERE user_id=$7 AND schema_id=$8',
+      'UPDATE Schemas SET schemaName=$1 key=$2 type=$3 options_check=$4 unique_check=$5 required_check=$6 WHERE user_id=$7 AND schema_id=$8',
       [
-        schema_name,
+        schemaName,
         key,
         type,
         options_check,

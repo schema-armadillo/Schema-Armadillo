@@ -67,7 +67,15 @@ code {
   font-size: 20px;
 }
 
+.saveButton {
+  margin: 20px 0 20px 30px;
+}
 pre {
+  margin: 0 0 0 30px;
+}
+
+pre {
+<<<<<<< HEAD
   margin: 30px;
  
 }
@@ -84,3 +92,41 @@ pre code {
   margin: 0px 10px 0px 0px;
 }
 
+=======
+  cursor: pointer;
+}
+
+pre:hover {
+  background-color: rgb(116, 129, 172);
+}
+
+#hideThis {
+  display: none;
+}
+
+.clipboard-message {
+  margin: 10px 0 0 30px;
+  background-color: rgb(255, 232, 59);
+  color: #000000;
+  font-family: 'Optima';
+  font-size: 20px;
+  font-weight: bold;
+  width: 100px;
+  text-align: center;
+}
+/* 
+.clipboard-message {
+  opacity: 1;
+  animation: fade 2s linear;
+}
+
+@keyframes fade {
+  0%,
+  100% {
+    opacity: 0;
+  }
+  50% {
+    opacity: 1;
+  }
+} */
+>>>>>>> dev
