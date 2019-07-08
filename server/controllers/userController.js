@@ -63,12 +63,20 @@ const userController = {
   },
   setJwt: (req, res) => {
     console.log('inside of set jwt');
-    jwt.sign({ user: res.locals.data.username }, 'secretkey', { expiresIn: 60 * 60 }, (err, token) => {
+    jwt.sign({ user_id: res.locals.data.user_id }, 'secretkey', { expiresIn: 60 * 60 }, (err, token) => {
       // sends back username, and user_id
-      return res.status(200).json(res.locals.data);
+      return res.cookie('ssid', token).status(200).json(res.locals.data);
     });
   },
-
+  checkJwt: (req, res) => {
+    console.log('checking jwt')
+    const { ssid } = req.cookies;
+    console.log(ssid);
+    jwt.verify(ssid, 'secretkey', (err, isverified) => {
+      if (err) return res.status(401).json({isLoggedIn: false})
+      else return res.status(200).json({isLoggedIn: true})
+    })
+  }
 };
 
 

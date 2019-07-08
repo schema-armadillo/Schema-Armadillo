@@ -90,8 +90,9 @@ class Login extends Component {
       })
       .then((obj) => {
 
-        alert('Welcome.')
+        alert('Welcome back.')
         console.log(obj);
+        this.props.loginToggle();
 
       })
       .catch(err => {
@@ -120,8 +121,9 @@ class Login extends Component {
     })
       .then(data => data.json())
       .then((obj) => {
-
+        alert("Welcome");
         console.log(obj);
+        this.props.loginToggle();
       })
       .catch(err => console.log('login fetch err ', err));
   }
