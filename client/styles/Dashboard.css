@@ -72,3 +72,15 @@ pre,
 .saveButton {
   margin: 30px;
 }
+
+pre {
+  cursor: pointer;
+}
+
+pre:hover {
+  background-color: rgb(116, 129, 172);
+}
+
+#hideThis {
+  display: none;
+}

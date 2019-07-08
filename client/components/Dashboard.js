@@ -210,7 +210,7 @@ class Dashboard extends Component {
             </button>
           </div>
         </div>
-        <pre>
+        <pre onClick={this.handleCopySchema}>
           <code>{this.state.result}</code>
         </pre>
 
