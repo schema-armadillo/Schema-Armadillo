@@ -5,7 +5,7 @@ const schemaController = require('../controllers/schemaController');
 
 // prefix with api
 console.log('routed to schema file');
-router.post('/schema', schemaController.createSchema, (req, res) => {
+router.post('/schema', schemaController.createSchemaId, schemaController.createSchema, (req, res) => {
   res.status(200).send('Schema added to DB.');
 });
 router.delete('/schema', schemaController.deleteSchema);

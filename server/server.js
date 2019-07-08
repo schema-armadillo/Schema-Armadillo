@@ -3,7 +3,7 @@ const path = require('path');
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
 
-// const schema = require('./routers/schema');
+const schema = require('./routers/schema');
 const cors = require('cors');
 const user = require('./routers/user');
 
@@ -40,7 +40,7 @@ app.post('/test', (req, res) => {
 // app.use('/user', user);
 // changed from user
 app.use('/auth', user);
-// app.use('/api', schema);
+app.use('/api', schema);
 
 app.listen(port, () => {
   console.log(`Listening on port ${port}...`);

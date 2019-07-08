@@ -1,6 +1,26 @@
 const pool = require('./database');
 
 const schemaController = {
+  createSchemaId: (req, res, next) => {
+    console.log('inside create schema id middleware');
+    pool.query(`CREATE TABLE IF NOT EXISTS Schema_IDs (schema_id SERIAL PRIMARY KEY, user_id INT)`, (err, result) => {
+      if (err) {
+        console.error('error in creating schema_id table');
+        throw new Error(err);
+      }
+
+      const { user_id } = req.body;
+
+      pool.query(`INSERT INTO Schema_IDs (user_id) VALUES ('${user_id}') RETURNING *`, (err, result) => {
+        if (err) {
+          console.error('Error in adding table to DB');
+          throw new Error(err);
+        }
+        res.locals.schema_id = result.rows[0].schema_id;
+        return next();
+      })
+    })
+  },
   createSchema: (req, res, next) => {
     // extract all the form inputs. not there yet
     // TODO NEED: userId, SchemaID
@@ -8,11 +28,11 @@ const schemaController = {
     // const testSchemaId = 999;
 
     // needs to be assigned something off body
-    let user_id;
-    // needs to be assigned something off body
-    let schema_id;
+    // let user_id;
+    // THIS WILL BE AUTO GENERATED: needs to be assigned something off body
+    const { schema_id } = res.locals;
     // need to establish body format for parsing.
-    const { schema_name, keys } = req.body;
+    const { schema_name, rows, user_id } = req.body;
 
     // check if table has already been made
     pool.query(
@@ -30,7 +50,7 @@ const schemaController = {
 
         const queryText =
           'INSERT INTO Schemas (user_id, schema_name, schema_id, key, type, options_check, unique_check, required_check) values ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING *;';
-        keys.forEach((row, idx) => {
+        rows.forEach((row, idx) => {
           // iterate thru keys to create rows in the table
 
           const { key, type } = row;
