@@ -7,10 +7,11 @@ body {
     background-color: #FFF4E6;
 }
 
-.container {
+.loginContainer {   
     display: flex;
     flex-direction: row;
-    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+    justify-content: center;
+    /* box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2); */
     margin-top: 70px;
 }
 
