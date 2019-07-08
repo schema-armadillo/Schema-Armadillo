@@ -1,12 +1,5 @@
 import React, { Component } from 'react';
 import '.././styles/Login.css';
-import { hot } from 'react-hot-loader';
-import {
-  Route,
-  Link,
-  BrowserRouter as Router,
-  Redirect
-} from 'react-router-dom';
 import styled from 'styled-components';
 import armadillo from '../Armadillo-icon.jpg';
 
