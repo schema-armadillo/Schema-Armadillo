@@ -10,7 +10,7 @@ import styled from 'styled-components';
 import armadillo from '../Armadillo-icon.jpg';
 
 const Form = styled.form`
-
+    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
     display: flex;
     flex-direction: column;
     height: 450px;
@@ -131,7 +131,7 @@ class Login extends Component {
   render() {
     return (
 
-      <div className='container'>
+      <div className='loginContainer'>
         <div>
           <Form className='signupForm' onSubmit={this.handleSignupSubmit}>
             <h1 className='signup'>Sign up</h1>

@@ -20,6 +20,7 @@ const KeyValue = ({
   rowIndex,
   handleChangeKey,
   handleChangeRequired,
+  handleChangeUnique,
   handleChangeType,
   deleteRow
 }) => {
@@ -40,8 +41,6 @@ const KeyValue = ({
           }}
           onChange={e => handleChangeType(e, rowIndex)}
           options={typeOptions}
-          // a user must select 'type' so it shouldn't be clearable
-          // isClearable='false'
           isSearchable='true'
           closeMenuOnSelect='true'
         />
@@ -51,6 +50,14 @@ const KeyValue = ({
             type='checkbox'
             checked={rowData.options.required}
             onChange={e => handleChangeRequired(e, rowIndex)}
+          />
+        </label>
+        <label className='checkbox'>
+          <input
+            name='unique'
+            type='checkbox'
+            checked={rowData.options.unique}
+            onChange={e => handleChangeUnique(e, rowIndex)}
           />
         </label>
         <button
