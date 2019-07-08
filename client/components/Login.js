@@ -50,7 +50,7 @@ class Login extends Component {
     console.log(`A login was submitted: ${this.state.email}`);
     console.log(`A login was submitted: ${this.state.password}`);
     event.preventDefault();
-    // changed this to create acct, to test
+    // NOTE: THE URL IS CURRENTLY SET FOR LOGIN, NOT CREATE
     fetch('/auth/login', {
       method: 'POST',
       headers: {
@@ -61,7 +61,7 @@ class Login extends Component {
       .then(data => data.json())
       .then((obj) => {
         console.log(obj);
-        // this.history.pushState(null, obj.redirecturl);
+        this.history.pushState(null, obj.redirecturl);
       })
       .catch(err => console.log('login fetch err ', err));
   }
