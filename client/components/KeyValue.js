@@ -74,4 +74,82 @@ const KeyValue = ({
   );
 };
 
+<<<<<<< HEAD
 export default KeyValue;
+=======
+    constructor(props) {
+        super(props);
+        this.state = {
+            selectedOption: null,
+            value: '',
+            required: false,
+        };
+
+        this.handleChange = this.handleChange.bind(this);
+        this.handleSubmit = this.handleSubmit.bind(this);
+        this.handleChangeKey = this.handleChangeKey.bind(this);
+        this.handleInputChange = this.handleInputChange.bind(this)
+    }
+
+
+    handleSubmit(event) {
+        console.log('state on submit ', this.state)
+        this.props.updateRow(this.state.value, this.state.selectedOption.label, this.state.required)
+        this.props.newRow();
+        console.log('handle submit ', this.props.rows)
+        event.preventDefault();
+    }
+
+    handleChange(selectedOption) {
+        this.setState({ selectedOption });
+        console.log(`Option selected:` , selectedOption);
+    };
+
+    handleChangeKey(event) {
+        this.setState({ value: event.target.value })
+    }
+
+    handleInputChange(event) {
+        this.setState({ required: true })
+    }
+
+    render() {
+        console.log('rendering row ', this.props.rows)
+        const { selectedOption } = this.state;
+        return (
+            <div className="rowDiv">
+               <table>
+                   <tr >
+                       <td>
+                            <form className="rowForm" onSubmit={this.handleSubmit} >                                                
+                                <input className="key" type="text" placeholder="key" value={this.state.value} onChange={this.handleChangeKey} />
+                                <Select className="select"
+                                    value={selectedOption}
+                                    onChange={this.handleChange}
+                                    options={typeOptions}
+                                    isClearable='true'
+                                    isSearchable='true'
+                                    closeMenuOnSelect='true' > 
+                                </Select>                                   
+                                                                
+                                <label>
+                                        Required
+                                        <input
+                                            name="required"
+                                            type="checkbox"
+                                            //checked={this.state.required}
+                                            onChange={this.handleInputChange} />
+                                    </label>
+                                    <input className="newRowButton" type="submit" value="new row" />
+                            </form>
+                     </td>  
+                </tr>
+                </table>
+            </div>
+        );
+    }
+
+}
+
+export default KeyValue;
+>>>>>>> 7d0e82d3694d68b5b507f16b24c3a03b6454d73d
