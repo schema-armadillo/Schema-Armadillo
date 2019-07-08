@@ -31,7 +31,7 @@ const modelCodeMaker = newSchemaData => {
         // console.log(rows[i].options[option]);
         schemaBody += `${tab.repeat(2) + option}: ${
           rows[i].options[option]
-        },${'\n'}`;
+          },${'\n'}`;
       }
       // loop
       schemaBody += `${tab.repeat(1)}},${'\n'}`;
@@ -46,7 +46,7 @@ const modelCodeMaker = newSchemaData => {
   schemaBody += '});\n\n';
 
   // add proper export names to closing text
-  closingText += `('${schemaName}', ${schemaVarName});`;
+  closingText += `('${schemaName.slice(0, 1).toUpperCase()}${schemaName.slice(1).toLowerCase()}', ${schemaVarName});`;
 
   return openingText + schemaBody + closingText;
 };
