@@ -47,7 +47,8 @@ class App extends Component {
   toggleLoggedIn(result) {
     // JUST FOR THE SAKE OF DEMO
     const userSchemaArr = [...this.state.userSchemaArr];
-    result.userSchema.forEach(el => userSchemaArr.push(el));
+    // undefined check, handles create user
+    if(result.userSchema !== undefined) result.userSchema.forEach(el => userSchemaArr.push(el));
     this.setState({isLogged: true, userSchemaArr});
     // REVIEW THIS CODE HERE
 

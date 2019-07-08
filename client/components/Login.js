@@ -127,7 +127,7 @@ class Login extends Component {
       .then((obj) => {
         alert("Welcome");
         console.log(obj);
-        this.props.loginToggle();
+        this.props.loginToggle(obj);
       })
       .catch(err => console.log('login fetch err ', err));
   }
