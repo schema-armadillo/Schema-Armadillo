@@ -41,12 +41,6 @@ class Dashboard extends Component {
     // don't display it on page
     // need textarea to copy to clipboard
     let copyText = document.createElement('textarea');
-<<<<<<< HEAD
-    copyText.innerHTML = this.state.result;
-    document.body.appendChild(copyText);
-    console.log('Dashboard => handleCopySchema => copyText', copyText);
-    
-=======
     copyText.value = this.state.result;
     document.body.appendChild(copyText);
     console.log('Dashboard => handleCopySchema => copyText', copyText);
@@ -55,7 +49,6 @@ class Dashboard extends Component {
     document.execCommand('copy');
     copyText.setAttribute('id', 'hideThis');
 
->>>>>>> dev
     // show message to the client
     let clipboardMessage = document.querySelector('.clipboard-message');
     clipboardMessage.innerText = 'Copied';
@@ -63,10 +56,6 @@ class Dashboard extends Component {
     setTimeout(() => {
       clipboardMessage.style.display = 'none';
     }, 650);
-    
-    copyText.select();
-    document.execCommand('copy');
-    copyText.setAttribute('id', 'hideThis');
 
   }
 
@@ -81,6 +70,7 @@ class Dashboard extends Component {
       .then(data => data.json())
       .then(result => console.log(result));
   }
+
   handleCreateSchema(state) {
     // check if schemaname is filled out
     if (this.state.schema.schemaName.trim() === '') {
@@ -206,6 +196,14 @@ class Dashboard extends Component {
       );
     }
 
+    let schemaButtons = [];
+    // for (let i=0; i<this.props.userSchemaArr; i++) {
+    //   schemaButtons.push(<button>{}</button>)
+    // }
+    schemaButtons = this.props.userSchemaArr.map(el => {
+      return (<button>{el.schema_name}</button>)
+    })
+
     return (
       <div>
         <div className='schemaName'>
@@ -230,11 +228,7 @@ class Dashboard extends Component {
           <br />
           <div className='form'>{rows}</div>
           <div className='optionsKey'>
-            <button>Schema 1</button><br/>
-            <button>Schema 2</button><br/>
-            <button>Schema 3</button><br/>
-            <button>Schema 4</button><br/>
-            <button>Schema 5</button>
+            {schemaButtons}
           </div>
           <div className="buttons">
             <button
@@ -261,3 +255,4 @@ class Dashboard extends Component {
 }
 
 export default Dashboard;
+

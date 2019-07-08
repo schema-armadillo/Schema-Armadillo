@@ -101,7 +101,7 @@ pre:hover {
 }
 
 .clipboard-message {
-  margin: 10px 0 0 30px;
+  margin: 0 0 0 30px;
   background-color: rgb(255, 232, 59);
   color: #000000;
   font-family: 'Optima';

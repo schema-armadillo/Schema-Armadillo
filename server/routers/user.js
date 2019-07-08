@@ -4,13 +4,16 @@ const router = express.Router();
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 const userController = require('../controllers/userController');
+const schemaController = require('../controllers/schemaController')
 const pool = require('../controllers/database');
 
 // prefixed with /auth
-router.post('/login', userController.login, userController.setJwt);
+router.post('/login', userController.login, schemaController.getAllSchema, userController.setJwt);
 
 router.post('/create', userController.createUser, userController.addUserToDB, userController.setJwt);
 
-router.post('/verify', userController.checkJwt)
+router.post('/verify', userController.checkJwt, (req, res) => {
+    return res.status(200).json({ isLoggedIn: true })
+})
 
 module.exports = router;

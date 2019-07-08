@@ -13,13 +13,13 @@ import {
 import Login from './Login';
 import Dashboard from './Dashboard';
 
-const route = (isLogged, loginToggle) => {
+const route = (isLogged, loginToggle, getUserSchemaArr, userSchemaArr) => {
   return (<Switch>
 
-    <Route exact path="/" render={() => (isLogged ? <Dashboard /> : <Redirect to="/login" />)} />
-    <Route path="/login" render={() => (isLogged ? <Redirect to="/dashboard" /> : <Login isLoggedIn={isLogged} loginToggle={loginToggle}/>)}/>
-    <Route path="/signup" render={() => (isLogged ? <Redirect to="/dashboard" /> : <Login isLoggedIn={isLogged} loginToggle={loginToggle}/>)}/>
-    <Route path="/dashboard" render={() => (isLogged ? <Dashboard /> : <Redirect to="/login" />)} />
+    <Route exact path="/" render={() => (isLogged ? <Dashboard userSchemaArr={userSchemaArr}/> : <Redirect to="/login" />)} />
+    <Route path="/login" render={() => (isLogged ? <Redirect to="/dashboard" /> : <Login isLoggedIn={isLogged} loginToggle={loginToggle} getUserSchemaArr={getUserSchemaArr}/>)}/>
+    <Route path="/signup" render={() => (isLogged ? <Redirect to="/dashboard" /> : <Login isLoggedIn={isLogged} loginToggle={loginToggle} getUserSchemaArr={getUserSchemaArr}/>)}/>
+    <Route path="/dashboard" render={() => (isLogged ? <Dashboard userSchemaArr={userSchemaArr}/> : <Redirect to="/login" />)} />
     <Route path="/myschema" />
 
   </Switch>)
@@ -30,15 +30,29 @@ class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      userSchemaArr: [],
       isLogged: false,
     }
     this.checkIfLoggedIn = this.checkIfLoggedIn.bind(this);
     this.toggleLoggedIn = this.toggleLoggedIn.bind(this);
+    this.getUserSchemaArr = this.getUserSchemaArr.bind(this);
   }
 
-  toggleLoggedIn() {
-    this.setState({ isLogged: true });
-    console.log(this.state);
+  getUserSchemaArr(result) {
+    const userSchemaArr = [...this.state.userSchemaArr];
+    result.forEach(el => userSchemaArr.push(el));
+    this.setState({userSchemaArr});
+  }
+
+  toggleLoggedIn(result) {
+    // JUST FOR THE SAKE OF DEMO
+    const userSchemaArr = [...this.state.userSchemaArr];
+    result.userSchema.forEach(el => userSchemaArr.push(el));
+    this.setState({isLogged: true, userSchemaArr});
+    // REVIEW THIS CODE HERE
+
+    // this.setState({ isLogged: true });
+    // console.log(this.state);
   }
 
   checkIfLoggedIn() {
@@ -64,7 +78,7 @@ class App extends Component {
     return (
       <Router>
         {/* invoke route with isLogged */}
-        {route(this.state.isLogged, this.toggleLoggedIn)}
+        {route(this.state.isLogged, this.toggleLoggedIn, this.getUserSchemaArr, this.state.userSchemaArr)}
       </Router>
     );
   }

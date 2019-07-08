@@ -9,7 +9,9 @@ const schemaController = {
         throw new Error(err);
       }
 
-      const { user_id, schemaName } = req.body;
+      const { schemaName } = req.body;
+      const { user_id } = res.locals;
+      console.log('schemaController => createSchemaId => schemaName, user_id', schemaName, user_id)
 
       pool.query(`INSERT INTO Schema_IDs (user_id, schema_name) VALUES ('${user_id}', '${schemaName}') RETURNING *`, (err, result) => {
         if (err) {
@@ -31,9 +33,9 @@ const schemaController = {
     // needs to be assigned something off body
     // let user_id;
     // THIS WILL BE AUTO GENERATED: needs to be assigned something off body
-    const { schema_id } = res.locals;
+    const { schema_id, user_id } = res.locals;
     // need to establish body format for parsing.
-    const { schema_name, rows, user_id } = req.body;
+    const { schemaName, rows } = req.body;
 
     // check if table has already been made
     pool.query(
@@ -69,7 +71,7 @@ const schemaController = {
           // init queryValues array to pass into query
           const queryValues = [
             user_id,
-            schema_name,
+            schemaName,
             schema_id,
             key,
             type,
@@ -90,6 +92,7 @@ const schemaController = {
       }
     );
   },
+  
   // gets one specific schema
   getSchema: (req, res, next) => {
     // expecting to receive user_id and schema_id from req.body
@@ -109,8 +112,8 @@ const schemaController = {
     );
   },
   getAllSchema: (req, res, next) => {
-    const { user_id } = req.body;
-    pool.query(`SELECT * FROM Schemas WHERE user_id='${user_id}'`, (err, result) => {
+    const { user_id } = res.locals;
+    pool.query(`SELECT * FROM schema_ids WHERE user_id='${user_id}'`, (err, result) => {
       if (err) {
         console.error(err);
         return res.status(400).json({ error: 'error from getAllSchema' });
@@ -118,32 +121,39 @@ const schemaController = {
      //  console.log('schemaContorller => getAllSechama', result.rows);
       // need to make data in a more workable format. currently a bigass array
 
-      const schemaParsed = [];
+      console.log('schemaController => getAllSchema => result', result)
+      res.locals.userSchema = result.rows;
+      return next();
+      // return res.status(200).json(result.rows);
 
-      let tempObj = {};
-      result.rows.forEach((row, idx) => {
-        console.log('inside foreach loop');
-        if (tempObj.hasOwnProperty('schema_id')) {
-          const tempNewRow = {};
-          const { options_check, unique_check, required_check, type, key } = row;
-          tempNewRow.key = key;
-          tempNewRow.type = type;
-          if (options_check) {
-            tempNewRow.options = {};
-            tempNewRow.options.unique = unique_check ? unique_check : false;
-            tempNewRow.options.required = required_check ? required_check : false;
-          }
-          console.log('checking temp new row: ', tempNewRow)
-          tempObj.rows.push(tempNewRow);
-        } else {
-          if (schemaParsed.length !== 0) schemaParsed.push(tempObj);
-          console.log('setting up tempobj: ', row.schema_id);
 
-          tempObj = { schema_id: row.schema_id, schema_name: row.schema_name, rows: [] };
-        }
-      });
-      console.log('my schema pasrsed: ', schemaParsed);
-      return res.status(200).json(result.rows);
+      // result.rows.forEach(el => {
+      //   console.log(el.schema_id, el.schema_name)
+      // })
+      // const schemaParsed = [];
+      // let tempObj = {};
+      // result.rows.forEach((row, idx) => {
+      //   console.log('inside foreach loop');
+      //   if (tempObj.hasOwnProperty('schema_id')) {
+      //     const tempNewRow = {};
+      //     const { options_check, unique_check, required_check, type, key } = row;
+      //     tempNewRow.key = key;
+      //     tempNewRow.type = type;
+      //     if (options_check) {
+      //       tempNewRow.options = {};
+      //       tempNewRow.options.unique = unique_check ? unique_check : false;
+      //       tempNewRow.options.required = required_check ? required_check : false;
+      //     }
+      //     console.log('checking temp new row: ', tempNewRow)
+      //     tempObj.rows.push(tempNewRow);
+      //   } else {
+      //     if (schemaParsed.length !== 0) schemaParsed.push(tempObj);
+      //     console.log('setting up tempobj: ', row.schema_id);
+
+      //     tempObj = { schema_id: row.schema_id, schema_name: row.schema_name, rows: [] };
+      //   }
+      // });
+      // console.log('my schema pasrsed: ', schemaParsed);
     })
   },
   updateSchema: (req, res, next) => {
