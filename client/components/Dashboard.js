@@ -36,8 +36,7 @@ class Dashboard extends Component {
     this.handleCopySchema = this.handleCopySchema.bind(this);
   }
   handleCopySchema() {
-    this.state.result;
-
+    console.log('Dashboard.js => handleCopySchema => this.state.result', this.state.result)
     // create a fake element
     // don't display it on page
     // need textarea to copy to clipboard
@@ -57,6 +56,7 @@ class Dashboard extends Component {
     setTimeout(() => {
       clipboardMessage.style.display = 'none';
     }, 650);
+
   }
 
   handleSaveSchema() {
@@ -70,6 +70,7 @@ class Dashboard extends Component {
       .then(data => data.json())
       .then(result => console.log(result));
   }
+
   handleCreateSchema(state) {
     // check if schemaname is filled out
     if (this.state.schema.schemaName.trim() === '') {
@@ -195,6 +196,14 @@ class Dashboard extends Component {
       );
     }
 
+    let schemaButtons = [];
+    // for (let i=0; i<this.props.userSchemaArr; i++) {
+    //   schemaButtons.push(<button>{}</button>)
+    // }
+    schemaButtons = this.props.userSchemaArr.map(el => {
+      return (<button>{el.schema_name}</button>)
+    })
+
     return (
       <div>
         <div className='schemaName'>
@@ -219,7 +228,7 @@ class Dashboard extends Component {
           <br />
           <div className='form'>{rows}</div>
           <div className='optionsKey'>
-            <h5>Options Key</h5>
+            {schemaButtons}
           </div>
           <div className="buttons">
             <button
@@ -246,3 +255,4 @@ class Dashboard extends Component {
 }
 
 export default Dashboard;
+

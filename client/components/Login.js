@@ -88,15 +88,19 @@ class Login extends Component {
           throw new Error('Invalid credentials. Please try again.');
         } else return res.json();
       })
-      .then((obj) => {
-
+      .then((result) => {
         alert('Welcome back.')
-        console.log(obj);
-        this.props.loginToggle();
+        console.log('Login.js => handleLoginSubmit => rows',result);
+        
+        console.log('Login.js => handleLoginSubmit => loginToggle')
+        this.props.loginToggle(result);
+        console.log('Login.js => handleLoginSubmit => getUserSchemaArr')
+        // this.props.getUserSchemaArr(result);
 
       })
       .catch(err => {
-        alert('Invalid credentials. Please try again.')
+        console.error(err)
+        // alert('Invalid credentials. Please try again.')
         // console.log('login fetch err ', err)
       });
   }
