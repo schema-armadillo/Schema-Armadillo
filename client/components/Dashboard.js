@@ -75,10 +75,11 @@ class Dashboard extends Component {
   deleteRow(rowIndex) {
     let schema = Object.assign({}, this.state.schema);
     let { rows } = schema;
-    rows = rows.filter((el, index) => {
+    schema.rows = rows.filter((el, index) => {
       if (index === rowIndex) return false;
       return true;
     });
+    console.log('Dashboard => deleteRow => rows', rows);
     this.setState({ schema });
   }
 
@@ -122,7 +123,7 @@ class Dashboard extends Component {
     if (selectedOption === null) {
       selectedOption = '';
     }
-    rows[rowIndex].type = selectedOption.value;
+    rows[rowIndex].type = selectedOption.label;
     return this.setState({ schema });
     // console.log(`Option selected:`, selectedOption.label);
   }
