@@ -47,6 +47,14 @@ class Dashboard extends Component {
 
     copyText.select();
     document.execCommand('copy');
+
+    // show message to the client
+    let clipboardMessage = document.querySelector('.clipboard-message');
+    clipboardMessage.innerText = 'Copied';
+    clipboardMessage.style.display = 'block';
+    setTimeout(() => {
+      clipboardMessage.style.display = 'none';
+    }, 650);
   }
 
   handleSaveSchema() {
@@ -210,13 +218,13 @@ class Dashboard extends Component {
             </button>
           </div>
         </div>
-        <pre onClick={this.handleCopySchema}>
-          <code>{this.state.result}</code>
-        </pre>
-
         <button className='saveButton' onClick={this.handleSaveSchema}>
           Save
         </button>
+        <pre onClick={this.handleCopySchema}>
+          <code>{this.state.result}</code>
+        </pre>
+        <div className='clipboard-message' />
       </div>
     );
   }
