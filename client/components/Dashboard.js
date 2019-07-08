@@ -34,20 +34,15 @@ class Dashboard extends Component {
     this.handleCopySchema = this.handleCopySchema.bind(this);
   }
   handleCopySchema() {
-    this.state.result;
-
+    console.log('Dashboard.js => handleCopySchema => this.state.result', this.state.result)
     // create a fake element
     // don't display it on page
     // need textarea to copy to clipboard
     let copyText = document.createElement('textarea');
     copyText.innerHTML = this.state.result;
-    copyText.setAttribute('id', 'hideThis');
     document.body.appendChild(copyText);
     console.log('Dashboard => handleCopySchema => copyText', copyText);
-
-    copyText.select();
-    document.execCommand('copy');
-
+    
     // show message to the client
     let clipboardMessage = document.querySelector('.clipboard-message');
     clipboardMessage.innerText = 'Copied';
@@ -55,6 +50,11 @@ class Dashboard extends Component {
     setTimeout(() => {
       clipboardMessage.style.display = 'none';
     }, 650);
+    
+    copyText.select();
+    document.execCommand('copy');
+    copyText.setAttribute('id', 'hideThis');
+
   }
 
   handleSaveSchema() {

@@ -3,20 +3,21 @@ const pool = require('./database');
 const schemaController = {
   createSchemaId: (req, res, next) => {
     console.log('inside create schema id middleware', req.body);
-    pool.query(`CREATE TABLE IF NOT EXISTS Schema_IDs (schema_id SERIAL PRIMARY KEY, user_id INT)`, (err, result) => {
+    pool.query(`CREATE TABLE IF NOT EXISTS Schema_IDs (schema_id SERIAL PRIMARY KEY, schema_name VARCHAR(50), user_id INT)`, (err, result) => {
       if (err) {
         console.error('error in creating schema_id table');
         throw new Error(err);
       }
 
-      const { user_id } = req.body;
+      const { user_id, schemaName } = req.body;
 
-      pool.query(`INSERT INTO Schema_IDs (user_id) VALUES ('${user_id}') RETURNING *`, (err, result) => {
+      pool.query(`INSERT INTO Schema_IDs (user_id, schema_name) VALUES ('${user_id}', '${schemaName}') RETURNING *`, (err, result) => {
         if (err) {
           console.error('Error in adding table to DB');
           throw new Error(err);
         }
         res.locals.schema_id = result.rows[0].schema_id;
+        console.log('schemaController => createSchemaId => result', result)
         return next();
       })
     })
