@@ -150,7 +150,7 @@ const schemaController = {
     const {
       user_id,
       schema_id,
-      schema_name,
+      schemaName,
       key,
       type,
       options_check,
@@ -160,9 +160,9 @@ const schemaController = {
 
     // query for the table
     pool.query(
-      'UPDATE Schemas SET schema_name=$1 key=$2 type=$3 options_check=$4 unique_check=$5 required_check=$6 WHERE user_id=$7 AND schema_id=$8',
+      'UPDATE Schemas SET schemaName=$1 key=$2 type=$3 options_check=$4 unique_check=$5 required_check=$6 WHERE user_id=$7 AND schema_id=$8',
       [
-        schema_name,
+        schemaName,
         key,
         type,
         options_check,
