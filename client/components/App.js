@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+
 import '../styles/App.css';
 import { hot } from 'react-hot-loader';
 import {
@@ -7,6 +8,7 @@ import {
   BrowserRouter as Router,
   Redirect,
 } from 'react-router-dom';
+
 import Login from './Login';
 import Dashboard from './Dashboard';
 

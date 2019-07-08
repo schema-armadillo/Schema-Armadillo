@@ -1,13 +1,16 @@
 import React, { Component } from 'react';
+
 import '../styles/Login.css';
 import { hot } from 'react-hot-loader';
 import {
   Route, Link, BrowserRouter as Router, Redirect,
 } from 'react-router-dom';
+
 import styled from 'styled-components';
 import armadillo from '../Armadillo-icon.jpg';
 
 const Form = styled.form`
+
     display: flex;
     flex-direction: column;
     height: 450px;
@@ -23,12 +26,15 @@ const Input = styled.input`
 `;
 
 
+
 class Login extends Component {
   constructor(props) {
     super(props);
     this.state = {
       email: '',
+
       password: '',
+
     };
 
     this.handleChangeEmail = this.handleChangeEmail.bind(this);
@@ -47,6 +53,7 @@ class Login extends Component {
   }
 
   handleSubmit(event) {
+
     console.log(`A login was submitted: ${this.state.email}`);
     console.log(`A login was submitted: ${this.state.password}`);
     event.preventDefault();
@@ -60,6 +67,7 @@ class Login extends Component {
     })
       .then(data => data.json())
       .then((obj) => {
+
         console.log(obj);
         this.history.pushState(null, obj.redirecturl);
       })
@@ -68,22 +76,44 @@ class Login extends Component {
 
   render() {
     return (
-      <div className="container">
+
+      <div className='container'>
         <div>
-          <Form className="signupForm" onSubmit={this.handleSubmit}>
-            <h1 className="signup">Sign up</h1>
-            <input className="entry emailField" type="text" placeholder="email" />
-            <input className="entry passwordField" type="password" placeholder="password" />
-            <input className="signupButton" type="submit" value="Yeehaw!" />
+          <Form className='signupForm' onSubmit={this.handleSubmit}>
+            <h1 className='signup'>Sign up</h1>
+            <input
+              className='entry emailField'
+              type='text'
+              placeholder='email'
+            />
+            <input
+              className='entry passwordField'
+              type='password'
+              placeholder='password'
+            />
+            <input className='signupButton' type='submit' value='Yeehaw!' />
           </Form>
         </div>
         <div>
-          <Form className="loginForm" onSubmit={this.handleSubmit}>
+          <Form className='loginForm' onSubmit={this.handleSubmit}>
             {/* <img className="armadillo" src={armadillo} alt="armadillo logo" /> */}
             <h1>Log in to Schema Armadillo</h1>
-            <input className="entry emailField" type="text" placeholder="email" value={this.state.email} onChange={this.handleChangeEmail} />
-            <input className="entry passwordField" type="password" placeholder="password" value={this.state.password} onChange={this.handleChangePassword} />
-            <input className="loginButton" type="submit" value="Giddy-up!" />
+            <input
+              className='entry emailField'
+              type='text'
+              placeholder='email'
+              value={this.state.email}
+              onChange={this.handleChangeEmail}
+            />
+            <input
+              className='entry passwordField'
+              type='password'
+              placeholder='password'
+              value={this.state.password}
+              onChange={this.handleChangePassword}
+            />
+            <input className='loginButton' type='submit' value='Giddy-up!' />
+
           </Form>
         </div>
       </div>

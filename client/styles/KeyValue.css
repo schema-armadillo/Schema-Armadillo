@@ -1,14 +1,38 @@
+.rowDiv {
+  margin: 5px;
+  font-family: 'Optima';
+  font-size: 18px;
+}
 .rowForm {
-    display: grid;
-    grid-template-columns: auto 30% 10% 10%;   
+  display: grid;
+  grid-template-columns: auto 20% 15% 15%;
+  /* display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center; */
 }
 
+input[type='checkbox'] {
+  transform: scale(2);
+  padding: 20px;
+}
+
+.checkbox {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+}
+
+.type,
+.checkbox,
+.key,
 .select {
-    height: 50px;
+  margin-right: 15px;
 }
 
 .key {
-    /* width: 50px; */
-    height: 32px;
-    margin-right: 5px;
+  /* width: 200px; */
+  font-size: 18px;
+  height: 31px;
 }
