@@ -1,0 +1,35 @@
+body {
+    background-color: #4a4e69;
+    display: grid;
+    justify-content: stretch;
+}
+
+.schemaName {
+    margin-left: 40px;
+}
+
+.container {
+    background-color: #4a4e69;
+    display: grid;
+    grid-template-columns: 70% auto;
+    margin-left: 30px;
+    margin-right: 30px;
+}
+
+.form {
+    background-color: white;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    margin: 10px;
+}
+
+.optionsKey {
+    background-color: white;
+    margin: 10px;
+}
+
+.submit {
+    grid-column-start: 2;
+    grid-column-end: 3;
+}
