@@ -15,7 +15,8 @@ class Dashboard extends Component {
             key: '',
             type: '',
             options: {
-              required: false
+              required: false,
+              unique: false
             }
           }
         ]
@@ -28,6 +29,7 @@ class Dashboard extends Component {
     this.updateRow = this.updateRow.bind(this);
     this.deleteRow = this.deleteRow.bind(this);
     this.handleChangeRequired = this.handleChangeRequired.bind(this);
+    this.handleChangeUnique = this.handleChangeUnique.bind(this);
     this.handleChangeKey = this.handleChangeKey.bind(this);
     this.handleChangeType = this.handleChangeType.bind(this);
     this.handleSaveSchema = this.handleSaveSchema.bind(this);
@@ -39,10 +41,21 @@ class Dashboard extends Component {
     // don't display it on page
     // need textarea to copy to clipboard
     let copyText = document.createElement('textarea');
+<<<<<<< HEAD
     copyText.innerHTML = this.state.result;
     document.body.appendChild(copyText);
     console.log('Dashboard => handleCopySchema => copyText', copyText);
     
+=======
+    copyText.value = this.state.result;
+    document.body.appendChild(copyText);
+    console.log('Dashboard => handleCopySchema => copyText', copyText);
+
+    copyText.select();
+    document.execCommand('copy');
+    copyText.setAttribute('id', 'hideThis');
+
+>>>>>>> dev
     // show message to the client
     let clipboardMessage = document.querySelector('.clipboard-message');
     clipboardMessage.innerText = 'Copied';
@@ -143,6 +156,17 @@ class Dashboard extends Component {
     return this.setState({ schema });
   }
 
+  handleChangeUnique(event, rowIndex) {
+    let schema = Object.assign({}, this.state.schema);
+    let { rows } = schema;
+    console.log(
+      'Dashboard => handleChangeUnique => event.target',
+      event.target.checked
+    );
+    rows[rowIndex].options.unique = event.target.checked;
+    return this.setState({ schema });
+  }
+
   handleChangeKey(event, rowIndex) {
     let schema = Object.assign({}, this.state.schema);
     let { rows } = schema;
@@ -174,6 +198,7 @@ class Dashboard extends Component {
           rowIndex={i}
           deleteRow={this.deleteRow}
           handleChangeRequired={this.handleChangeRequired}
+          handleChangeUnique={this.handleChangeUnique}
           handleChangeKey={this.handleChangeKey}
           handleChangeType={this.handleChangeType}
           rowData={this.state.schema.rows[i]}
@@ -199,6 +224,7 @@ class Dashboard extends Component {
             <p>Key</p>
             <p>Type</p>
             <p>Required</p>
+            <p>Unique</p>
             <p>Delete</p>
           </div>
           <br />
@@ -210,7 +236,7 @@ class Dashboard extends Component {
             <button>Schema 4</button><br/>
             <button>Schema 5</button>
           </div>
-          <div>
+          <div className="buttons">
             <button
               className='submit'
               onClick={() => this.handleCreateSchema(this.state.schema)}
