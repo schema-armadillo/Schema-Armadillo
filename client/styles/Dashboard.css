@@ -1,35 +1,73 @@
 body {
-    background-color: #4a4e69;
-    display: grid;
-    justify-content: stretch;
+  font-family: 'Optima';
+  background-color: #4a4e69;
+  display: grid;
+  justify-content: stretch;
 }
 
 .schemaName {
-    margin-left: 40px;
+  color: #fff;
+
+  font-size: 20px;
+  margin-left: 40px;
+}
+
+.schemaName input[type='text'] {
+  height: 31px;
+  font-size: 20px;
 }
 
 .container {
-    background-color: #4a4e69;
-    display: grid;
-    grid-template-columns: 70% auto;
-    margin-left: 30px;
-    margin-right: 30px;
+  background-color: #4a4e69;
+  display: grid;
+  grid-template-columns: 70% auto;
+  margin-left: 30px;
+  margin-right: 30px;
+  margin-top: 30px;
+}
+.container .headers {
+  color: white;
+  font-style: bold;
+  margin: 0 10px 0 10px;
+  font-family: 'Optima';
+  font-size: 20px;
+  display: grid;
+  grid-template-columns: auto 20% 15% 15%;
 }
 
+.container .headers p {
+  /* background-color: rgb(21, 76, 143); */
+  margin: 5px;
+  /* border-style: solid;
+  border-width: thin; */
+}
 .form {
-    background-color: white;
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-start;
-    margin: 10px;
+  background-color: white;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  margin: 10px;
 }
 
 .optionsKey {
-    background-color: white;
-    margin: 10px;
+  background-color: white;
+  margin: 10px;
 }
 
 .submit {
-    grid-column-start: 2;
-    grid-column-end: 3;
+  grid-column-start: 2;
+  grid-column-end: 3;
+}
+
+button {
+  font-size: 20px;
+}
+
+code {
+  color: white;
+  font-size: 20px;
+}
+
+pre {
+  margin: 30px;
 }
