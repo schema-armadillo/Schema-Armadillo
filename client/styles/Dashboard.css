@@ -75,7 +75,6 @@ pre {
 }
 
 pre {
-<<<<<<< HEAD
   margin: 30px;
  
 }
@@ -92,9 +91,6 @@ pre code {
   margin: 0px 10px 0px 0px;
 }
 
-=======
-  cursor: pointer;
-}
 
 pre:hover {
   background-color: rgb(116, 129, 172);
@@ -129,4 +125,3 @@ pre:hover {
     opacity: 1;
   }
 } */
->>>>>>> dev
