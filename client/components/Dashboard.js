@@ -168,7 +168,11 @@ class Dashboard extends Component {
           <br />
           <div className='form'>{rows}</div>
           <div className='optionsKey'>
-            <h5>Options Key</h5>
+            <button>Schema 1</button><br/>
+            <button>Schema 2</button><br/>
+            <button>Schema 3</button><br/>
+            <button>Schema 4</button><br/>
+            <button>Schema 5</button>
           </div>
           <div>
             <button
