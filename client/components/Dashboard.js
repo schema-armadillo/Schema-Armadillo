@@ -30,8 +30,20 @@ class Dashboard extends Component {
     this.handleChangeRequired = this.handleChangeRequired.bind(this);
     this.handleChangeKey = this.handleChangeKey.bind(this);
     this.handleChangeType = this.handleChangeType.bind(this);
+    this.handleSaveSchema = this.handleSaveSchema.bind(this);
   }
 
+  handleSaveSchema() {
+    fetch('/api/schema', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(this.state.schema)
+    })
+      .then(data => data.json())
+      .then(result => console.log(result));
+  }
   handleCreateSchema(state) {
     // check if schemaname is filled out
     if (this.state.schema.schemaName.trim() === '') {
@@ -185,6 +197,9 @@ class Dashboard extends Component {
         <pre>
           <code>{this.state.result}</code>
         </pre>
+        <button className='saveButton' onClick={this.handleSaveSchema}>
+          Save
+        </button>
       </div>
     );
   }
