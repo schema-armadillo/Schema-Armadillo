@@ -31,6 +31,22 @@ class Dashboard extends Component {
     this.handleChangeKey = this.handleChangeKey.bind(this);
     this.handleChangeType = this.handleChangeType.bind(this);
     this.handleSaveSchema = this.handleSaveSchema.bind(this);
+    this.handleCopySchema = this.handleCopySchema.bind(this);
+  }
+  handleCopySchema() {
+    this.state.result;
+
+    // create a fake element
+    // don't display it on page
+    // need textarea to copy to clipboard
+    let copyText = document.createElement('textarea');
+    copyText.innerHTML = this.state.result;
+    copyText.setAttribute('id', 'hideThis');
+    document.body.appendChild(copyText);
+    console.log('Dashboard => handleCopySchema => copyText', copyText);
+
+    copyText.select();
+    document.execCommand('copy');
   }
 
   handleSaveSchema() {
@@ -197,6 +213,7 @@ class Dashboard extends Component {
         <pre>
           <code>{this.state.result}</code>
         </pre>
+
         <button className='saveButton' onClick={this.handleSaveSchema}>
           Save
         </button>
