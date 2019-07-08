@@ -26,17 +26,16 @@ const typeOptions = [
 class KeyValue extends Component {
   constructor(props) {
     super(props);
-    this.state = { selectedOption: null };
+    this.state = {
+      selectedOption: null,
+      value: '',
+      required: false
+    };
 
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleChangeKey = this.handleChangeKey.bind(this);
     this.handleInputChange = this.handleInputChange.bind(this);
-  }
-
-  handleChange(selectedOption) {
-    this.setState({ selectedOption });
-    console.log(`Option selected:`, selectedOption);
   }
 
   handleSubmit(event) {
