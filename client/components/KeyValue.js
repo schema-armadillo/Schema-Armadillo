@@ -45,7 +45,7 @@ class KeyValue extends Component {
 
     handleChange(selectedOption) {
         this.setState({ selectedOption });
-        console.log(`Option selected:`, selectedOption);
+        console.log(`Option selected:` , selectedOption);
     };
 
     handleChangeKey(event) {
@@ -61,26 +61,33 @@ class KeyValue extends Component {
         const { selectedOption } = this.state;
         return (
             <div className="rowDiv">
-                <form className="rowForm" onSubmit={this.handleSubmit} >
-                    <input className="key" type="text" placeholder="key" value={this.state.value} onChange={this.handleChangeKey} />
-                    <Select className="select"
-                        value={selectedOption}
-                        onChange={this.handleChange}
-                        options={typeOptions}
-                        isClearable='true'
-                        isSearchable='true'
-                        closeMenuOnSelect='true'
-                    />
-                    <label>
-                        Required
-                        <input
-                            name="required"
-                            type="checkbox"
-                            checked={this.state.required}
-                            onChange={this.handleInputChange} />
-                    </label>
-                    <input className="newRowButton" type="submit" value="new row" />
-                </form>
+               <table>
+                   <tr >
+                       <td>
+                            <form className="rowForm" onSubmit={this.handleSubmit} >                                                
+                                <input className="key" type="text" placeholder="key" value={this.state.value} onChange={this.handleChangeKey} />
+                                <Select className="select"
+                                    value={selectedOption}
+                                    onChange={this.handleChange}
+                                    options={typeOptions}
+                                    isClearable='true'
+                                    isSearchable='true'
+                                    closeMenuOnSelect='true' > 
+                                </Select>                                   
+                                                                
+                                <label>
+                                        Required
+                                        <input
+                                            name="required"
+                                            type="checkbox"
+                                            //checked={this.state.required}
+                                            onChange={this.handleInputChange} />
+                                    </label>
+                                    <input className="newRowButton" type="submit" value="new row" />
+                            </form>
+                     </td>  
+                </tr>
+                </table>
             </div>
         );
     }
