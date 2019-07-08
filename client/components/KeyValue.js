@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import ".././styles/Dashboard.css";
+import ".././styles/KeyValue.css";
 import { hot } from "react-hot-loader";
 import { Route, Link, BrowserRouter as Router, Redirect } from "react-router-dom";
 import styled from 'styled-components'
@@ -22,15 +22,24 @@ class KeyValue extends Component {
 
     constructor(props) {
         super(props);
-        this.state = { selectedOption: null };
+        this.state = {
+            selectedOption: null,
+            value: '',
+            required: false,
+        };
 
         this.handleChange = this.handleChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
+        this.handleChangeKey = this.handleChangeKey.bind(this);
+        this.handleInputChange = this.handleInputChange.bind(this)
     }
 
 
     handleSubmit(event) {
-        console.log('A form was submitted:');
+        console.log('state on submit ', this.state)
+        this.props.updateRow(this.state.value, this.state.selectedOption.label, this.state.required)
+        this.props.newRow();
+        console.log('handle submit ', this.props.rows)
         event.preventDefault();
     }
 
@@ -39,13 +48,22 @@ class KeyValue extends Component {
         console.log(`Option selected:`, selectedOption);
     };
 
+    handleChangeKey(event) {
+        this.setState({ value: event.target.value })
+    }
+
+    handleInputChange(event) {
+        this.setState({ required: true })
+    }
+
     render() {
+        console.log('rendering row ', this.props.rows)
         const { selectedOption } = this.state;
         return (
-            <div>
-                <form onSubmit={this.handleSubmit}>
-                    <input className="key" type="text" placeholder="key" />
-                    <Select
+            <div className="rowDiv">
+                <form className="rowForm" onSubmit={this.handleSubmit} >
+                    <input className="key" type="text" placeholder="key" value={this.state.value} onChange={this.handleChangeKey} />
+                    <Select className="select"
                         value={selectedOption}
                         onChange={this.handleChange}
                         options={typeOptions}
@@ -53,25 +71,15 @@ class KeyValue extends Component {
                         isSearchable='true'
                         closeMenuOnSelect='true'
                     />
-                    {/* <select className="typeDrop">
-                        <option value="string">String</option>
-                        <option value="number">Number</option>
-                        <option value="date">Date</option>
-                        <option value="buffer">Buffer</option>
-                        <option value="boolean">Boolean</option>
-                        <option value="mixed">Mixed</option>
-                        <option value="objectID">ObjectID</option>
-                        <option value="array">Array</option>
-                        <option value="decimal128">Decimal128</option>
-                        <option value="map">Map</option>
-                    </select> */}
                     <label>
                         Required
                         <input
                             name="required"
-                            type="checkbox" />
+                            type="checkbox"
+                            checked={this.state.required}
+                            onChange={this.handleInputChange} />
                     </label>
-                    <input className="save" type="submit" value="save key" />
+                    <input className="newRowButton" type="submit" value="new row" />
                 </form>
             </div>
         );
