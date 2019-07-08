@@ -6,7 +6,7 @@
   "scripts": {
     "start": "nodemon server/server.js",
     "build": "webpack --mode production",
-    "dev": "webpack-dev-server --mode development --open & node server/server.js",
+    "dev": "webpack-dev-server --mode development --open & nodemon server/server.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -34,9 +34,11 @@
     "webpack-dev-server": "^3.7.2"
   },
   "dependencies": {
+    "bcrypt": "^3.0.6",
     "body-parser": "^1.19.0",
     "cors": "^2.8.5",
     "express": "^4.17.1",
+    "jsonwebtoken": "^8.5.1",
     "nodemon": "^1.19.1",
     "path": "^0.12.7",
     "pg": "^7.11.0",

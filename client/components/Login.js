@@ -1,35 +1,47 @@
 import React, { Component } from 'react';
-import '.././styles/Login.css';
+
+import '../styles/Login.css';
+import { hot } from 'react-hot-loader';
+import {
+  Route, Link, BrowserRouter as Router, Redirect,
+} from 'react-router-dom';
+
 import styled from 'styled-components';
 import armadillo from '../Armadillo-icon.jpg';
 
 const Form = styled.form`
-  display: flex;
-  flex-direction: column;
-  height: 450px;
-  padding-top: 150px;
-  align-items: center;
-`;
+
+    display: flex;
+    flex-direction: column;
+    height: 450px;
+    padding-top: 150px;
+    align-items: center;
+    `;
 
 const Input = styled.input`
-  width: 375px;
-  height: 50px;
-  margin: 30px;
-  padding: 10px;
+    width: 375px;
+    height: 50px;
+    margin: 30px;
+    padding: 10px;
 `;
+
+
 
 class Login extends Component {
   constructor(props) {
     super(props);
     this.state = {
       email: '',
-      password: ''
+
+      password: '',
+
     };
 
     this.handleChangeEmail = this.handleChangeEmail.bind(this);
     this.handleChangePassword = this.handleChangePassword.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
   }
+
 
   handleChangeEmail(event) {
     console.log(event.target.value);
@@ -41,18 +53,21 @@ class Login extends Component {
   }
 
   handleSubmit(event) {
-    console.log('A login was submitted: ' + this.state.email);
-    console.log('A login was submitted: ' + this.state.password);
+
+    console.log(`A login was submitted: ${this.state.email}`);
+    console.log(`A login was submitted: ${this.state.password}`);
     event.preventDefault();
-    fetch('/test', {
+    // NOTE: THE URL IS CURRENTLY SET FOR LOGIN, NOT CREATE
+    fetch('/auth/login', {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
       },
-      body: JSON.stringify(this.state)
+      body: JSON.stringify(this.state),
     })
       .then(data => data.json())
-      .then(obj => {
+      .then((obj) => {
+
         console.log(obj);
         this.history.pushState(null, obj.redirecturl);
       })
@@ -61,6 +76,7 @@ class Login extends Component {
 
   render() {
     return (
+
       <div className='container'>
         <div>
           <Form className='signupForm' onSubmit={this.handleSubmit}>
@@ -97,6 +113,7 @@ class Login extends Component {
               onChange={this.handleChangePassword}
             />
             <input className='loginButton' type='submit' value='Giddy-up!' />
+
           </Form>
         </div>
       </div>
