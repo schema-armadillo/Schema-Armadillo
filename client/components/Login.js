@@ -72,9 +72,9 @@ class Login extends Component {
     console.log(`A login was submitted: ${this.state.loginPassword}`);
     event.preventDefault();
 
-    const {loginEmail: email, loginPassword: password} = this.state;
-    const loginBody = {email, password};
-  
+    const { loginEmail: email, loginPassword: password } = this.state;
+    const loginBody = { email, password };
+
     fetch('/auth/login', {
       method: 'POST',
       headers: {
@@ -82,12 +82,17 @@ class Login extends Component {
       },
       body: JSON.stringify(loginBody),
     })
-      .then(data => data.json())
+      .then(res => {
+        console.log(res.status);
+        if (res.status === 401) {
+          throw new Error('Invalid credentials. Please try again.');
+        } else return res.json();
+      })
       .then((obj) => {
 
         alert('Welcome.')
         console.log(obj);
-        
+
       })
       .catch(err => {
         alert('Invalid credentials. Please try again.')
@@ -103,9 +108,9 @@ class Login extends Component {
     console.log(`A login was submitted: ${this.state.signupPassword}`);
     event.preventDefault();
 
-    const {signupEmail: email, signupPassword: password} = this.state;
-    const signupBody = {email, password};
-    
+    const { signupEmail: email, signupPassword: password } = this.state;
+    const signupBody = { email, password };
+
     fetch('/auth/create', {
       method: 'POST',
       headers: {

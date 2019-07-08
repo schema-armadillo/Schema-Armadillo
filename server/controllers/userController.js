@@ -6,7 +6,7 @@ const createToken = user => jwt.sign({ user }, 'secretkey', { expiresIn: 60 * 60
 
 const userController = {
   createUser: (req, res, next) => {
-    const { email:username, password } = req.body;
+    const { email: username, password } = req.body;
     bcrypt.hash(password, 10, (err, hashResponse) => {
       if (err) {
         return res.status(500).send('error encrypting pw');
@@ -22,7 +22,7 @@ const userController = {
     .then((data) => {
       console.log('some data: ', data);
       // THIS NEEDS TO CHANGE, IT'S ALL THE DATA
-      res.locals.data = {username: data.rows[0].username, user_id:data.rows[0].user_id};
+      res.locals.data = { username: data.rows[0].username, user_id: data.rows[0].user_id };
       return next();
     })
     .catch((err) => {
@@ -37,7 +37,8 @@ const userController = {
     pool.query(`SELECT * FROM users WHERE username = '${username}'`)
       .then((data) => {
         console.log('data rows:\n\n', data.rows[0]);
-        return data.rows[0];
+        if (data.rows[0] === undefined) { res.status(401).send('Unable to login.'); }
+        else return data.rows[0];
       })
       .then((userFound) => {
         console.log('user has been found: ', userFound);
@@ -48,14 +49,14 @@ const userController = {
           }
           if (result) {
             console.log('result is true');
-            res.locals.data = {username: userFound.username, user_id: userFound.user_id}
+            res.locals.data = { username: userFound.username, user_id: userFound.user_id }
             return next();
             // res.cookie('new', createToken(result));
             // return res.status(200).send('success');
           }
 
           console.log('there is an error, after brcyprt process');
-          return res.status(200).send('Unable to login.');
+          return res.status(401).send('Unable to login.');
         });
       })
       .catch(err => res.status(500).send(err));
