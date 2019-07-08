@@ -1,10 +1,11 @@
-const Pool = require('pg').Pool;
+const { Pool } = require('pg');
+
 const pool = new Pool({
   user: 'armadillo',
   host: 'localhost',
   database: 'schema-armadillo',
   password: 'pink',
-  port: 5432
+  port: 5432,
 });
 
 // !!!!!! IMPORTANT: PW NEEDS TO BE LONGER
@@ -13,7 +14,7 @@ pool.query(
   (err, result) => {
     if (err) return console.error(err);
     console.log('CREATE TABLE users', result);
-  }
+  },
 );
 
 module.exports = pool;
