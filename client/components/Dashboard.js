@@ -47,7 +47,7 @@ class Dashboard extends Component {
 
     copyText.select();
     document.execCommand('copy');
-    copyText.setAttribute('id', 'hideThis');
+     copyText.setAttribute('id', 'hideThis');
 
     // show message to the client
     let clipboardMessage = document.querySelector('.clipboard-message');
