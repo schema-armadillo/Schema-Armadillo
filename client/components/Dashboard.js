@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import '.././styles/Dashboard.css';
 import KeyValue from './KeyValue';
 import schemaGenerator from '../../utils/modelCodeMaker2';
+import LogoutButton from './LogoutButton'
 
 class Dashboard extends Component {
   constructor(props) {
@@ -190,6 +191,9 @@ class Dashboard extends Component {
 
     return (
       <div>
+        {/* <button id='logout-button' onClick={this.props.deleteCookie}>Logout</button> */}
+        <LogoutButton />
+
         <div className='schemaName'>
           <input
             type='text'
@@ -229,6 +233,7 @@ class Dashboard extends Component {
         <button className='saveButton' onClick={this.handleSaveSchema}>
           Save
         </button>
+        
         <pre onClick={this.handleCopySchema}>
           <div className='clipboard-message' />
           <code>{this.state.result}</code>
