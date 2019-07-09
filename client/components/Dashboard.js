@@ -36,18 +36,16 @@ class Dashboard extends Component {
     this.handleCopySchema = this.handleCopySchema.bind(this);
   }
   handleCopySchema() {
-    console.log('Dashboard.js => handleCopySchema => this.state.result', this.state.result)
     // create a fake element
-    // don't display it on page
     // need textarea to copy to clipboard
     let copyText = document.createElement('textarea');
     copyText.value = this.state.result;
     document.body.appendChild(copyText);
-    console.log('Dashboard => handleCopySchema => copyText', copyText);
 
+    // delete afterwards
     copyText.select();
     document.execCommand('copy');
-     copyText.setAttribute('id', 'hideThis');
+    copyText.remove();
 
     // show message to the client
     let clipboardMessage = document.querySelector('.clipboard-message');
@@ -67,8 +65,7 @@ class Dashboard extends Component {
       },
       body: JSON.stringify(this.state.schema)
     })
-      .then(data => data.json())
-      .then(result => console.log(result));
+      .then(data => data.json());
   }
 
   handleCreateSchema(state) {
@@ -100,7 +97,6 @@ class Dashboard extends Component {
   createRow() {
     let schema = Object.assign({}, this.state.schema);
     let { rows } = schema;
-    console.log('Dashboard => createRow => this.state.schema.rows', rows);
     rows.push({
       key: '',
       type: '',
@@ -118,14 +114,12 @@ class Dashboard extends Component {
       if (index === rowIndex) return false;
       return true;
     });
-    console.log('Dashboard => deleteRow => rows', rows);
     this.setState({ schema });
   }
 
   updateRow(key, type, required) {
     let schema = Object.assign({}, this.state.schema);
     let { rows } = schema;
-    console.log('Dashboard => updateRow => this.state.schema.rows', rows);
 
     rows[rows.length - 1] = {
       key,
@@ -138,10 +132,6 @@ class Dashboard extends Component {
   handleChangeRequired(event, rowIndex) {
     let schema = Object.assign({}, this.state.schema);
     let { rows } = schema;
-    console.log(
-      'Dashboard => handleChangeRequired => event.target',
-      event.target.checked
-    );
     rows[rowIndex].options.required = event.target.checked;
     return this.setState({ schema });
   }
@@ -149,10 +139,6 @@ class Dashboard extends Component {
   handleChangeUnique(event, rowIndex) {
     let schema = Object.assign({}, this.state.schema);
     let { rows } = schema;
-    console.log(
-      'Dashboard => handleChangeUnique => event.target',
-      event.target.checked
-    );
     rows[rowIndex].options.unique = event.target.checked;
     return this.setState({ schema });
   }
@@ -175,11 +161,9 @@ class Dashboard extends Component {
     }
     rows[rowIndex].type = selectedOption.label;
     return this.setState({ schema });
-    // console.log(`Option selected:`, selectedOption.label);
   }
 
   render() {
-    console.log('Dashboard => this.state.schema', this.state.schema);
     let rows = [];
     for (let i = 0; i < this.state.schema.rows.length; i++) {
       rows.push(
@@ -246,9 +230,9 @@ class Dashboard extends Component {
           Save
         </button>
         <pre onClick={this.handleCopySchema}>
+          <div className='clipboard-message' />
           <code>{this.state.result}</code>
         </pre>
-        <div className='clipboard-message' />
       </div>
     );
   }

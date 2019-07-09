@@ -101,14 +101,14 @@ pre:hover {
 }
 
 .clipboard-message {
-  margin: 10px 0 0 30px;
   background-color: #4a4e69;
   color: white;
+  float: right;
 
   font-family: 'Optima';
   font-size: 20px;
   font-weight: bold;
-  width: 100px;
+  width: 100%;
   text-align: center;
 }
 /* 
