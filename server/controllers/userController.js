@@ -37,7 +37,7 @@ const userController = {
     pool.query(`SELECT * FROM users WHERE username = '${username}'`)
       .then((data) => {
         //console.log('data rows:\n\n', data.rows[0]);
-        
+
         //check the length of the row instead of undefined
         if (data.rows[0] === undefined) { return res.status(401).send('Unable to login.'); }
         else return data.rows[0];
@@ -52,7 +52,7 @@ const userController = {
           if (result) {
             console.log('result is true');
             res.locals.user_id = userFound.user_id;
-            res.locals.data = {user_id : userFound.user_id}
+            res.locals.data = { user_id: userFound.user_id }
             return next();
             // res.cookie('new', createToken(result));
             // return res.status(200).send('success');
@@ -69,20 +69,22 @@ const userController = {
     jwt.sign({ user_id: res.locals.data.user_id }, 'secretkey', { expiresIn: 60 * 60 }, (err, token) => {
       // sends back username, and user_id
       console.log('set jwt')
-      return res.cookie('ssid', token).status(200).json({user_id: 
-      res.locals.data.user_id, userSchema: res.locals.userSchema});
+      return res.cookie('ssid', token).status(200).json({
+        user_id:
+          res.locals.data.user_id, userSchema: res.locals.userSchema
+      });
       // need to create res.locals of user schema 
 
     });
   },
   //
   checkJwt: (req, res, next) => {
-    console.log('userController => checkJwt')
     const { ssid } = req.cookies;
-    console.log('looking for jwt');
     console.log(ssid);
     jwt.verify(ssid, 'secretkey', (err, result) => {
-      if (err) {return res.status(401).json({ isLoggedIn: false })}
+      if (err) {
+        return res.status(401).json({ isLoggedIn: false })
+      }
       res.locals.user_id = result.user_id;
       console.log('userController => checkJwt => result', result);
       next();
