@@ -92,7 +92,7 @@ const schemaController = {
       }
     );
   },
-  
+
   // gets one specific schema
   getSchema: (req, res, next) => {
     // expecting to receive user_id and schema_id from req.body
@@ -118,7 +118,7 @@ const schemaController = {
         console.error(err);
         return res.status(400).json({ error: 'error from getAllSchema' });
       }
-     //  console.log('schemaContorller => getAllSechama', result.rows);
+      //  console.log('schemaContorller => getAllSechama', result.rows);
       // need to make data in a more workable format. currently a bigass array
 
       console.log('schemaController => getAllSchema => result', result)
