@@ -1,16 +1,30 @@
 import * as types from "../constants/types";
 
-const defaultState = {
-  rows: []
-};
+const defaultState = [
+  {
+    key:'',
+    type:'',
+    required:false,
+    unique:false,
+  },
+];
 
-export default (state, action) => {
+export default (state = defaultState, action) => {
+  let rows;
   switch (action.type) {
     case types.ADD_KEY:
-      action.payload;
-      return;
+      rows = state;
+      rows[rows.length]=action.payload;
+      return rows;
     case types.DELETE_KEY:
-      return;
+      rows = state.rows;
+      Object.keys(rows).forEach(row => {
+        if(row===action.payload.id){
+          delete rows[row];
+        }
+      })
+      totalRows = state.totalRows-1;
+      return { ...state, totalRows, rows};
     default:
       return { ...state };
   }

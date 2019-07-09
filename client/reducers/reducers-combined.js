@@ -4,7 +4,7 @@ import rowReducer from "./rowreducer";
 import { combineReducers } from "redux";
 
 const reducers = combineReducers({
-  row: rowReducer
+  row: rowReducer,
 });
 
 export default reducers;
