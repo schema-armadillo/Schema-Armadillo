@@ -28,8 +28,8 @@ const userController = {
       console.log('some data: ', data);
       // THIS NEEDS TO CHANGE, IT'S ALL THE DATA
       ////// res.locals.data = { username: data.rows[0].username, user_id: data.rows[0].user_id };
-      res.locals.user_idFromDB = data.rows[0].user_id;
-      res.locals.usernameFromDB = data.rows[0].username;
+      res.locals.user_id = data.rows[0].user_id;
+      res.locals.username = data.rows[0].username;
 
       return next();
     })
@@ -58,7 +58,7 @@ const userController = {
           }
           if (result) {
             console.log('result is true');
-            res.locals.user_idFromDB = userFound.user_id;
+            res.locals.user_id = userFound.user_id;
             return next();
           }
           // change to incorrect password
@@ -70,7 +70,7 @@ const userController = {
   },
   setJwt: (req, res) => {
     console.log('inside of set jwt');
-    jwt.sign({ user_id: res.locals.user_idFromDB }, 'secretkey', { expiresIn: 60 * 60 }, (err, token) => {
+    jwt.sign({ user_id: res.locals.user_id }, 'secretkey', { expiresIn: 60 * 60 }, (err, token) => {
 
       // sends back username, and user_id
       console.log('set jwt')

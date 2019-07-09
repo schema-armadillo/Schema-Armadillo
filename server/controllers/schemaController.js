@@ -116,7 +116,7 @@ const schemaController = {
     );
   },
   getAllSchema: (req, res, next) => {
-    const { user_idFromDB } = res.locals.data;
+    const { user_id } = res.locals;
 
     pool.query(`CREATE TABLE IF NOT EXISTS Schema_IDs (schema_id SERIAL PRIMARY KEY, schema_name VARCHAR(50), user_id INT)`, (err, result) => {
       if (err) {
