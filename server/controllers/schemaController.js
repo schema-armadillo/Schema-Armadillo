@@ -1,3 +1,7 @@
+///////////////////////////////////////////////////////////////
+// Backend: user_id should not be assigned to an object called data. Assign it directly to res.locals. Make sure everything that accesses user_id is adjusted. => => => DONE ///////////////////
+///////////////////////////////////////////////////////////////
+
 const pool = require('./database');
 
 const schemaController = {
@@ -112,7 +116,7 @@ const schemaController = {
     );
   },
   getAllSchema: (req, res, next) => {
-    const { user_id } = res.locals.data;
+    const { user_idFromDB } = res.locals.data;
 
     pool.query(`CREATE TABLE IF NOT EXISTS Schema_IDs (schema_id SERIAL PRIMARY KEY, schema_name VARCHAR(50), user_id INT)`, (err, result) => {
       if (err) {

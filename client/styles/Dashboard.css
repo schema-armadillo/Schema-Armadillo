@@ -126,3 +126,8 @@ pre:hover {
     opacity: 1;
   }
 } */
+
+#logout-button{
+  float:right;
+  margin-right: 30px
+}
