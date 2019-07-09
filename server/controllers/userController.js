@@ -16,6 +16,7 @@ const userController = {
       return next();
     });
   },
+
   addUserToDB: (req, res, next) => pool.query(
     `INSERT INTO users (username, password) VALUES ('${res.locals.username}', '${res.locals.password}') RETURNING user_id, username`,
   )
@@ -26,8 +27,7 @@ const userController = {
       return next();
     })
     .catch((err) => {
-      console.log('error adding user to DB: ', err);
-      return res.status(500).send('Error creating user. PLease try again.');
+      return res.status(500).send('Error creating user. Please try again.');
     }),
 
   //  WHERE username = '${username}'

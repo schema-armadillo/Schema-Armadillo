@@ -129,7 +129,7 @@ class Login extends Component {
         console.log(obj);
         this.props.loginToggle(obj);
       })
-      .catch(err => console.log('login fetch err ', err));
+      .catch(alert("Username already taken"));
   }
 
   render() {
