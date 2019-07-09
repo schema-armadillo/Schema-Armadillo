@@ -58,6 +58,7 @@ class App extends Component {
 
   checkIfLoggedIn() {
     console.log('inside did mount func')
+    //checks the jwt
     fetch('/auth/verify', {method:'POST'})
       .then(data => data.json())
       .then(data => {
