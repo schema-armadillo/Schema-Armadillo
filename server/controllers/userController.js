@@ -14,7 +14,7 @@ const userController = {
       res.locals.username = username;
       res.locals.password = hashResponse;
       return next();
-    });
+    })
   },
 
 
@@ -74,7 +74,7 @@ const userController = {
     });
   },
 
-  
+
   checkJwt: (req, res, next) => {
     console.log('userController => checkJwt')
     const { ssid } = req.cookies;
