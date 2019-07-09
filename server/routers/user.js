@@ -1,11 +1,9 @@
 const express = require('express');
 
 const router = express.Router();
-const jwt = require('jsonwebtoken');
-const bcrypt = require('bcrypt');
+
 const userController = require('../controllers/userController');
 const schemaController = require('../controllers/schemaController')
-const pool = require('../controllers/database');
 
 // prefixed with /auth
 router.post('/login', userController.login, schemaController.getAllSchema, userController.setJwt);
