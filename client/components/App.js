@@ -1,4 +1,6 @@
 import React, { Component } from 'react';
+import Cookies from 'js-cookie';
+
 
 import '../styles/App.css';
 import { hot } from 'react-hot-loader';
@@ -13,13 +15,13 @@ import {
 import Login from './Login';
 import Dashboard from './Dashboard';
 
-const route = (isLogged, loginToggle, getUserSchemaArr, userSchemaArr) => {
+const route = (isLogged, loginToggle, getUserSchemaArr, userSchemaArr, deleteCookie) => {
   return (<Switch>
 
     <Route exact path="/" render={() => (isLogged ? <Dashboard userSchemaArr={userSchemaArr}/> : <Redirect to="/login" />)} />
     <Route path="/login" render={() => (isLogged ? <Redirect to="/dashboard" /> : <Login isLoggedIn={isLogged} loginToggle={loginToggle} getUserSchemaArr={getUserSchemaArr}/>)}/>
     <Route path="/signup" render={() => (isLogged ? <Redirect to="/dashboard" /> : <Login isLoggedIn={isLogged} loginToggle={loginToggle} getUserSchemaArr={getUserSchemaArr}/>)}/>
-    <Route path="/dashboard" render={() => (isLogged ? <Dashboard userSchemaArr={userSchemaArr}/> : <Redirect to="/login" />)} />
+    <Route path="/dashboard" render={() => (isLogged ? <Dashboard userSchemaArr={userSchemaArr} deleteCookie={deleteCookie}/> : <Redirect to="/login" />)} />
     <Route path="/myschema" />
 
   </Switch>)
@@ -75,12 +77,13 @@ class App extends Component {
     console.log('component mounting, about to check jwt');
     this.checkIfLoggedIn();
   }
+  
 
   render() {
     return (
       <Router>
         {/* invoke route with isLogged */}
-        {route(this.state.isLogged, this.toggleLoggedIn, this.getUserSchemaArr, this.state.userSchemaArr)}
+        {route(this.state.isLogged, this.toggleLoggedIn, this.getUserSchemaArr, this.state.userSchemaArr, this.deleteCookie)}
       </Router>
     );
   }
