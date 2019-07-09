@@ -1,7 +1,5 @@
 # Schema-Armadillo
 
-by Uggmasters
-
 An application that maps out your Mongoose Schema.
 
 NEED TO CREATE A DATABASE IN YOUR LOCAL SERVER BEFORE RUNNING THE PROGRAM

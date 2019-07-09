@@ -112,7 +112,8 @@ const schemaController = {
     );
   },
   getAllSchema: (req, res, next) => {
-    const { user_id } = res.locals;
+  
+    const { user_id } = res.locals.data;
     pool.query(`SELECT * FROM schema_ids WHERE user_id='${user_id}'`, (err, result) => {
       if (err) {
         console.error(err);
