@@ -16,4 +16,6 @@ router.post('/verify', userController.checkJwt, (req, res) => {
     return res.status(200).json({ isLoggedIn: true })
 })
 
+router.post('/googleAuth', (req, res) => res.status(200).send("GOOGLE AUTH PAGE"))
+
 module.exports = router;
