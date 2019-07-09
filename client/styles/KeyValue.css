@@ -1,0 +1,33 @@
+.rowDiv {
+  margin: 5px;
+  font-family: 'Optima';
+  font-size: 18px;
+}
+.rowForm {
+  display: grid;
+  grid-template-columns: 45% 20% 7% 7% 15%;
+}
+
+input[type='checkbox'] {
+  transform: scale(2);
+  padding: 20px;
+}
+
+.checkbox {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+}
+
+.type,
+.checkbox,
+.key,
+.select {
+  margin-right: 15px;
+}
+
+.key {
+  font-size: 18px;
+  height: 31px;
+}
