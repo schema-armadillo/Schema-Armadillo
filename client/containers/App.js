@@ -19,7 +19,7 @@ const mapStateToProps = store => ({
   rows: store.rows
 });
 const mapDispatchToProps = dispatch => ({
-  addRow: () => dispatch(addRow)
+  addRow: () => dispatch(addRow())
 });
 
 const route = (isLogged, loginToggle, getUserSchemaArr, userSchemaArr) => {

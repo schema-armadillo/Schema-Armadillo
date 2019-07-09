@@ -2,6 +2,16 @@ import React, { Component } from "react";
 import ".././styles/Dashboard.css";
 import KeyValue from "../components/KeyValue";
 import schemaGenerator from "../../utils/modelCodeMaker2";
+import { connect } from 'react-redux';
+import { addRow, deleteRow } from '../actions/actions'
+
+const mapStateToProps = store => ({
+  myrows: store.row,
+});
+const mapDispatchToProps = dispatch => ({
+  addRow: () => dispatch(addRow()),
+  deleteRow:() => dispatch(deleteRow())
+});
 
 class Dashboard extends Component {
   constructor(props) {
@@ -10,16 +20,12 @@ class Dashboard extends Component {
       result: "",
       schema: {
         schemaName: "",
-        rows: [
-          {
-            key: "",
-            type: "",
-            options: {
-              required: false,
-              unique: false
-            }
-          }
-        ]
+        rows: [{
+          key: '',
+          type: '',
+          required: false,
+          unique: false,
+        }],
       }
     };
 
@@ -101,25 +107,26 @@ class Dashboard extends Component {
 
   createRow() {
     let schema = Object.assign({}, this.state.schema);
-    let { rows } = schema;
-    console.log("Dashboard => createRow => this.state.schema.rows", rows);
-    rows.push({
-      key: "",
-      type: "",
-      options: {
-        required: false
-      }
-    });
+    // let { rows } = schema;
+    // console.log("Dashboard => createRow => this.state.schema.rows", rows);
+    // rows.push({
+    //   key: "",
+    //   type: "",
+    //   required: false
+    // });
+    console.log(JSON.stringify(this.props.myrows),this.props.totalRows);
+    schema.rows = this.props.myrows;
     this.setState({ schema });
   }
 
   deleteRow(rowIndex) {
     let schema = Object.assign({}, this.state.schema);
-    let { rows } = schema;
-    schema.rows = rows.filter((el, index) => {
-      if (index === rowIndex) return false;
-      return true;
-    });
+    // let { rows } = schema;
+    // schema.rows = rows.filter((el, index) => {
+    //   if (index === rowIndex) return false;
+    //   return true;
+    // });
+    schema.rows = this.props.rows;
     console.log("Dashboard => deleteRow => rows", rows);
     this.setState({ schema });
   }
@@ -182,8 +189,10 @@ class Dashboard extends Component {
 
   render() {
     console.log("Dashboard => this.state.schema", this.state.schema);
+
     let rows = [];
-    for (let i = 0; i < this.state.schema.rows.length; i++) {
+    // console.log(this.totalRows);
+    for (let i = 0; i < this.props.totalRows; i++) {
       rows.push(
         <KeyValue
           key={"row" + i}
@@ -193,11 +202,11 @@ class Dashboard extends Component {
           handleChangeUnique={this.handleChangeUnique}
           handleChangeKey={this.handleChangeKey}
           handleChangeType={this.handleChangeType}
-          rowData={this.state.schema.rows[i]}
+          rowData={this.props.myrows[i]}
         />
       );
     }
-
+    //Object.values(this.props.rows[i])
     let schemaButtons = [];
     // for (let i=0; i<this.props.userSchemaArr; i++) {
     //   schemaButtons.push(<button>{}</button>)
@@ -237,7 +246,7 @@ class Dashboard extends Component {
             >
               Create Schema
             </button>
-            <button className="createrow" onClick={this.createRow}>
+            <button className="createrow" onClick={()=>{this.props.addRow();this.createRow();}}>
               Add a New Key
             </button>
           </div>
@@ -254,4 +263,4 @@ class Dashboard extends Component {
   }
 }
 
-export default Dashboard;
+export default connect(mapStateToProps,mapDispatchToProps)(Dashboard);

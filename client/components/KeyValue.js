@@ -48,7 +48,7 @@ const KeyValue = ({
           <input
             name='required'
             type='checkbox'
-            checked={rowData.options.required}
+            checked={rowData.required}
             onChange={e => handleChangeRequired(e, rowIndex)}
           />
         </label>
@@ -56,7 +56,7 @@ const KeyValue = ({
           <input
             name='unique'
             type='checkbox'
-            checked={rowData.options.unique}
+            checked={rowData.unique}
             onChange={e => handleChangeUnique(e, rowIndex)}
           />
         </label>
