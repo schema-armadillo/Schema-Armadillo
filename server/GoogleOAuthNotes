@@ -1,0 +1,8 @@
+heroku under avflinkette@gmail.com  Amanda Flink
+
+1) install heroku cli (https://devcenter.heroku.com/articles/heroku-cli)
+for mac:
+brew tap heroku/brew && brew install heroku
+
+2) heroku login
+
