@@ -7,6 +7,7 @@
     "start": "nodemon server/server.js",
     "build": "webpack --mode production",
     "dev": "webpack-dev-server --mode development --open & nodemon server/server.js",
+    "dev2": "concurrently \"nodemon server/server.js\" \"webpack-dev-server --open --mode development\"",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -25,6 +26,7 @@
     "@babel/preset-env": "^7.1.0",
     "@babel/preset-react": "^7.0.0",
     "babel-loader": "^8.0.6",
+    "concurrently": "^4.1.1",
     "css-loader": "^3.0.0",
     "file-loader": "^4.0.0",
     "hot-module-replacement": "^3.0.3",
