@@ -1,3 +1,7 @@
+///////////////////////////////////////////////////////////////
+// Backend: user_id should not be assigned to an object called data. Assign it directly to res.locals. Make sure everything that accesses user_id is adjusted. => => => DONE ///////////////////
+///////////////////////////////////////////////////////////////
+
 const pool = require('./database');
 
 const schemaController = {
@@ -113,8 +117,10 @@ const schemaController = {
   },
   getAllSchema: (req, res, next) => {
   
-    const { user_id } = res.locals.data;
-    pool.query(`SELECT * FROM schema_ids WHERE user_id='${user_id}'`, (err, result) => {
+    ////// const { user_id } = res.locals.data;
+    const { user_idFromDB } = res.locals;
+
+    pool.query(`SELECT * FROM schema_ids WHERE user_id='${user_idFromDB}'`, (err, result) => {
       if (err) {
         console.error(err);
         return res.status(400).json({ error: 'error from getAllSchema' });
