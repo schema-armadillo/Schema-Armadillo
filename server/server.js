@@ -39,7 +39,10 @@ app.post('/test', (req, res) => {
 // commenting these two routes since sophie and indra may not have database set up yet and it will give them an error
 // app.use('/user', user);
 // changed from user
-app.use('/auth', user);
+app.use('/auth', (req, res, next) => {
+  console.log('hit the server at /auth');
+  next();
+}, user);
 app.use('/api', schema);
 
 app.listen(port, () => {

@@ -6,6 +6,7 @@ const createToken = user => jwt.sign({ user }, 'secretkey', { expiresIn: 60 * 60
 
 const userController = {
   createUser: (req, res, next) => {
+    console.log('in createUser');
     const { email: username, password } = req.body;
     bcrypt.hash(password, 10, (err, hashResponse) => {
       if (err) {
