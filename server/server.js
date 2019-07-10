@@ -22,7 +22,7 @@ app.use(
 app.use(cookieParser());
 
 // create routers for separate endpoints
-app.get('*', (req, res) => {
+app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, '../client/index.html'));
   // res.send('hello')
 });
