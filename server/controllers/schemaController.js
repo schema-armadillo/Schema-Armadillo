@@ -4,20 +4,41 @@ const pool = require('./database');
 const schemaController = {
   createSchemaId: (req, res, next) => {
     // create schema_ids table if not already existing
+    const { schemaName } = req.body;
+    const { user_id } = res.locals;
     pool.query('CREATE TABLE IF NOT EXISTS schema_IDs (schema_id SERIAL PRIMARY KEY, schema_name VARCHAR(50), user_id INT)')
       .then(() => {
-        const { schemaName } = req.body;
-        const { user_id } = res.locals;
-
-        // insert new schema id into schema_ids table
-        return pool.query('INSERT INTO schema_IDs (user_id, schema_name) VALUES ($1, $2) RETURNING schema_id', [user_id, schemaName]);
+        // search for duplicate
+        return pool.query('SELECT schema_id FROM schema_IDS WHERE user_id=$1 AND schema_name=$2', [user_id, schemaName]);
       })
-      .then((insertResult) => {
-        res.locals.schema_id = insertResult.rows[0].schema_id;
-        return next();
+      .then(({ rows: dupes }) => {
+        // if the search result is empty, then there is no duplicate
+        if (!dupes.length) {
+          // insert new schema id into schema_ids table
+          pool.query('INSERT INTO schema_IDs (user_id, schema_name) VALUES ($1, $2) RETURNING schema_id', [user_id, schemaName])
+            .then((insertResult) => {
+              res.locals.schema_id = insertResult.rows[0].schema_id;
+              return next();
+            });
+        // update the schema instead
+        } else {
+          // remove all the current schemas before adding any new ones
+          const schemaDelete = pool.query('DELETE FROM schemas WHERE user_id=$1 AND schema_name=$2', [user_id, schemaName]);
+          const schemaIdDelete = pool.query('DELETE FROM schema_ids WHERE user_id=$1 AND schema_name=$2', [user_id, schemaName]);
+
+          return Promise.all([schemaDelete, schemaIdDelete])
+            .then(() => {
+              // insert new schema
+              pool.query('INSERT INTO schema_IDs (user_id, schema_name) VALUES ($1, $2) RETURNING schema_id', [user_id, schemaName])
+                .then((insertResult) => {
+                  res.locals.schema_id = insertResult.rows[0].schema_id;
+                  return next();
+                });
+            });
+        }
       })
       .catch((err) => {
-        console.error('error in creating schema_ids table');
+        console.error('error in creating new schema id');
         throw new Error(err);
       });
   },

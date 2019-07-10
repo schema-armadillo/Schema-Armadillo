@@ -81,6 +81,8 @@ class Dashboard extends Component {
       },
       body: JSON.stringify(this.state.schema)
     })
+      .then(data => data.json())
+      .then(console.log)
       .then(this.refreshSchemas);
   }
 
