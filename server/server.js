@@ -3,22 +3,18 @@ const express = require('express');
 const path = require('path');
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
-
 const cors = require('cors');
-const user = require('./routers/user');
 const schema = require('./routers/schema');
+const user = require('./routers/user');
 const google = require('./routers/google');
+const github = require('./routers/github');
 
 const app = express();
 const port = process.env.PORT || 3000;
 
 app.use(cors());
 app.use(bodyParser.json());
-app.use(
-  bodyParser.urlencoded({
-    extended: true
-  })
-);
+app.use(bodyParser.urlencoded({ extended: true }));
 
 app.use(cookieParser());
 
@@ -36,9 +32,6 @@ app.get('/', (req, res) => {
 });
 
 app.post('/test', (req, res) => {
-  console.log('posted to /test');
-  console.log(req.body);
-  // return res.status(200).redirect('/dashboard');
   return res
     .set('Content-Type', 'application/json')
     .status(200)
@@ -48,6 +41,7 @@ app.post('/test', (req, res) => {
 app.use('/auth', user);
 app.use('/api', schema);
 app.use('/google', google);
+app.use('/github', github);
 
 app.listen(port, () => {
   console.log(`Listening on port ${port}...`);

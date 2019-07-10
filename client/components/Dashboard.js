@@ -228,7 +228,10 @@ class Dashboard extends Component {
 
 
   render() {
+<<<<<<< HEAD
     // console.log('Dashboard => this.state.schema', this.state.schema);
+=======
+>>>>>>> dev
     let rows = [];
     for (let i = 0; i < this.state.schema.rows.length; i++) {
       rows.push(

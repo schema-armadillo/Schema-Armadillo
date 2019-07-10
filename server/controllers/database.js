@@ -14,7 +14,7 @@ pool.query(
   'CREATE TABLE IF NOT EXISTS users(user_id SERIAL PRIMARY KEY, username VARCHAR(50) UNIQUE, password VARCHAR(100), oauth VARCHAR(10))', //oauth will be null, github, or google
   (err, result) => {
     if (err) return console.error(err);
-    console.log('CREATE TABLE users', result);
+    // console.log('CREATE TABLE users', result);
   },
 );
 

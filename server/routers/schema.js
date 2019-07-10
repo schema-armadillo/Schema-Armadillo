@@ -5,10 +5,14 @@ const schemaController = require('../controllers/schemaController');
 const userController = require('../controllers/userController')
 
 // prefix with api
-console.log('routed to schema file');
 router.post('/schema', userController.checkJwt, schemaController.createSchemaId, schemaController.createSchema, (req, res) => {
+<<<<<<< HEAD
   let { schema_id, user_id, schema_name } = res.locals;
   res.status(200).json({ schema_id, user_id, schema_name });
+=======
+  let { schema_id } = res.locals;
+  res.status(200).json({ schema_id });
+>>>>>>> dev
 });
 router.delete('/schema', schemaController.deleteSchema);
 router.put('/schema', schemaController.updateSchema);
@@ -20,4 +24,3 @@ router.get('/schema/refresh', schemaController.refreshAllSchema)
 router.get('/schema/one', schemaController.getSchema)
 
 module.exports = router;
-
