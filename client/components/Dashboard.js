@@ -198,7 +198,7 @@ class Dashboard extends Component {
             rows={this.state.schema.rows}
           />
 
-          <SchemaStorage userSchemaArr={this.state.userSchemaArr} />
+          <SchemaStorage userSchemaArr={this.state.userSchemaArr} setKeyValueTable={this.setKeyValueTable} />
           <OptionButtons schema={this.state.schema} handleCreateSchema={this.handleCreateSchema} createRow={this.createRow} />
         </div>
 
