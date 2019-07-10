@@ -75,8 +75,7 @@ class Dashboard extends Component {
 
   getSchema(user_id, schema_id) {
     console.log('getSchema Dashboard user_id, schema_id ', user_id, schema_id)
-    const url = 'http//:localhost:3000/schema/one?user_id=' + user_id + '&schema_id=' + schema_id;
-    console.log('url with query string ', url);
+    const url = '/api/schema/one?user_id=' + user_id + '&schema_id=' + schema_id;
     fetch(url)
       .then(data => data.json())
       .then(result => console.log(result))

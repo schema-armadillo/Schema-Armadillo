@@ -1,4 +1,5 @@
 const pool = require('./database');
+const querystring = require('query-string')
 
 const schemaController = {
   createSchemaId: (req, res, next) => {
@@ -96,8 +97,8 @@ const schemaController = {
   // gets one specific schema
   getSchema: (req, res, next) => {
     // expecting to receive user_id and schema_id from req.body
-    // console.log('hi from get schema!')
-    console.log('getSchema req', req)
+    console.log('hi from get schema!')
+    console.log('getSchema req', req.data)
     const { user_id, schema_id } = req.params;
     console.log('in getSchema')
     console.log('getSchema user_id, schema_id ', user_id, schema_id)
