@@ -1,12 +1,17 @@
 import React, { Component } from 'react';
-import '.././styles/Dashboard.css';
-import KeyValue from './KeyValue';
+import '../styles/Dashboard.css';
 import schemaGenerator from '../../utils/modelCodeMaker2';
 import LogoutButton from './LogoutButton';
 import SchemaStorage from './SchemaStorage.jsx';
+import SchemaName from './SchemaName';
+import SchemaHeaders from './SchemaHeaders'
+import Rows from './Rows'
+import OptionButtons from './OptionButtons'
+import SaveButton from './SaveButton'
 import Select from 'react-select';
 
 
+const autoBind = require('auto-bind');
 
 class Dashboard extends Component {
   constructor(props) {
@@ -32,22 +37,11 @@ class Dashboard extends Component {
 
     this.refreshSchemas();
 
-    this.valueHolderFromSelect = this.valueHolderFromSelect.bind(this)
-    this.schemaListOptions = this.schemaListOptions.bind(this);
-    this.refreshSchemas = this.refreshSchemas.bind(this);
-    this.handleSchemaName = this.handleSchemaName.bind(this);
-    this.createRow = this.createRow.bind(this);
-    this.handleCreateSchema = this.handleCreateSchema.bind(this);
-    this.updateRow = this.updateRow.bind(this);
-    this.deleteRow = this.deleteRow.bind(this);
-    this.handleChangeRequired = this.handleChangeRequired.bind(this);
-    this.handleChangeUnique = this.handleChangeUnique.bind(this);
-    this.handleChangeKey = this.handleChangeKey.bind(this);
-    this.handleChangeType = this.handleChangeType.bind(this);
-    this.handleSaveSchema = this.handleSaveSchema.bind(this);
-    this.handleCopySchema = this.handleCopySchema.bind(this);
-    this.handleDeleteSchema = this.handleDeleteSchema.bind(this);
-    this.renderItem = this.renderItem.bind(this)
+    autoBind(this);
+  }
+
+  setKeyValueTable(schema) {
+    this.setState({ schema });
   }
 
   schemaListOptions() {
@@ -58,13 +52,6 @@ class Dashboard extends Component {
       newOptions.push( {label: schema_name, value: {schema_id, user_id}} )
     }
    return newOptions;
-  }
-
-  // holderVariableForDelete = null;
-  valueHolderFromSelect(obj){
-    console.log('in here')
-    let {schema_id, user_id} = obj;
-    glo
   }
 
   refreshSchemas() {
@@ -96,11 +83,10 @@ class Dashboard extends Component {
 
   }
 
-
   handleSaveSchema() {
-  if(this.state.schema.schemaName.length === 0){
-    return alert('Schema Name must be filled out')
-  }
+    if (this.state.schema.schemaName.length === 0) {
+      return alert('Schema Name must be filled out')
+    }
     fetch('/api/schema', {
       method: 'POST',
       headers: {
@@ -238,87 +224,42 @@ class Dashboard extends Component {
   }
 
   render() {
-    let rows = [];
-    for (let i = 0; i < this.state.schema.rows.length; i++) {
-      rows.push(
-        <KeyValue
-          key={'row' + i}
-          rowIndex={i}
-          deleteRow={this.deleteRow}
-          handleChangeRequired={this.handleChangeRequired}
-          handleChangeUnique={this.handleChangeUnique}
-          handleChangeKey={this.handleChangeKey}
-          handleChangeType={this.handleChangeType}
-          rowData={this.state.schema.rows[i]}
-        />
-      );
-    }
-
     return (
-      <div>
-        {/* <button id='logout-button' onClick={this.props.deleteCookie}>Logout</button> */}
+      <div id="dashboard">
         <LogoutButton />
+        <img id="armadillo" src="Armadillo-icon.png" alt="armadillo" />
+        <br />
+        <SchemaName schemaName={this.state.schema.schemaName} handleSchemaName={this.handleSchemaName} />
 
-        <div className='schemaName'>
-          <input
-            type='text'
-            value='Schema Name'
-            placeholder='Schema Name'
-            value={this.state.schema.schemaName}
-            onChange={this.handleSchemaName}
-          />
-          <br />
-        </div>
         <div className='container'>
-          {/* ADDED TABLE HEADS - SHOULD BE STYLED */}
-          <div className='headers'>
-            <p>Key</p>
-            <p>Type</p>
-            <p>Required</p>
-            <p>Unique</p>
-            <p>Delete</p>
-          </div>
+          <SchemaHeaders />
           <br />
-          <div className='form'>{rows}</div>
-          <SchemaStorage userSchemaArr={this.state.userSchemaArr} />
-          <div className="buttons">
-            <button
-              className="submit"
-              onClick={() => this.handleCreateSchema(this.state.schema)}
-              type="button"
-            >
-              Create Schema
-            </button>
-            <button
-              className='createrow'
-              onClick={this.createRow}
-              type="button"
-            >
-              Add a New Key
-            </button>
+          <Rows deleteRow={this.deleteRow}
+            handleChangeRequired={this.handleChangeRequired}
+            handleChangeUnique={this.handleChangeUnique}
+            handleChangeKey={this.handleChangeKey}
+            handleChangeType={this.handleChangeType}
+            rows={this.state.schema.rows}
+          />
+
+          <SchemaStorage userSchemaArr={this.state.userSchemaArr} setKeyValueTable={this.setKeyValueTable} />
+          <OptionButtons schema={this.state.schema} handleCreateSchema={this.handleCreateSchema} createRow={this.createRow} />
 {/* //////////////////////////////////////////////////////////////////////////////////////////// */}
-            <button
-              className="submit"
-              // should delete from database => refresh schema storage
-              onClick={() => this.handleDeleteSchema()}
-              type="button"
-            >
-              Delete
-            </button>
-{/* //////////////////////////////////////////////////////////////////////////////////////////// */}
-{/* //////////////////////////////////////////////////////////////////////////////////////////// */}
-            <Select options={this.schemaListOptions()} closeMenuOnSelect='true' onChange={e => this.setState({deleteThisSchema: e.value})} />
-{/* //////////////////////////////////////////////////////////////////////////////////////////// */}
-          </div>
-        </div>
-        <button
-          className='saveButton'
-          onClick={this.handleSaveSchema}
+      <button
+          className="submit"
+          // should delete from database => refresh schema storage
+          onClick={() => this.handleDeleteSchema()}
           type="button"
         >
-          Save
+          Delete
         </button>
+{/* //////////////////////////////////////////////////////////////////////////////////////////// */}
+{/* //////////////////////////////////////////////////////////////////////////////////////////// */}
+        <Select options={this.schemaListOptions()} closeMenuOnSelect='true' onChange={e => this.setState({deleteThisSchema: e.value})} />
+{/* //////////////////////////////////////////////////////////////////////////////////////////// */}
+        </div>
 
+        <SaveButton result={this.state.result} handleSaveSchema={this.handleSaveSchema} />
         <pre onClick={this.handleCopySchema}>
           <div className='clipboard-message' />
           <code>{this.state.result}</code>

@@ -20,26 +20,14 @@ app.use(
 
 app.use(cookieParser());
 
+app.use(express.static('img'));
+
 app.use('/auth', user);
 app.use('/api', schema);
 
-// create routers for separate endpoints
 app.get('/*', (req, res) => {
   res.sendFile(path.join(__dirname, '../client/index.html'));
-  // res.send('hello')
 });
-
-
-app.post('/test', (req, res) => {
-  console.log('posted to /test');
-  console.log(req.body);
-  // return res.status(200).redirect('/dashboard');
-  return res
-    .set('Content-Type', 'application/json')
-    .status(200)
-    .json({ success: true, redirecturl: '/dashboard' });
-});
-
 
 app.listen(port, () => {
   console.log(`Listening on port ${port}...`);

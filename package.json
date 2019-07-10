@@ -7,7 +7,7 @@
     "start": "nodemon server/server.js",
     "build": "webpack --mode production",
     "dev": "webpack-dev-server --mode development --open & nodemon server/server.js",
-    "dev2": "concurrently \"nodemon server/server.js\" \"webpack-dev-server --open --mode development\"",
+    "dev2": "concurrently \"set NODE_ENV=development& nodemon server/server.js\" \"webpack-dev-server --open --mode development\"",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -36,6 +36,7 @@
     "webpack-dev-server": "^3.7.2"
   },
   "dependencies": {
+    "auto-bind": "^2.1.0",
     "bcrypt": "^3.0.6",
     "body-parser": "^1.19.0",
     "bootstrap": "^4.3.1",
