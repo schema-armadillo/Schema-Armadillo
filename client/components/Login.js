@@ -132,6 +132,25 @@ class Login extends Component {
       .catch(err => console.log('login fetch err ', err));
   }
 
+  handleGoogleOAuth(event) {
+    console.log(`CLICKED THE GOOGLE AUTH BUTTON`);
+    event.preventDefault();
+    const metaData = {
+      'method': 'GET',
+      'Content-type': 'application/json',
+      'Accept': 'text/html'
+    }
+
+    fetch('/auth/googleInit', metaData)
+      .then(response => {
+        console.log("GOT RESPONSE", response);
+        window.location.pathname = '/auth/googleInit'
+      // <Redirect to='/auth/google-init' />
+      })
+      .catch(err => console.error(err))
+
+  }
+
   render() {
     return (
 
@@ -177,6 +196,9 @@ class Login extends Component {
             <input className='loginButton' type='submit' value='Giddy-up!' />
 
           </Form>
+        </div>
+        <div>
+          <button onClick={this.handleGoogleOAuth}>GOOGLE OAUTH</button>
         </div>
       </div>
     );

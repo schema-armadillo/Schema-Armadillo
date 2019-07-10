@@ -22,6 +22,15 @@ app.use(
 app.use(cookieParser());
 
 // create routers for separate endpoints
+
+if (process.env.NODE_ENV === 'production') {
+  // statically serve everything in the build folder on the route '/build'
+  app.use('/build', express.static(path.join(__dirname, '../build')));
+  // serve index.html on the root route '/'
+  app.get('/', (req, res) => {
+    res.sendFile(path.join(__dirname, '../client/index.html'));
+  });
+}
 app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, '../client/index.html'));
   // res.send('hello')
