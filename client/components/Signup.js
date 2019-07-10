@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
 
 import '../styles/Login.css'
-import {
-  Route, Link, BrowserRouter as Router, Redirect,
-} from 'react-router-dom';
+import { Redirect } from 'react-router-dom';
 
 import styled from 'styled-components';
+
+const autoBind = require('auto-bind');
 
 const Form = styled.form`
     box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
@@ -24,10 +24,7 @@ class Signup extends Component {
       redirectLogin: false,
     }
 
-    this.handleChangeSignupEmail = this.handleChangeSignupEmail.bind(this);
-    this.handleChangeSignupPassword = this.handleChangeSignupPassword.bind(this);
-    this.handleSignupSubmit = this.handleSignupSubmit.bind(this)
-    this.handleRedirectLogin = this.handleRedirectLogin.bind(this)
+    autoBind(this);
   }
 
   handleChangeSignupEmail(event) {
