@@ -98,21 +98,20 @@ const schemaController = {
 
   // gets one specific schema
   getSchema: (req, res, next) => {
-    // expecting to receive user_id and schema_id from req.body
-    const { user_id, schema_id } = req.body;
-    // query the table using user_id and schema_id
-    pool.query(
-      'SELECT * FROM Schemas WHERE user_id=$1 AND schema_id=$2',
-      [user_id, schema_id],
-      (err, result) => {
-        if (err) {
-          console.error(err);
-          return res.status(400).json({ error: 'error from getSchema' });
-        }
-        console.log('schemaController => getSchema', result.rows);
-        return res.status(200).json(result.rows);
+    const { ssid } = req.cookies;
+    const { schema_id } = req.params;
+
+    jwt.verify(ssid, 'secretkey', (err, result) => {
+      if (err) {
+        return res.status(401).json({ isLoggedIn: false })
       }
-    );
+      const { user_id } = result;
+
+      // query the table using user_id and schema_id
+      pool.query('SELECT * FROM Schemas WHERE user_id=$1 AND schema_id=$2', [user_id, schema_id])
+        .then(schemaInfo => res.status(200).json(schemaInfo.rows))
+        .catch(err => res.status(400).send(err));
+    });
   },
   getAllSchema: (req, res, next) => {
     const { user_id } = res.locals;
@@ -141,18 +140,15 @@ const schemaController = {
         if (err) {
           return res.status(401).json({ isLoggedIn: false })
         }
-        if (result) {
-          const { user_id } = result;
+        const { user_id } = result;
 
-          pool.query(`SELECT * FROM schema_ids WHERE user_id='${user_id}'`, (err1, result1) => {
-            if (err1) {
-              return res.status(400).json({ error: 'error from getAllSchema' });
-            }
-            return res.send(result1.rows);
-          });
-        }
-      })
-
+        pool.query(`SELECT * FROM schema_ids WHERE user_id='${user_id}'`, (err1, result1) => {
+          if (err1) {
+            return res.status(400).json({ error: 'error from getAllSchema' });
+          }
+          return res.send(result1.rows);
+        });
+      });
     }
   },
   updateSchema: (req, res, next) => {
