@@ -58,8 +58,6 @@ class App extends Component {
     // undefined check, handles create user
     if(result.userSchema !== undefined) result.userSchema.forEach(el => userSchemaArr.push(el));
     this.setState({isLogged: true, userSchemaArr});
-    // REVIEW THIS CODE HERE
-
     // this.setState({ isLogged: true });
     // console.log(this.state);
   }
