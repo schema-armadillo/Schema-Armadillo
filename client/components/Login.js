@@ -83,20 +83,12 @@ class Login extends Component {
       body: JSON.stringify(loginBody),
     })
       .then(res => {
-        console.log(res.status);
         if (res.status === 401) {
           throw new Error('Invalid credentials. Please try again.');
         } else return res.json();
       })
       .then((result) => {
-        alert('Welcome back.')
-        console.log('Login.js => handleLoginSubmit => rows',result);
-        
-        console.log('Login.js => handleLoginSubmit => loginToggle')
         this.props.loginToggle(result);
-        console.log('Login.js => handleLoginSubmit => getUserSchemaArr')
-        // this.props.getUserSchemaArr(result);
-
       })
       .catch(err => {
         console.error(err)
