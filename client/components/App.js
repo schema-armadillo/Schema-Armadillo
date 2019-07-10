@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 
 import '../styles/App.css';
 import { hot } from 'react-hot-loader';
-import { Route, Link, BrowserRouter as Router, Redirect, Switch} from 'react-router-dom';
+import { Route, Link, BrowserRouter as Router, Redirect, Switch } from 'react-router-dom';
 
 import Login from './Login';
 import Dashboard from './Dashboard';
@@ -10,17 +10,10 @@ import Dashboard from './Dashboard';
 const route = (isLogged, toggleLoggedIn, getUserSchemaArr, userSchemaArr) => {
   return (<Switch>
 
-<<<<<<< HEAD
-    <Route exact path="/" render={() => (isLogged ? <Dashboard userSchemaArr={userSchemaArr}/> : <Redirect to="/login" />)} />
-    <Route path="/login" render={() => (isLogged ? <Redirect to="/dashboard" /> : <Login isLoggedIn={isLogged} toggleLoggedIn={toggleLoggedIn} getUserSchemaArr={getUserSchemaArr}/>)}/>
-    <Route path="/signup" render={() => (isLogged ? <Redirect to="/dashboard" /> : <Login isLoggedIn={isLogged} toggleLoggedIn={toggleLoggedIn} getUserSchemaArr={getUserSchemaArr}/>)}/>
-    <Route path="/dashboard" render={() => (isLogged ? <Dashboard userSchemaArr={userSchemaArr}/> : <Redirect to="/login" />)} />
-=======
     <Route exact path="/" render={() => (isLogged ? <Dashboard userSchemaArr={userSchemaArr} /> : <Redirect to="/login" />)} />
-    <Route path="/login" render={() => (isLogged ? <Redirect to="/dashboard" /> : <Login isLoggedIn={isLogged} loginToggle={loginToggle} getUserSchemaArr={getUserSchemaArr} />)} />
-    <Route path="/signup" render={() => (isLogged ? <Redirect to="/dashboard" /> : <Login isLoggedIn={isLogged} loginToggle={loginToggle} getUserSchemaArr={getUserSchemaArr} />)} />
+    <Route path="/login" render={() => (isLogged ? <Redirect to="/dashboard" /> : <Login isLoggedIn={isLogged} toggleLoggedIn={toggleLoggedIn} getUserSchemaArr={getUserSchemaArr} />)} />
+    <Route path="/signup" render={() => (isLogged ? <Redirect to="/dashboard" /> : <Login isLoggedIn={isLogged} toggleLoggedIn={toggleLoggedIn} getUserSchemaArr={getUserSchemaArr} />)} />
     <Route path="/dashboard" render={() => (isLogged ? <Dashboard userSchemaArr={userSchemaArr} /> : <Redirect to="/login" />)} />
->>>>>>> dev
     <Route path="/myschema" />
 
   </Switch>)
@@ -58,10 +51,7 @@ class App extends Component {
   }
 
   checkIfLoggedIn() {
-    console.log('inside did mount func')
-    console.log((/google/g.test(JSON.stringify(window.location.href))))
     if (/google/g.test(JSON.stringify(window.location.href))) {
-      console.log("here")
       // fetch('/google')
       //   // .then(data => data.json())
       //   .then(data => {
@@ -79,17 +69,14 @@ class App extends Component {
         .then(data => data.json())
         .then(data => {
           this.setState({ isLogged: data.isLoggedIn })
-          console.log('inside check if logged in ', this.state.isLogged)
         })
         .catch(e => {
-          console.log('no jwt, inside catch e');
-          console.log(this.state.isLogged);
+          console.error(e);
         })
     }
   }
 
   componentDidMount() {
-    console.log('component mounting, about to check jwt');
     this.checkIfLoggedIn();
   }
 

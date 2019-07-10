@@ -7,7 +7,9 @@ const cors = require('cors');
 const schema = require('./routers/schema');
 const user = require('./routers/user');
 const githubController = require('./controllers/githubController');
+const userController = require('./controllers/userController');
 const google = require('./routers/google');
+const github = require('./routers/github');
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -48,12 +50,8 @@ app.post('/test', (req, res) => {
 app.use('/auth', user);
 app.use('/api', schema);
 app.use('/google', google);
+app.use('/github', github);
 
-app.get('/github',
-  githubController.getCode,
-  githubController.postCode,
-  githubController.getEmail
-)
 
 app.listen(port, () => {
   console.log(`Listening on port ${port}...`);
