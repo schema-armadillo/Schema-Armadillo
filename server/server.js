@@ -22,16 +22,17 @@ app.use(
 
 app.use(cookieParser());
 
-// if (process.env.NODE_ENV === 'production') {
-//   // statically serve everything in the build folder on the route '/build'
-//   app.use('/build', express.static(path.join(__dirname, '../build')));
-//   // serve index.html on the root route '/'
-//   app.get('/', (req, res) => {
-//     res.sendFile(path.join(__dirname, '../client/index.html'));
-//   });
-// }
+if (process.env.NODE_ENV === 'production') {
+  // statically serve everything in the build folder on the route '/build'
+  console.log("PATH DIRDIR", path.join(__dirname, "/"), "JLSDKJFLSDF    ", path.join(__dirname, "../build"))
+  app.use('/build', express.static(path.join(__dirname, '../build')));
+  // serve index.html on the root route '/'
+  // app.get('/', (req, res) => {
+  //   res.sendFile(path.join(__dirname, '../client/index.html'));
+  // });
+}
 
-app.get('*', (req, res) => {
+app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, '../client/index.html'));
   // res.send('hello')
 });
