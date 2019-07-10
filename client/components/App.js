@@ -13,6 +13,7 @@ import {
 } from 'react-router-dom';
 
 import Login from './Login';
+import Signup from './Signup';
 import Dashboard from './Dashboard';
 
 const route = (isLogged, loginToggle, getUserSchemaArr, userSchemaArr) => {
@@ -20,7 +21,7 @@ const route = (isLogged, loginToggle, getUserSchemaArr, userSchemaArr) => {
 
     <Route exact path="/" render={() => (isLogged ? <Dashboard userSchemaArr={userSchemaArr} /> : <Redirect to="/login" />)} />
     <Route path="/login" render={() => (isLogged ? <Redirect to="/dashboard" /> : <Login isLoggedIn={isLogged} loginToggle={loginToggle} getUserSchemaArr={getUserSchemaArr} />)} />
-    <Route path="/signup" render={() => (isLogged ? <Redirect to="/dashboard" /> : <Login isLoggedIn={isLogged} loginToggle={loginToggle} getUserSchemaArr={getUserSchemaArr} />)} />
+    <Route path="/signup" render={() => (isLogged ? <Redirect to="/dashboard" /> : <Signup isLoggedIn={isLogged} loginToggle={loginToggle} getUserSchemaArr={getUserSchemaArr} />)} />
     <Route path="/dashboard" render={() => (isLogged ? <Dashboard userSchemaArr={userSchemaArr} /> : <Redirect to="/login" />)} />
     <Route path="/myschema" />
 
