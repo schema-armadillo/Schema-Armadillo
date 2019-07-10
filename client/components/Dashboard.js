@@ -1,9 +1,11 @@
 import React, { Component } from 'react';
-import '.././styles/Dashboard.css';
+import '../styles/Dashboard.css';
 import KeyValue from './KeyValue';
 import schemaGenerator from '../../utils/modelCodeMaker2';
 import LogoutButton from './LogoutButton';
 import SchemaStorage from './SchemaStorage.jsx';
+
+const autoBind = require('auto-bind');
 
 class Dashboard extends Component {
   constructor(props) {
@@ -28,18 +30,11 @@ class Dashboard extends Component {
 
     this.refreshSchemas();
 
-    this.refreshSchemas = this.refreshSchemas.bind(this);
-    this.handleSchemaName = this.handleSchemaName.bind(this);
-    this.createRow = this.createRow.bind(this);
-    this.handleCreateSchema = this.handleCreateSchema.bind(this);
-    this.updateRow = this.updateRow.bind(this);
-    this.deleteRow = this.deleteRow.bind(this);
-    this.handleChangeRequired = this.handleChangeRequired.bind(this);
-    this.handleChangeUnique = this.handleChangeUnique.bind(this);
-    this.handleChangeKey = this.handleChangeKey.bind(this);
-    this.handleChangeType = this.handleChangeType.bind(this);
-    this.handleSaveSchema = this.handleSaveSchema.bind(this);
-    this.handleCopySchema = this.handleCopySchema.bind(this);
+    autoBind(this);
+  }
+
+  setKeyValueTable(schema) {
+    this.setState({ schema });
   }
 
   refreshSchemas() {
@@ -73,9 +68,9 @@ class Dashboard extends Component {
 
 
   handleSaveSchema() {
-  if(this.state.schema.schemaName.length === 0){
-    return alert('Schema Name must be filled out')
-  }
+    if (this.state.schema.schemaName.length === 0) {
+      return alert('Schema Name must be filled out')
+    }
     fetch('/api/schema', {
       method: 'POST',
       headers: {
@@ -206,7 +201,6 @@ class Dashboard extends Component {
         <div className='schemaName'>
           <input
             type='text'
-            value='Schema Name'
             placeholder='Schema Name'
             value={this.state.schema.schemaName}
             onChange={this.handleSchemaName}
@@ -224,7 +218,7 @@ class Dashboard extends Component {
           </div>
           <br />
           <div className='form'>{rows}</div>
-          <SchemaStorage userSchemaArr={this.state.userSchemaArr} />
+          <SchemaStorage userSchemaArr={this.state.userSchemaArr} setKeyValueTable={this.setKeyValueTable} />
           <div className="buttons">
             <button
               className="submit"

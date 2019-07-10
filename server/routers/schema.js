@@ -14,6 +14,7 @@ router.delete('/schema', schemaController.deleteSchema);
 router.put('/schema', schemaController.updateSchema);
 // returns all stored schema for a specific user
 router.get('/schema', schemaController.getAllSchema);
+router.get('/schema/:schema_id', schemaController.getSchema);
 
 module.exports = router;
 
