@@ -26,11 +26,4 @@ router.post('/verify', userController.checkJwt, (req, res) => {
   return res.status(200).json({ isLoggedIn: true });
 });
 
-router.get('/googleInit', googleController.getCode)
-router.post('/googleAuth', googleController.getToken) //getTOken => login stuff
-// router.post('/googleInit',
-// go to google controller.getCode
-//
-
-
 module.exports = router;

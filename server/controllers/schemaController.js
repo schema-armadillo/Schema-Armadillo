@@ -1,4 +1,5 @@
 const pool = require('./database');
+const querystring = require('query-string')
 
 const schemaController = {
   createSchemaId: (req, res, next) => {
@@ -10,7 +11,7 @@ const schemaController = {
 
       const { schemaName } = req.body;
       const { user_id } = res.locals;
-
+      res.locals.schema_name = schemaName
       pool.query(`INSERT INTO Schema_IDs (user_id, schema_name) VALUES ('${user_id}', '${schemaName}') RETURNING *`, (err, result) => {
         if (err) {
           console.error('Error in adding table to DB');
@@ -84,7 +85,11 @@ const schemaController = {
   // gets one specific schema
   getSchema: (req, res, next) => {
     // expecting to receive user_id and schema_id from req.body
-    const { user_id, schema_id } = req.body;
+    console.log('hi from get schema!')
+    console.log('getSchema req.query', req.query)
+    const { user_id, schema_id } = req.query;
+    console.log('in getSchema')
+    console.log('getSchema user_id, schema_id ', user_id, schema_id)
     // query the table using user_id and schema_id
     pool.query(
       'SELECT * FROM Schemas WHERE user_id=$1 AND schema_id=$2',
@@ -108,6 +113,25 @@ const schemaController = {
       res.locals.userSchema = result.rows;
       console.log('schemaController -> getAllSchema -> res.locals.userSchema', res.locals.userSchema);
       return next();
+      // return res.status(200).json(result.rows);
+
+    })
+  },
+  refreshAllSchema: (req, res, next) => {
+    const { user_id } = res.locals;
+    pool.query(`SELECT * FROM schema_ids WHERE user_id='${user_id}'`, (err, result) => {
+      if (err) {
+        console.error(err);
+        return res.status(400).json({ error: 'error from getAllSchema' });
+      }
+      //  console.log('schemaContorller => getAllSechama', result.rows);
+      // need to make data in a more workable format. currently a bigass array
+
+      console.log('schemaController => refreshAllSchema => result', result)
+      return res.locals.userSchema = result.rows;
+
+      // return res.status(200).json(result.rows);
+
     })
   },
   updateSchema: (req, res, next) => {

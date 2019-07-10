@@ -9,6 +9,7 @@ router.get('/',
   githubController.getEmail,
   userController.addUserToDB,
   userController.setJwt,
-  userController.redirectToRoot);
+  userController.redirectToRoot
+);
 
 module.exports = router;

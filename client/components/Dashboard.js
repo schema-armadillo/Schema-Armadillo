@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import '.././styles/Dashboard.css';
 import KeyValue from './KeyValue';
 import schemaGenerator from '../../utils/modelCodeMaker2';
+const url = require('url')
 
 class Dashboard extends Component {
   constructor(props) {
@@ -34,16 +35,17 @@ class Dashboard extends Component {
     this.handleChangeType = this.handleChangeType.bind(this);
     this.handleSaveSchema = this.handleSaveSchema.bind(this);
     this.handleCopySchema = this.handleCopySchema.bind(this);
+    this.getSchema = this.getSchema.bind(this);
   }
   handleCopySchema() {
-    console.log('Dashboard.js => handleCopySchema => this.state.result', this.state.result)
+    // console.log('Dashboard.js => handleCopySchema => this.state.result', this.state.result)
     // create a fake element
     // don't display it on page
     // need textarea to copy to clipboard
     let copyText = document.createElement('textarea');
     copyText.value = this.state.result;
     document.body.appendChild(copyText);
-    console.log('Dashboard => handleCopySchema => copyText', copyText);
+    // console.log('Dashboard => handleCopySchema => copyText', copyText);
 
     copyText.select();
     document.execCommand('copy');
@@ -73,8 +75,53 @@ class Dashboard extends Component {
       body: JSON.stringify(this.state.schema)
     })
       .then(data => data.json())
-      .then(result => console.log(result))
-      .catch(err => console.error(err));
+      .then(result => {
+        console.log('save schema result ', result)
+        let stateCopy = Object.assign(this.state.schema, {});
+        stateCopy.rows = [
+          {
+            key: '',
+            type: '',
+            options: {
+              required: false,
+              unique: false
+            }
+          }
+        ];
+        stateCopy.schemaName = '';
+        this.setState({ schema: stateCopy })
+        this.props.getUserSchemaArr([{
+          schema_id: result.schema_id, schema_name: result.schema_name, user_id: result.user_id
+        }])
+      })
+
+
+  }
+
+  getSchema(user_id, schema_id) {
+    console.log('getSchema Dashboard user_id, schema_id ', user_id, schema_id)
+    const url = '/api/schema/one?user_id=' + user_id + '&schema_id=' + schema_id;
+    fetch(url)
+      .then(data => data.json())
+      .then(result => {
+        console.log('result from getSchema in dashboard ', result)
+        let stateCopy = Object.assign(this.state.schema, {})
+        console.log('stateCopy ', stateCopy)
+        stateCopy.rows = [];
+        result.forEach(el => {
+          console.log('el ', el)
+          stateCopy.schemaName = el.schema_name
+          stateCopy.rows.push({
+            key: el.key,
+            type: el.type,
+            options: {
+              required: el.required_check,
+              unique: el.unique_check
+            }
+          })
+        })
+        this.setState({ schema: stateCopy })
+      })
   }
 
   handleCreateSchema(state) {
@@ -129,7 +176,7 @@ class Dashboard extends Component {
   updateRow(key, type, required) {
     let schema = Object.assign({}, this.state.schema);
     let { rows } = schema;
-    console.log('Dashboard => updateRow => this.state.schema.rows', rows);
+    // console.log('Dashboard => updateRow => this.state.schema.rows', rows);
 
     rows[rows.length - 1] = {
       key,
@@ -142,10 +189,10 @@ class Dashboard extends Component {
   handleChangeRequired(event, rowIndex) {
     let schema = Object.assign({}, this.state.schema);
     let { rows } = schema;
-    console.log(
-      'Dashboard => handleChangeRequired => event.target',
-      event.target.checked
-    );
+    // console.log(
+    //   'Dashboard => handleChangeRequired => event.target',
+    //   event.target.checked
+    // );
     rows[rowIndex].options.required = event.target.checked;
     return this.setState({ schema });
   }
@@ -153,10 +200,10 @@ class Dashboard extends Component {
   handleChangeUnique(event, rowIndex) {
     let schema = Object.assign({}, this.state.schema);
     let { rows } = schema;
-    console.log(
-      'Dashboard => handleChangeUnique => event.target',
-      event.target.checked
-    );
+    // console.log(
+    //   'Dashboard => handleChangeUnique => event.target',
+    //   event.target.checked
+    // );
     rows[rowIndex].options.unique = event.target.checked;
     return this.setState({ schema });
   }
@@ -211,11 +258,12 @@ class Dashboard extends Component {
     }
 
     let schemaButtons = [];
-    console.log('userSchemaArr', this.props.userSchemaArr);
+
     if (this.props.userSchemaArr) {
       schemaButtons = this.props.userSchemaArr.map(el => {
-        return (<button>{el.schema_name}</button>)
-      });
+        console.log('el ', el)
+        return (<button onClick={() => this.getSchema(el.user_id, el.schema_id)}>{el.schema_name}</button>)
+      })
     }
 
     return (

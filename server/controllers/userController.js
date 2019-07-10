@@ -71,7 +71,7 @@ const userController = {
     );
   },
 
-  sendUserIdAndSchema: (req, res) => {
+  sendUserIdAndSchema: (req, res) => { //only for logging in the first time (without cookies)
     return res.cookie('ssid', res.locals.jwtToken).status(200).json({ user_id: res.locals.user_id, userSchema: res.locals.userSchema });
   },
 
@@ -86,10 +86,11 @@ const userController = {
   },
 
   redirectToRoot: (req, res) => {
-    // TODO: Need to redirect based on environment (e.g., production vs. development)
-    return res.cookie('ssid', res.locals.jwtToken).redirect('http://localhost:8080');
+    if (process.env.NODE_ENV === "development") {
+      return res.cookie('ssid', res.locals.jwtToken).redirect('http://localhost:8080');
+    }
+    else return res.cookie('ssid', res.locals.jwtToken).redirect('/');
   },
 };
-
 
 module.exports = userController;
