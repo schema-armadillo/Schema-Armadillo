@@ -5,12 +5,12 @@ const SchemaStorage = ({ userSchemaArr }) => {
     <button type="button">
       {schema.schema_name}
     </button>
-  ))
+  ));
   return (
     <div className="optionsKey">
       {schemas}
     </div>
-  )
+  );
 }
 
 export default SchemaStorage;

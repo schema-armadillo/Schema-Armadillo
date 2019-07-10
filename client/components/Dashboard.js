@@ -22,9 +22,13 @@ class Dashboard extends Component {
             }
           }
         ]
-      }
+      },
+      userSchemaArr: [],
     };
 
+    this.refreshSchemas();
+
+    this.refreshSchemas = this.refreshSchemas.bind(this);
     this.handleSchemaName = this.handleSchemaName.bind(this);
     this.createRow = this.createRow.bind(this);
     this.handleCreateSchema = this.handleCreateSchema.bind(this);
@@ -37,6 +41,14 @@ class Dashboard extends Component {
     this.handleSaveSchema = this.handleSaveSchema.bind(this);
     this.handleCopySchema = this.handleCopySchema.bind(this);
   }
+
+  refreshSchemas() {
+    fetch('/api/schema')
+      .then(data => data.json())
+      .then(data => this.setState({ userSchemaArr: data }))
+      .catch(err => console.log('err in fetch', err));
+  }
+
   handleCopySchema() {
     // create a fake element
     // need textarea to copy to clipboard
@@ -67,7 +79,7 @@ class Dashboard extends Component {
       },
       body: JSON.stringify(this.state.schema)
     })
-      .then(data => data.json());
+      .then(this.refreshSchemas);
   }
 
   handleCreateSchema(state) {
@@ -208,7 +220,7 @@ class Dashboard extends Component {
           </div>
           <br />
           <div className='form'>{rows}</div>
-          <SchemaStorage userSchemaArr={this.props.userSchemaArr}/>
+          <SchemaStorage userSchemaArr={this.state.userSchemaArr} />
           <div className="buttons">
             <button
               className="submit"

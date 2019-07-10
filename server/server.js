@@ -20,11 +20,15 @@ app.use(
 
 app.use(cookieParser());
 
+app.use('/auth', user);
+app.use('/api', schema);
+
 // create routers for separate endpoints
-app.get('*', (req, res) => {
+app.get('/*', (req, res) => {
   res.sendFile(path.join(__dirname, '../client/index.html'));
   // res.send('hello')
 });
+
 
 app.post('/test', (req, res) => {
   console.log('posted to /test');
@@ -36,11 +40,6 @@ app.post('/test', (req, res) => {
     .json({ success: true, redirecturl: '/dashboard' });
 });
 
-// commenting these two routes since sophie and indra may not have database set up yet and it will give them an error
-// app.use('/user', user);
-// changed from user
-app.use('/auth', user);
-app.use('/api', schema);
 
 app.listen(port, () => {
   console.log(`Listening on port ${port}...`);
