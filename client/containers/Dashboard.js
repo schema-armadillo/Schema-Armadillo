@@ -2,15 +2,18 @@ import React, { Component } from "react";
 import ".././styles/Dashboard.css";
 import KeyValue from "../components/KeyValue";
 import schemaGenerator from "../../utils/modelCodeMaker2";
-import { connect } from 'react-redux';
-import { addRow, deleteRow } from '../actions/actions'
+import { connect } from "react-redux";
+import { addRow, deleteRow, updateKey } from "../actions/actions";
 
 const mapStateToProps = store => ({
-  myrows: store.row,
+  myrows: store.row
 });
+
+// think about the new prop function here as this.setState for our Redux Store
 const mapDispatchToProps = dispatch => ({
   addRow: () => dispatch(addRow()),
-  deleteRow:(index) => dispatch(deleteRow(index))
+  deleteRow: index => dispatch(deleteRow(index)),
+  updateKey: (index, newKey) => dispatch(updateKey(index, newKey))
 });
 
 class Dashboard extends Component {
@@ -20,12 +23,14 @@ class Dashboard extends Component {
       result: "",
       schema: {
         schemaName: "",
-        rows: [{
-          key: '',
-          type: '',
-          required: false,
-          unique: false,
-        }],
+        rows: [
+          {
+            key: "",
+            type: "",
+            required: false,
+            unique: false
+          }
+        ]
       }
     };
 
@@ -40,6 +45,10 @@ class Dashboard extends Component {
     this.handleChangeType = this.handleChangeType.bind(this);
     this.handleSaveSchema = this.handleSaveSchema.bind(this);
     this.handleCopySchema = this.handleCopySchema.bind(this);
+  }
+
+  componentDidUpdate() {
+    console.log("rows changed?", this.props.myrows);
   }
   handleCopySchema() {
     console.log(
@@ -118,9 +127,9 @@ class Dashboard extends Component {
     //   if (index === rowIndex) return false;
     //   return true;
     // });
-    console.log('before',this.props.myrows)
+    console.log("before", this.props.myrows);
     this.props.deleteRow(rowIndex);
-    console.log('after',this.props.myrows);
+    console.log("after", this.props.myrows);
     schema.rows = this.props.myrows;
     console.log("Dashboard => deleteRow => rows", rows);
     this.setState({ schema });
@@ -162,10 +171,11 @@ class Dashboard extends Component {
   }
 
   handleChangeKey(event, rowIndex) {
-    let schema = Object.assign({}, this.state.schema);
-    let { rows } = schema;
-    rows[rowIndex].key = event.target.value;
-    return this.setState({ schema });
+    // let schema = Object.assign({}, this.state.schema);
+    // let { rows } = schema;
+    // rows[rowIndex].key = event.target.value;
+    return this.props.updateKey(rowIndex, event.target.value);
+    // return this.setState({ schema });
   }
 
   handleChangeType(selectedOption, rowIndex) {
@@ -241,7 +251,13 @@ class Dashboard extends Component {
             >
               Create Schema
             </button>
-            <button className="createrow" onClick={()=>{this.props.addRow();this.createRow();}}>
+            <button
+              className="createrow"
+              onClick={() => {
+                this.props.addRow();
+                this.createRow();
+              }}
+            >
               Add a New Key
             </button>
           </div>
@@ -258,4 +274,7 @@ class Dashboard extends Component {
   }
 }
 
-export default connect(mapStateToProps,mapDispatchToProps)(Dashboard);
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(Dashboard);
