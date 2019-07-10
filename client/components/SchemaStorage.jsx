@@ -1,4 +1,5 @@
 import React from 'react';
+import SchemaButton from './SchemaButton.jsx';
 
 function setNewKeyValueTable(schema, setKeyValueTable) {
   fetch(`/api/schema/${schema.schema_id}`)
@@ -16,14 +17,12 @@ function setNewKeyValueTable(schema, setKeyValueTable) {
         })),
       });
     })
-    .catch(err => console.log('error in getSchemaData', err));
+    .catch(err => console.log('error in settingKeyValueTable', err));
 }
 
 const SchemaStorage = ({ userSchemaArr, setKeyValueTable }) => {
   const schemas = userSchemaArr.map((schema, i) => (
-    <button key={`schema${i}`} type="button" onClick={() => setNewKeyValueTable(schema, setKeyValueTable)}>
-      {schema.schema_name}
-    </button>
+    <SchemaButton key={`schema${i}`} schema_name={schema.schema_name} onClick={() => setNewKeyValueTable(schema, setKeyValueTable)} />
   ));
   return (
     <div className="optionsKey">
