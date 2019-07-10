@@ -2,8 +2,6 @@ const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 const pool = require('./database');
 
-const createToken = user => jwt.sign({ user }, 'secretkey', { expiresIn: 60 * 60 }, (err, token) => { console.log('made token: ', token); return token; });
-
 const userController = {
   createUser: (req, res, next) => {
     const { email: username, password } = req.body;
