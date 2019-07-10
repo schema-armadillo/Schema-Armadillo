@@ -20,10 +20,12 @@ const userController = {
     `INSERT INTO users (username, password, oauth) VALUES ('${res.locals.username}', '${res.locals.password}', '${res.locals.oauth}') RETURNING user_id, username`,
   )
     .then((data) => {
-      console.log('data from addUserToDB (usrcntrl): ', data);
       // THIS NEEDS TO CHANGE, IT'S ALL THE DATA
-      res.locals.data = { username: data.rows[0].username, user_id: data.rows[0].user_id };
-      console.log("RES LOCALS USER_ID and stuff", res.locals.data);
+      res.locals.data = {
+        username: data.rows[0].username,
+        user_id: data.rows[0].user_id,
+        oauth: data.rows[0].oauth,
+      };
       res.locals.user_id = data.rows[0].user_id;
       return next();
     })
