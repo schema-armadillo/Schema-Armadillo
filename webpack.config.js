@@ -1,3 +1,4 @@
+// const dotenv = require('dotenv');
 const path = require('path');
 
 module.exports = {
@@ -15,6 +16,7 @@ module.exports = {
       '/': 'http://localhost:3000',
       '/api/': 'http://localhost:3000',
       '/auth/': 'http://localhost:3000',
+      '/google/': 'http://localhost:3000',
       '/test/': 'http://localhost:3000'
     }
   },
