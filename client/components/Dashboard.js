@@ -7,6 +7,8 @@ import SchemaStorage from './SchemaStorage.jsx';
 import SchemaName from './SchemaName';
 import SchemaHeaders from './SchemaHeaders'
 import Rows from './Rows'
+import OptionButtons from './OptionButtons'
+import SaveButton  from './SaveButton'
 
 class Dashboard extends Component {
   constructor(props) {
@@ -185,7 +187,6 @@ class Dashboard extends Component {
   }
 
   render() {
- 
     return (
       <div>
         <LogoutButton />
@@ -205,34 +206,11 @@ class Dashboard extends Component {
           />
          
           <SchemaStorage userSchemaArr={this.state.userSchemaArr} />
-          
-          <div className="buttons">
-            <OptionButtons />
-
-            <button
-              className="submit"
-              onClick={() => this.handleCreateSchema(this.state.schema)}
-              type="button"
-            >
-              Create Schema
-            </button>
-            <button
-              className='createrow'
-              onClick={this.createRow}
-              type="button"
-            >
-              Add a New Key
-            </button>
-          </div>
+          <OptionButtons schema = {this.state.schema} handleCreateSchema={this.handleCreateSchema} createRow = {this.createRow}/>
         </div>
-        <button
-          className='saveButton'
-          onClick={this.handleSaveSchema}
-          type="button"
-        >
-          Save
-        </button>
+        <SaveButton result = {this.state.result}/>
 
+      
         <pre onClick={this.handleCopySchema}>
           <div className='clipboard-message' />
           <code>{this.state.result}</code>
