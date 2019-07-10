@@ -70,7 +70,27 @@ class Dashboard extends Component {
       body: JSON.stringify(this.state.schema)
     })
       .then(data => data.json())
-      .then(result => console.log(result));
+      .then(result => {
+        console.log('save schema result ', result)
+        let stateCopy = Object.assign(this.state.schema, {});
+        stateCopy.rows = [
+          {
+            key: '',
+            type: '',
+            options: {
+              required: false,
+              unique: false
+            }
+          }
+        ];
+        stateCopy.schemaName = '';
+        this.setState({ schema: stateCopy })
+        this.props.getUserSchemaArr([{
+          schema_id: result.schema_id, schema_name: result.schema_name, user_id: result.user_id
+        }])
+      })
+
+
   }
 
   getSchema(user_id, schema_id) {
@@ -78,7 +98,25 @@ class Dashboard extends Component {
     const url = '/api/schema/one?user_id=' + user_id + '&schema_id=' + schema_id;
     fetch(url)
       .then(data => data.json())
-      .then(result => console.log(result))
+      .then(result => {
+        console.log('result from getSchema in dashboard ', result)
+        let stateCopy = Object.assign(this.state.schema, {})
+        console.log('stateCopy ', stateCopy)
+        stateCopy.rows = [];
+        result.forEach(el => {
+          console.log('el ', el)
+          stateCopy.schemaName = el.schema_name
+          stateCopy.rows.push({
+            key: el.key,
+            type: el.type,
+            options: {
+              required: el.required_check,
+              unique: el.unique_check
+            }
+          })
+        })
+        this.setState({ schema: stateCopy })
+      })
   }
 
   handleCreateSchema(state) {
@@ -209,6 +247,7 @@ class Dashboard extends Component {
 
     let schemaButtons = [];
     schemaButtons = this.props.userSchemaArr.map(el => {
+      console.log('el ', el)
       return (<button onClick={() => this.getSchema(el.user_id, el.schema_id)}>{el.schema_name}</button>)
     })
 

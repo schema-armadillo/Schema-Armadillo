@@ -12,6 +12,7 @@ const schemaController = {
 
       const { schemaName } = req.body;
       const { user_id } = res.locals;
+      res.locals.schema_name = schemaName
       // console.log('schemaController => createSchemaId => schemaName, user_id', schemaName, user_id)
 
       pool.query(`INSERT INTO Schema_IDs (user_id, schema_name) VALUES ('${user_id}', '${schemaName}') RETURNING *`, (err, result) => {
@@ -98,8 +99,8 @@ const schemaController = {
   getSchema: (req, res, next) => {
     // expecting to receive user_id and schema_id from req.body
     console.log('hi from get schema!')
-    console.log('getSchema req', req.data)
-    const { user_id, schema_id } = req.params;
+    console.log('getSchema req.query', req.query)
+    const { user_id, schema_id } = req.query;
     console.log('in getSchema')
     console.log('getSchema user_id, schema_id ', user_id, schema_id)
     // query the table using user_id and schema_id
@@ -131,34 +132,23 @@ const schemaController = {
       return next();
       // return res.status(200).json(result.rows);
 
+    })
+  },
+  refreshAllSchema: (req, res, next) => {
+    const { user_id } = res.locals;
+    pool.query(`SELECT * FROM schema_ids WHERE user_id='${user_id}'`, (err, result) => {
+      if (err) {
+        console.error(err);
+        return res.status(400).json({ error: 'error from getAllSchema' });
+      }
+      //  console.log('schemaContorller => getAllSechama', result.rows);
+      // need to make data in a more workable format. currently a bigass array
 
-      // result.rows.forEach(el => {
-      //   console.log(el.schema_id, el.schema_name)
-      // })
-      // const schemaParsed = [];
-      // let tempObj = {};
-      // result.rows.forEach((row, idx) => {
-      //   console.log('inside foreach loop');
-      //   if (tempObj.hasOwnProperty('schema_id')) {
-      //     const tempNewRow = {};
-      //     const { options_check, unique_check, required_check, type, key } = row;
-      //     tempNewRow.key = key;
-      //     tempNewRow.type = type;
-      //     if (options_check) {
-      //       tempNewRow.options = {};
-      //       tempNewRow.options.unique = unique_check ? unique_check : false;
-      //       tempNewRow.options.required = required_check ? required_check : false;
-      //     }
-      //     console.log('checking temp new row: ', tempNewRow)
-      //     tempObj.rows.push(tempNewRow);
-      //   } else {
-      //     if (schemaParsed.length !== 0) schemaParsed.push(tempObj);
-      //     console.log('setting up tempobj: ', row.schema_id);
+      console.log('schemaController => refreshAllSchema => result', result)
+      return res.locals.userSchema = result.rows;
 
-      //     tempObj = { schema_id: row.schema_id, schema_name: row.schema_name, rows: [] };
-      //   }
-      // });
-      // console.log('my schema pasrsed: ', schemaParsed);
+      // return res.status(200).json(result.rows);
+
     })
   },
   updateSchema: (req, res, next) => {
