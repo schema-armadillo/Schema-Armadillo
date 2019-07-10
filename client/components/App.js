@@ -63,20 +63,20 @@ class App extends Component {
   }
 
   render() {
-    console.log(this.state);
     return (
       <>
         <Nav />
         {this.state.screen === 'dashboard' &&
           <Dashboard
-            userSchemaArr={this.userSchemaArr}
+            userSchemaArr={this.state.userSchemaArr}
             isLogged={this.state.isLogged}
             redirectToLogin={this.redirectToLogin}
+            getUserSchemaArr={this.getUserSchemaArr}
           />
         }
         {this.state.screen === 'login' &&
           <Login
-            isLoggedIn={this.isLogged}
+            isLoggedIn={this.state.isLogged}
             toggleLoggedIn={this.toggleLoggedIn}
             getUserSchemaArr={this.getUserSchemaArr}
             redirectToDashboard={this.redirectToDashboard} />

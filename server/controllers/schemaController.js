@@ -84,13 +84,7 @@ const schemaController = {
 
   // gets one specific schema
   getSchema: (req, res, next) => {
-    // expecting to receive user_id and schema_id from req.body
-    console.log('hi from get schema!')
-    console.log('getSchema req.query', req.query)
     const { user_id, schema_id } = req.query;
-    console.log('in getSchema')
-    console.log('getSchema user_id, schema_id ', user_id, schema_id)
-    // query the table using user_id and schema_id
     pool.query(
       'SELECT * FROM Schemas WHERE user_id=$1 AND schema_id=$2',
       [user_id, schema_id],

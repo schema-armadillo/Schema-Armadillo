@@ -261,7 +261,6 @@ class Dashboard extends Component {
 
     if (this.props.userSchemaArr) {
       schemaButtons = this.props.userSchemaArr.map(el => {
-        console.log('el ', el)
         return (<button onClick={() => this.getSchema(el.user_id, el.schema_id)}>{el.schema_name}</button>)
       })
     }
