@@ -187,15 +187,26 @@ const schemaController = {
   deleteSchema: (req, res, next) => {
     // expecting to receive user_id and post_id to find the rows that we want to delete
     const { user_id, schema_id } = req.body;
-
+    console.log(user_id, schema_id, 'in controlla')
     // query for the table
     pool.query(
-      'DELETE FROM Schemas WHERE user_id=$1 AND schema_id=$2',
+      'DELETE FROM schemas WHERE user_id=$1 AND schema_id=$2',
       [user_id, schema_id],
       (err, result) => {
         if (err) {
           console.error(err);
-          return res.status(400).json({ error: 'error from deleteSchema' });
+          return res.status(400).json({ error: 'error from delete Schema' });
+        }
+        // return res.status(200).json(result.rows);
+      }
+    );
+    pool.query(
+      'DELETE FROM schema_ids WHERE user_id=$1 AND schema_id=$2',
+      [user_id, schema_id],
+      (err, result) => {
+        if (err) {
+          console.error(err);
+          return res.status(400).json({ error: 'error from delete Schema_ids' });
         }
         return res.status(200).json(result.rows);
       }

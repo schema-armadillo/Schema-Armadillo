@@ -8,6 +8,8 @@ import SchemaHeaders from './SchemaHeaders'
 import Rows from './Rows'
 import OptionButtons from './OptionButtons'
 import SaveButton from './SaveButton'
+import Select from 'react-select';
+
 
 const autoBind = require('auto-bind');
 
@@ -30,6 +32,7 @@ class Dashboard extends Component {
         ]
       },
       userSchemaArr: [],
+      deleteThisSchema: null,
     };
 
     this.refreshSchemas();
@@ -39,6 +42,16 @@ class Dashboard extends Component {
 
   setKeyValueTable(schema) {
     this.setState({ schema });
+  }
+
+  schemaListOptions() {
+    let newOptions = [];
+    // must have label and value
+    for(let i = 0; i < this.state.userSchemaArr.length; i++){
+      let { schema_name, schema_id, user_id } = this.state.userSchemaArr[i];
+      newOptions.push( {label: schema_name, value: {schema_id, user_id}} )
+    }
+   return newOptions;
   }
 
   refreshSchemas() {
@@ -83,6 +96,29 @@ class Dashboard extends Component {
     })
       .then(this.refreshSchemas);
   }
+
+  /////////////////////////////////////////////////////////////////////////////////////////////////////
+  /////////////////////////////////////////////////////////////////////////////////////////////////////
+
+  handleDeleteSchema() {
+    let { schema_id, user_id } = this.state.deleteThisSchema;
+    console.log()
+      fetch('/api/schema', {
+        method: 'DELETE', 
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          schema_id,
+          user_id
+        })
+      })
+      .then(this.refreshSchemas);
+  
+    }
+
+  /////////////////////////////////////////////////////////////////////////////////////////////////////
+  /////////////////////////////////////////////////////////////////////////////////////////////////////
 
   handleCreateSchema(state) {
     // check if schemaname is filled out
@@ -179,6 +215,14 @@ class Dashboard extends Component {
     return this.setState({ schema });
   }
 
+  renderItem() {
+    let newArr = [];
+    for(let i = 0; i < this.state.userSchemaArr.length; i++){
+      newArr.push(<div>{this.state.userSchemaArr[i]}</div>)
+    }
+    return newArr
+  }
+
   render() {
     return (
       <div id="dashboard">
@@ -200,6 +244,19 @@ class Dashboard extends Component {
 
           <SchemaStorage userSchemaArr={this.state.userSchemaArr} setKeyValueTable={this.setKeyValueTable} />
           <OptionButtons schema={this.state.schema} handleCreateSchema={this.handleCreateSchema} createRow={this.createRow} />
+{/* //////////////////////////////////////////////////////////////////////////////////////////// */}
+      <button
+          className="submit"
+          // should delete from database => refresh schema storage
+          onClick={() => this.handleDeleteSchema()}
+          type="button"
+        >
+          Delete
+        </button>
+{/* //////////////////////////////////////////////////////////////////////////////////////////// */}
+{/* //////////////////////////////////////////////////////////////////////////////////////////// */}
+        <Select options={this.schemaListOptions()} closeMenuOnSelect='true' onChange={e => this.setState({deleteThisSchema: e.value})} />
+{/* //////////////////////////////////////////////////////////////////////////////////////////// */}
         </div>
 
         <SaveButton result={this.state.result} handleSaveSchema={this.handleSaveSchema} />
