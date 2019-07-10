@@ -2,8 +2,6 @@ const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 const pool = require('./database');
 
-const createToken = user => jwt.sign({ user }, 'secretkey', { expiresIn: 60 * 60 }, (err, token) => { console.log('made token: ', token); return token; });
-
 const userController = {
   createUser: (req, res, next) => {
     console.log('in createUser');
@@ -15,15 +13,19 @@ const userController = {
       res.locals.username = username;
       res.locals.password = hashResponse;
       return next();
-    });
+    })
   },
+
+
   addUserToDB: (req, res, next) => pool.query(
     `INSERT INTO users (username, password) VALUES ('${res.locals.username}', '${res.locals.password}') RETURNING user_id, username`,
   )
     .then((data) => {
-      console.log('some data: ', data);
+      console.log('data from addUserToDB (usrcntrl): ', data);
       // THIS NEEDS TO CHANGE, IT'S ALL THE DATA
       res.locals.data = { username: data.rows[0].username, user_id: data.rows[0].user_id };
+      console.log("RES LOCALS USER_ID and stuff", res.locals.data)
+      res.locals.user_id = data.rows[0].user_id;
       return next();
     })
     .catch((err) => {
@@ -31,7 +33,7 @@ const userController = {
       return res.status(500).send('Error creating user. Please try again.');
     }),
 
-  //  WHERE username = '${username}'
+
   login: (req, res, next) => {
     const { email: username, password } = req.body;
     // console.log(username);
@@ -52,8 +54,6 @@ const userController = {
             console.log('result is true');
             res.locals.user_id = userFound.user_id;
             return next();
-            // res.cookie('new', createToken(result));
-            // return res.status(200).send('success');
           }
 
           console.log('there is an error, after brcyprt process');
@@ -62,17 +62,27 @@ const userController = {
       })
       .catch(err => res.status(500).send(err));
   },
+
+
   setJwt: (req, res) => {
     console.log('inside of set jwt');
-    jwt.sign({ user_id: res.locals.user_id }, 'secretkey', { expiresIn: 60 * 60 }, (err, token) => {
+    jwt.sign({ user_id: res.locals.user_id }, process.env.SECRET_KEY, { expiresIn: 60 * 60 }, (err, token) => {
       // sends back username, and user_id
-      console.log('set jwt')
+      console.log('set jwt, ', res.locals.user_id)
       return res.cookie('ssid', token).status(200).json({user_id: res.locals.user_id, userSchema: res.locals.userSchema});
     });
   },
+
+
   checkJwt: (req, res, next) => {
     const { ssid } = req.cookies;
+<<<<<<< HEAD
     jwt.verify(ssid, 'secretkey', (err, result) => {
+=======
+    console.log('looking for jwt');
+    console.log(ssid);
+    jwt.verify(ssid, process.env.SECRET_KEY, (err, result) => {
+>>>>>>> dev
       if (err) {return res.status(401).json({ isLoggedIn: false })}
       res.locals.user_id = result.user_id;
       next();
