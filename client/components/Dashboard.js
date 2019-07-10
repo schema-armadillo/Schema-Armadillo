@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import '.././styles/Dashboard.css';
+import '../styles/Dashboard.css';
 import KeyValue from './KeyValue';
 import schemaGenerator from '../../utils/modelCodeMaker2';
 import LogoutButton from './LogoutButton';
@@ -9,6 +9,8 @@ import SchemaHeaders from './SchemaHeaders'
 import Rows from './Rows'
 import OptionButtons from './OptionButtons'
 import SaveButton from './SaveButton'
+
+const autoBind = require('auto-bind');
 
 class Dashboard extends Component {
   constructor(props) {
@@ -31,18 +33,13 @@ class Dashboard extends Component {
       userSchemaArr: [],
     };
 
-    this.refreshSchemas = this.refreshSchemas.bind(this);
-    this.handleSchemaName = this.handleSchemaName.bind(this);
-    this.createRow = this.createRow.bind(this);
-    this.handleCreateSchema = this.handleCreateSchema.bind(this);
-    this.updateRow = this.updateRow.bind(this);
-    this.deleteRow = this.deleteRow.bind(this);
-    this.handleChangeRequired = this.handleChangeRequired.bind(this);
-    this.handleChangeUnique = this.handleChangeUnique.bind(this);
-    this.handleChangeKey = this.handleChangeKey.bind(this);
-    this.handleChangeType = this.handleChangeType.bind(this);
-    this.handleSaveSchema = this.handleSaveSchema.bind(this);
-    this.handleCopySchema = this.handleCopySchema.bind(this);
+    this.refreshSchemas();
+
+    autoBind(this);
+  }
+
+  setKeyValueTable(schema) {
+    this.setState({ schema });
   }
 
   refreshSchemas() {
