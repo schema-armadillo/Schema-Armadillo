@@ -46,12 +46,6 @@ class App extends Component {
     this.setState({userSchemaArr});
   }
 
-  getUserSchemaArr(result) {
-    const userSchemaArr = [...this.state.userSchemaArr];
-    result.forEach(el => userSchemaArr.push(el));
-    this.setState({userSchemaArr});
-  }
-
   toggleLoggedIn(result) {
     // JUST FOR THE SAKE OF DEMO
     const userSchemaArr = [...this.state.userSchemaArr];
