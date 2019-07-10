@@ -4,6 +4,9 @@ import KeyValue from './KeyValue';
 import schemaGenerator from '../../utils/modelCodeMaker2';
 import LogoutButton from './LogoutButton';
 import SchemaStorage from './SchemaStorage.jsx';
+import SchemaName from './SchemaName';
+import SchemaHeaders from './SchemaHeaders'
+import Rows from './Rows'
 
 class Dashboard extends Component {
   constructor(props) {
@@ -182,50 +185,30 @@ class Dashboard extends Component {
   }
 
   render() {
-    let rows = [];
-    for (let i = 0; i < this.state.schema.rows.length; i++) {
-      rows.push(
-        <KeyValue
-          key={'row' + i}
-          rowIndex={i}
-          deleteRow={this.deleteRow}
+ 
+    return (
+      <div>
+        <LogoutButton />
+        <br/>
+        <SchemaName schemaName = {this.state.schema.schemaName} handleSchemaName={this.handleSchemaName} />
+        <br/>
+
+        <div className='container'>
+          <SchemaHeaders />   
+          <br/>
+          <Rows deleteRow={this.deleteRow}
           handleChangeRequired={this.handleChangeRequired}
           handleChangeUnique={this.handleChangeUnique}
           handleChangeKey={this.handleChangeKey}
           handleChangeType={this.handleChangeType}
-          rowData={this.state.schema.rows[i]}
-        />
-      );
-    }
-
-    return (
-      <div>
-        {/* <button id='logout-button' onClick={this.props.deleteCookie}>Logout</button> */}
-        <LogoutButton />
-
-        <div className='schemaName'>
-          <input
-            type='text'
-            value='Schema Name'
-            placeholder='Schema Name'
-            value={this.state.schema.schemaName}
-            onChange={this.handleSchemaName}
+          rows = {this.state.schema.rows}
           />
-          <br />
-        </div>
-        <div className='container'>
-          {/* ADDED TABLE HEADS - SHOULD BE STYLED */}
-          <div className='headers'>
-            <p>Key</p>
-            <p>Type</p>
-            <p>Required</p>
-            <p>Unique</p>
-            <p>Delete</p>
-          </div>
-          <br />
-          <div className='form'>{rows}</div>
+         
           <SchemaStorage userSchemaArr={this.state.userSchemaArr} />
+          
           <div className="buttons">
+            <OptionButtons />
+
             <button
               className="submit"
               onClick={() => this.handleCreateSchema(this.state.schema)}
