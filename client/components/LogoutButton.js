@@ -6,7 +6,6 @@ function LogoutButton() {
 
   const deleteCookie = () => {
     Cookies.remove('ssid');
-    <Redirect to='/login' />;
   };
 
   return (

@@ -1,5 +1,3 @@
-
-
 const jwt = require('jsonwebtoken');
 const pool = require('./database');
 
@@ -97,7 +95,7 @@ const schemaController = {
   },
 
   // gets one specific schema
-  getSchema: (req, res, next) => {
+  getSchema: (req, res) => {
     const { ssid } = req.cookies;
     const { schema_id } = req.params;
 

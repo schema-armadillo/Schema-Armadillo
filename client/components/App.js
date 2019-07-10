@@ -15,13 +15,13 @@ import {
 import Login from './Login';
 import Dashboard from './Dashboard';
 
-const route = (isLogged, loginToggle, getUserSchemaArr, userSchemaArr, deleteCookie) => {
+const route = (isLogged, loginToggle, getUserSchemaArr, userSchemaArr) => {
   return (<Switch>
 
     <Route exact path="/" render={() => (isLogged ? <Dashboard userSchemaArr={userSchemaArr} /> : <Redirect to="/login" />)} />
     <Route path="/login" render={() => (isLogged ? <Redirect to="/dashboard" /> : <Login isLoggedIn={isLogged} loginToggle={loginToggle} getUserSchemaArr={getUserSchemaArr} />)} />
     <Route path="/signup" render={() => (isLogged ? <Redirect to="/dashboard" /> : <Login isLoggedIn={isLogged} loginToggle={loginToggle} getUserSchemaArr={getUserSchemaArr} />)} />
-    <Route path="/dashboard" render={() => (isLogged ? <Dashboard userSchemaArr={userSchemaArr} deleteCookie={deleteCookie} /> : <Redirect to="/login" />)} />
+    <Route path="/dashboard" render={() => (isLogged ? <Dashboard userSchemaArr={userSchemaArr} /> : <Redirect to="/login" />)} />
     <Route path="/myschema" />
 
   </Switch>)
@@ -52,18 +52,14 @@ class App extends Component {
     // undefined check, handles create user
     if (result.userSchema !== undefined) result.userSchema.forEach(el => userSchemaArr.push(el));
     this.setState({ isLogged: true, userSchemaArr });
-    // this.setState({ isLogged: true });
-    // console.log(this.state);
   }
 
   checkIfLoggedIn() {
-    console.log('inside did mount func')
     //checks the jwt
     fetch('/auth/verify', { method: 'POST' })
       .then(data => data.json())
       .then(data => {
         this.setState({ isLogged: data.isLoggedIn })
-        console.log('inside check if logged in ', this.state.isLogged)
       })
       .catch(e => {
         console.log('no jwt, inside catch e');
@@ -72,7 +68,6 @@ class App extends Component {
   }
 
   componentDidMount() {
-    console.log('component mounting, about to check jwt');
     this.checkIfLoggedIn();
   }
 
@@ -81,7 +76,7 @@ class App extends Component {
     return (
       <Router>
         {/* invoke route with isLogged */}
-        {route(this.state.isLogged, this.toggleLoggedIn, this.getUserSchemaArr, this.state.userSchemaArr, this.deleteCookie)}
+        {route(this.state.isLogged, this.toggleLoggedIn, this.getUserSchemaArr, this.state.userSchemaArr)}
       </Router>
     );
   }
