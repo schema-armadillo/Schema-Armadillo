@@ -63,23 +63,20 @@ const schemaController = {
     const { ssid } = req.cookies;
     const { schema_id } = req.params;
 
-    jwt.verify(ssid, 'secretkey', (err, result) => {
-      if (err) {
-        return res.status(401).json({ isLoggedIn: false })
-      }
-      const { user_id } = result;
-
-      // query the table using user_id and schema_id
+    try {
+      const { user_id } = jwt.verify(ssid, 'secretkey');
       pool.query('SELECT * FROM Schemas WHERE user_id=$1 AND schema_id=$2', [user_id, schema_id])
         .then(schemaInfo => res.status(200).json(schemaInfo.rows))
-        .catch(err => res.status(400).send(err));
-    });
+        .catch((err) => { throw new Error(err); });
+    } catch (err) {
+      res.status(500).send('jwt has been tampered with');
+    }
   },
   getAllSchema: (req, res, next) => {
     const { user_id } = res.locals;
 
     if (user_id) {
-      pool.query(`CREATE TABLE IF NOT EXISTS Schema_IDs (schema_id SERIAL PRIMARY KEY, schema_name VARCHAR(50), user_id INT)`, (err, result) => {
+      pool.query('CREATE TABLE IF NOT EXISTS Schema_IDs (schema_id SERIAL PRIMARY KEY, schema_name VARCHAR(50), user_id INT)', (err, result) => {
         if (err) {
           console.error('error in creating schema_id table');
           throw new Error(err);
