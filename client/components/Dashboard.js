@@ -71,7 +71,11 @@ class Dashboard extends Component {
 
   }
 
+
   handleSaveSchema() {
+  if(this.state.schema.schemaName.length === 0){
+    return alert('Schema Name must be filled out')
+  }
     fetch('/api/schema', {
       method: 'POST',
       headers: {
