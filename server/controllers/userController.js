@@ -28,7 +28,7 @@ const userController = {
     })
     .catch((err) => {
       console.log('error adding user to DB: ', err);
-      return res.status(500).send('Error creating user. PLease try again.');
+      return res.status(500).send('Error creating user. Please try again.');
     }),
 
   //  WHERE username = '${username}'
@@ -71,14 +71,10 @@ const userController = {
     });
   },
   checkJwt: (req, res, next) => {
-    console.log('userController => checkJwt')
     const { ssid } = req.cookies;
-    console.log('looking for jwt');
-    console.log(ssid);
     jwt.verify(ssid, 'secretkey', (err, result) => {
       if (err) {return res.status(401).json({ isLoggedIn: false })}
       res.locals.user_id = result.user_id;
-      console.log('userController => checkJwt => result', result);
       next();
     })
   }
