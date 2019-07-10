@@ -39,7 +39,7 @@ class App extends Component {
     this.toggleLoggedIn = this.toggleLoggedIn.bind(this);
     this.getUserSchemaArr = this.getUserSchemaArr.bind(this);
   }
-
+  
   getUserSchemaArr(result) {
     const userSchemaArr = [...this.state.userSchemaArr];
     result.forEach(el => userSchemaArr.push(el));
