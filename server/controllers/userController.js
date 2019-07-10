@@ -45,13 +45,11 @@ const userController = {
       .then((data) => {
         //check the length of the row instead of undefined
         
-        if (data.rows[0].username === undefined) {
+        if (data.rows.length === 0) {
           console.log('this is data rows',data.rows[0])
           return res.status(401).send('Unable to login.');
         }
-        else return data.rows[0];
-      })
-      .then((userFound) => {
+        const userFound = data.rows[0]
         bcrypt.compare(password, userFound.password, (err, result) => {
           if (err) {
             console.log('inside of 500')
@@ -64,7 +62,7 @@ const userController = {
           console.log('inside of 401')
           return res.status(401).send('Unable to login.');
         });
-      })
+      })        
       .catch(err => res.status(500).send('There is an error'));
 
   },

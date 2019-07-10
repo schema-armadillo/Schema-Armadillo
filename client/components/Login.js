@@ -92,9 +92,6 @@ class Login extends Component {
       .then((result) => {
          this.props.loginToggle(result);
       })
-      .catch(err => {
-        
-      });
   }
 
 
