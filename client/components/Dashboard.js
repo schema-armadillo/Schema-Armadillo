@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import '../styles/Dashboard.css';
-import KeyValue from './KeyValue';
 import schemaGenerator from '../../utils/modelCodeMaker2';
 import LogoutButton from './LogoutButton';
 import SchemaStorage from './SchemaStorage.jsx';
@@ -182,8 +181,9 @@ class Dashboard extends Component {
 
   render() {
     return (
-      <div>
+      <div id="dashboard">
         <LogoutButton />
+        <img id="armadillo" src="Armadillo-icon.png" alt="armadillo" />
         <br />
         <SchemaName schemaName={this.state.schema.schemaName} handleSchemaName={this.handleSchemaName} />
 
@@ -202,7 +202,7 @@ class Dashboard extends Component {
           <OptionButtons schema={this.state.schema} handleCreateSchema={this.handleCreateSchema} createRow={this.createRow} />
         </div>
 
-        <SaveButton result={this.state.result} />
+        <SaveButton result={this.state.result} handleSaveSchema={this.handleSaveSchema} />
         <pre onClick={this.handleCopySchema}>
           <div className='clipboard-message' />
           <code>{this.state.result}</code>

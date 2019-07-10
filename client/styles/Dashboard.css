@@ -111,21 +111,15 @@ pre:hover {
   width: 100%;
   text-align: center;
 }
-/* 
-.clipboard-message {
-  opacity: 1;
-  animation: fade 2s linear;
-}
 
-@keyframes fade {
-  0%,
-  100% {
-    opacity: 0;
-  }
-  50% {
-    opacity: 1;
-  }
-} */
+
+#dashboard #armadillo{
+  left: 45%;
+  height: 10%;
+  width: 5%;
+  position: absolute;
+  margin-bottom: 0;
+}
 
 #logout-button{
   float:right;
