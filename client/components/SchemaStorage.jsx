@@ -1,16 +1,34 @@
 import React from 'react';
+import SchemaButton from './SchemaButton.jsx';
 
-const SchemaStorage = ({ userSchemaArr }) => {
-  const schemas = userSchemaArr.map(schema => (
-    <button type="button">
-      {schema.schema_name}
-    </button>
+function setNewKeyValueTable(schema, setKeyValueTable) {
+  fetch(`/api/schema/${schema.schema_id}`)
+    .then(data => data.json())
+    .then((data) => {
+      setKeyValueTable({
+        schemaName: schema.schema_name,
+        rows: data.map(row => ({
+          key: row.key,
+          type: row.type,
+          options: {
+            required: row.required_check,
+            unique: row.unique_check,
+          },
+        })),
+      });
+    })
+    .catch(err => console.log('error in settingKeyValueTable', err));
+}
+
+const SchemaStorage = ({ userSchemaArr, setKeyValueTable }) => {
+  const schemas = userSchemaArr.map((schema, i) => (
+    <SchemaButton key={`schema${i}`} schema_name={schema.schema_name} onClick={() => setNewKeyValueTable(schema, setKeyValueTable)} />
   ));
   return (
     <div className="optionsKey">
       {schemas}
     </div>
   );
-}
+};
 
 export default SchemaStorage;
