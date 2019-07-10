@@ -3,27 +3,23 @@ const pool = require('./database');
 
 const schemaController = {
   createSchemaId: (req, res, next) => {
-    console.log('inside create schema id middleware', req.body);
-    pool.query(`CREATE TABLE IF NOT EXISTS Schema_IDs (schema_id SERIAL PRIMARY KEY, schema_name VARCHAR(50), user_id INT)`, (err, result) => {
-      if (err) {
-        console.error('error in creating schema_id table');
-        throw new Error(err);
-      }
+    // create schema_ids table if not already existing
+    pool.query('CREATE TABLE IF NOT EXISTS schema_IDs (schema_id SERIAL PRIMARY KEY, schema_name VARCHAR(50), user_id INT)')
+      .then(() => {
+        const { schemaName } = req.body;
+        const { user_id } = res.locals;
 
-      const { schemaName } = req.body;
-      const { user_id } = res.locals;
-      console.log('schemaController => createSchemaId => schemaName, user_id', schemaName, user_id)
-
-      pool.query(`INSERT INTO Schema_IDs (user_id, schema_name) VALUES ('${user_id}', '${schemaName}') RETURNING *`, (err, result) => {
-        if (err) {
-          console.error('Error in adding table to DB');
-          throw new Error(err);
-        }
-        res.locals.schema_id = result.rows[0].schema_id;
-        console.log('schemaController => createSchemaId => result', result)
+        // insert new schema id into schema_ids table
+        return pool.query('INSERT INTO schema_IDs (user_id, schema_name) VALUES ($1, $2) RETURNING schema_id', [user_id, schemaName]);
+      })
+      .then((insertResult) => {
+        res.locals.schema_id = insertResult.rows[0].schema_id;
         return next();
       })
-    })
+      .catch((err) => {
+        console.error('error in creating schema_ids table');
+        throw new Error(err);
+      });
   },
   createSchema: (req, res, next) => {
     // extract all the form inputs. not there yet
