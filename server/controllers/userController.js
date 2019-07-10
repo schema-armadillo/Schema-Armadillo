@@ -40,33 +40,35 @@ const userController = {
 
   //  WHERE username = '${username}'
   login: (req, res, next) => {
+    
     const { email: username, password } = req.body;
-    pool.query(`SELECT * FROM users WHERE username = '${username}`)
+    // console.log(username);
+    pool.query(`SELECT * FROM users WHERE username = '${username}'`)
       .then((data) => {
-        console.log('data rows' , data.rows[0])
-        if (data.rows[0] === undefined) {
+        //check the length of the row instead of undefined
+        
+        if (data.rows[0].username === undefined) {
+          console.log('this is data rows',data.rows[0])
           return res.status(401).send('Unable to login.');
         }
         else return data.rows[0];
       })
       .then((userFound) => {
-        console.log('user has been found: ', userFound);
         bcrypt.compare(password, userFound.password, (err, result) => {
           if (err) {
-            console.log('sending error from inside bcrypt');
+            console.log('inside of 500')
             return res.status(500).send('Internal error authorizing credentials.');
           }
           if (result) {
-            console.log('result is true');
             res.locals.user_id = userFound.user_id;
             return next();
           }
-          // change to incorrect password
-          console.log('there is an error, after brcyprt process');
+          console.log('inside of 401')
           return res.status(401).send('Unable to login.');
         });
       })
-      .catch(err => res.status(500).send(err));
+      .catch(err => res.status(500).send('There is an error'));
+
   },
   setJwt: (req, res) => {
     console.log('inside of set jwt');
@@ -89,7 +91,7 @@ const userController = {
         return res.status(401).json({ isLoggedIn: false })
       }
       res.locals.user_id = result.user_id;
-      next();
+       next();
     })
   }
 };

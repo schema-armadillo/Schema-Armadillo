@@ -83,20 +83,17 @@ class Login extends Component {
       body: JSON.stringify(loginBody),
     })
       .then(res => {
-        console.log(res.status);
-        if (res.status === 500) {
-          alert('Invalid username or password. Please try again.')
+        if (res.status === 401 || res.status == 500) {
+          alert('Oops. Wrong username or password. Please try again')
           throw new Error('Invalid credentials. Please try again.');
         } 
-      else return res.json();
+        else return res.json();
       })
       .then((result) => {
-        alert('Welcome back.')
-        this.props.loginToggle(result);
+         this.props.loginToggle(result);
       })
       .catch(err => {
-       // console.error(err)
-        //  alert('Invalid username or password. Please try again.')
+         
       });
   }
 
