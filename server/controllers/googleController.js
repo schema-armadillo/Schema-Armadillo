@@ -23,7 +23,7 @@ const googleController = {
         console.log("---------------------------------code", code)
         res.locals.code = code;
         // const sessionState = req.query.session_state;
-        axios.post(`https://www.googleapis.com/oauth2/v4/token?code=${code}&client_id=${process.env.GOOGLE_CLIENT_ID}&client_secret=${process.env.GOOGLE_CLIENT_SECRET}&redirect_uri=http://localhost/dashboard&grant_type=authorization_code&Content-Type=application/x-www-form-urlencoded`)
+        axios.post(`https://www.googleapis.com/oauth2/v4/token?code=${code}&client_id=${process.env.GOOGLE_CLIENT_ID}&client_secret=${process.env.GOOGLE_CLIENT_SECRET}&redirect_uri=http://localhost:3000/google/googleOAuth&grant_type=authorization_code&Content-Type=application/x-www-form-urlencoded`)
             .then(response => {
                 console.log("IN THE GETTOKEN POST REQUEST")
                 let jwt = response.data.id_token;
