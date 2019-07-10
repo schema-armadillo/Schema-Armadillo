@@ -5,7 +5,7 @@ const googleController = {
     //for initial option to use google oauth
     getCode: (req, res) => {
         console.log("IN THE GET CODE")
-        axios.get(`https://accounts.google.com/o/oauth2/v2/auth?client_id=${process.env.GOOGLE_CLIENT_ID}&response_type=code&scope=openid%20email&redirect_uri=http://localhost:3000/dashboard`)
+        axios.get(`https://accounts.google.com/o/oauth2/v2/auth?client_id=${process.env.GOOGLE_CLIENT_ID}&response_type=code&scope=openid%20email&redirect_uri=http://localhost:3000/google/googleOAuth`)
             .then((response) => {
                 // console.log("google response", response.data)
                 res.send(response.data);
@@ -20,10 +20,12 @@ const googleController = {
     getToken: (req, res, next) => {
         console.log("here I am, in getToken")
         const code = req.query.code;
+        console.log("---------------------------------code", code)
         res.locals.code = code;
         // const sessionState = req.query.session_state;
-        axios.post(`https://www.googleapis.com/oauth2/v4/token?code=${code}&client_id=${process.env.GOOGLE_CLIENT_ID}&client_secret=${process.env.GOOGLE_CLIENT_SECRET}&redirect_uri=http://localhost:3000/dashboard&grant_type=authorization_code&Content-Type=application/x-www-form-urlencoded`)
+        axios.post(`https://www.googleapis.com/oauth2/v4/token?code=${code}&client_id=${process.env.GOOGLE_CLIENT_ID}&client_secret=${process.env.GOOGLE_CLIENT_SECRET}&redirect_uri=http://localhost/dashboard&grant_type=authorization_code&Content-Type=application/x-www-form-urlencoded`)
             .then(response => {
+                console.log("IN THE GETTOKEN POST REQUEST")
                 let jwt = response.data.id_token;
                 jwt = jwt.split('.')[1];
                 const base64 = Buffer.from(jwt, 'base64').toString();
