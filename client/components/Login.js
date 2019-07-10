@@ -84,24 +84,19 @@ class Login extends Component {
     })
       .then(res => {
         console.log(res.status);
-        if (res.status === 401) {
+        if (res.status === 500) {
+          alert('Invalid username or password. Please try again.')
           throw new Error('Invalid credentials. Please try again.');
-        } else return res.json();
+        } 
+      else return res.json();
       })
       .then((result) => {
         alert('Welcome back.')
-        console.log('Login.js => handleLoginSubmit => rows',result);
-        
-        console.log('Login.js => handleLoginSubmit => loginToggle')
         this.props.loginToggle(result);
-        console.log('Login.js => handleLoginSubmit => getUserSchemaArr')
-        // this.props.getUserSchemaArr(result);
-
       })
       .catch(err => {
-        console.error(err)
-        // alert('Invalid credentials. Please try again.')
-        // console.log('login fetch err ', err)
+       // console.error(err)
+        //  alert('Invalid username or password. Please try again.')
       });
   }
 

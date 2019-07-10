@@ -21,32 +21,32 @@ const userController = {
     });
   },
 
-  addUserToDB: (req, res, next) => pool.query(
-    `INSERT INTO users (username, password) VALUES ('${res.locals.username}', '${res.locals.password}') RETURNING user_id, username`,
-  )
-    .then((data) => {
-      console.log('some data: ', data);
-      // THIS NEEDS TO CHANGE, IT'S ALL THE DATA
-      ////// res.locals.data = { username: data.rows[0].username, user_id: data.rows[0].user_id };
-      res.locals.user_id = data.rows[0].user_id;
-      res.locals.username = data.rows[0].username;
+  addUserToDB: (req, res, next) => {
 
-      return next();
-    })
-    .catch((err) => {
-      return res.status(500).send('Error creating user. Please try again.');
-    }),
+    pool.query(`INSERT INTO users (username, password) VALUES ('${res.locals.username}', '${res.locals.password}') RETURNING user_id, username`)
+      .then((data) => {
+        console.log('some data: ', data);
+        // THIS NEEDS TO CHANGE, IT'S ALL THE DATA
+        ////// res.locals.data = { username: data.rows[0].username, user_id: data.rows[0].user_id };
+        res.locals.user_id = data.rows[0].user_id;
+        res.locals.username = data.rows[0].username;
+
+        return next();
+      })
+      .catch((err) => {
+        return res.status(500).send('Error creating user. Please try again.');
+      })
+  },
 
   //  WHERE username = '${username}'
   login: (req, res, next) => {
     const { email: username, password } = req.body;
-    // console.log(username);
-    pool.query(`SELECT * FROM users WHERE username = '${username}'`)
+    pool.query(`SELECT * FROM users WHERE username = '${username}`)
       .then((data) => {
-        //console.log('data rows:\n\n', data.rows[0]);
-
-        //check the length of the row instead of undefined
-        if (data.rows[0] === undefined) { return res.status(401).send('Unable to login.'); }
+        console.log('data rows' , data.rows[0])
+        if (data.rows[0] === undefined) {
+          return res.status(401).send('Unable to login.');
+        }
         else return data.rows[0];
       })
       .then((userFound) => {
