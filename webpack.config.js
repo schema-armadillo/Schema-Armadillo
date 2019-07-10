@@ -38,15 +38,6 @@ module.exports = {
           'css-loader', // translates CSS into CommonJS
         ],
       },
-      {
-        test: /\.(png|jpe?g|gif)$/,
-        use: [
-          {
-            loader: 'file-loader',
-            options: {},
-          },
-        ],
-      },
     ],
   },
 };

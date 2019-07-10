@@ -1,17 +1,17 @@
 import React from 'react'
 
 function SaveButton(props) {
-    return (
-        <div className='Buttons'>
-            <button
-                className='saveButton'
-                onClick={props.handleSaveSchema}
-                type="button"
-            >
-                Save
+  return (
+    <div className='Buttons'>
+      <button
+        className='saveButton'
+        onClick={props.handleSaveSchema}
+        type="button"
+      >
+        Save
         </button>
-        </div>
-    )
+    </div>
+  )
 }
 
 export default SaveButton

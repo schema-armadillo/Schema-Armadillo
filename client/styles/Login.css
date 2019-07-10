@@ -3,7 +3,6 @@ body {
     flex-direction: row;
     justify-content: center;
     align-items: center;
-    padding-top: 50px;
     background-color: #FFF4E6;
 }
 
@@ -24,12 +23,16 @@ body {
 }
 
 .signupForm {
+    padding-top: 5%;
+    padding-bottom: 5%;
     background-color: #4a4e69;
-    width: 400px;
+    width: 40%;
 }
 
 .loginForm {
-    width: 680px;
+    padding-top: 5%;
+    padding-bottom: 5%;
+    width: 40%;
     background-color: white;
 }
 
@@ -104,8 +107,23 @@ h1 {
     margin: 10px;
 }
 
-.armadillo{
-    margin-top: -50px;
-    width: 50px;
-    height: 50px;
+/* .signupForm #armadillo{
+  animation: spin infinite 5s linear;
+  margin-bottom: 5%;
+} */
+
+#armadillo{
+  width: 20%;
+  height: 20%;
+  animation: spin infinite 5s linear;
+  margin-bottom: 5%;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
 }

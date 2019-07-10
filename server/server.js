@@ -20,13 +20,13 @@ app.use(
 
 app.use(cookieParser());
 
+app.use(express.static('img'));
+
 app.use('/auth', user);
 app.use('/api', schema);
 
-// create routers for separate endpoints
 app.get('/*', (req, res) => {
   res.sendFile(path.join(__dirname, '../client/index.html'));
-  // res.send('hello')
 });
 
 app.listen(port, () => {

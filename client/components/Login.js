@@ -7,25 +7,14 @@ import {
 } from 'react-router-dom';
 
 import styled from 'styled-components';
-import armadillo from '../Armadillo-icon.jpg';
 
 const Form = styled.form`
     box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
     display: flex;
     flex-direction: column;
     height: 450px;
-    padding-top: 150px;
     align-items: center;
     `;
-
-
-// Commented out since it never uses this styled.input?
-// const Input = styled.input`
-//     width: 375px;
-//     height: 50px;
-//     margin: 30px;
-//     padding: 10px;
-// `;
 
 class Login extends Component {
   constructor(props) {
@@ -53,8 +42,8 @@ class Login extends Component {
     this.setState({ loginPassword: event.target.value });
   }
 
-  handleSignupButton(){
-    this.setState({redirectSignup: true})
+  handleSignupButton() {
+    this.setState({ redirectSignup: true })
   }
 
   handleLoginSubmit(event) {
@@ -75,41 +64,41 @@ class Login extends Component {
         if (res.status === 401 || res.status == 500) {
           alert('Oops. Wrong username or password. Please try again')
           throw new Error('Invalid credentials. Please try again.');
-        } 
+        }
         else return res.json();
       })
       .then((result) => {
-         this.props.loginToggle(result);
+        this.props.loginToggle(result);
       })
   }
 
   render() {
-    if(this.state.redirectSignup) return(
-      <Redirect to='/signup'/>
+    if (this.state.redirectSignup) return (
+      <Redirect to='/signup' />
     )
     return (
       <div className='loginContainer'>
-          <Form className='loginForm' onSubmit={this.handleLoginSubmit}>
-            {/* <img className="armadillo" src={armadillo} alt="armadillo logo" /> */}
-            <h1>Log in to Schema Armadillo</h1>
-            <input
-              className='entry emailField'
-              type='text'
-              placeholder='email'
-              value={this.state.loginEmail}
-              onChange={this.handleChangeLoginEmail}
-            />
-            <input
-              className='entry passwordField'
-              type='password'
-              placeholder='password'
-              value={this.state.loginPassword}
-              onChange={this.handleChangeLoginPassword}
-            />
-            <input className='loginButton' type='submit' value='Giddy-up!' />
-            <button id="signup-button" onClick={this.handleSignupButton}>Signup</button>
-          </Form>
-      </div> 
+        <Form className='loginForm' onSubmit={this.handleLoginSubmit}>
+          <img id="armadillo" src="Armadillo-icon.png" alt="armadillo" />
+          <h1>Log in to Schema Armadillo</h1>
+          <input
+            className='entry emailField'
+            type='text'
+            placeholder='email'
+            value={this.state.loginEmail}
+            onChange={this.handleChangeLoginEmail}
+          />
+          <input
+            className='entry passwordField'
+            type='password'
+            placeholder='password'
+            value={this.state.loginPassword}
+            onChange={this.handleChangeLoginPassword}
+          />
+          <input className='loginButton' type='submit' value='Giddy-up!' />
+          <button id="signup-button" onClick={this.handleSignupButton}>Signup</button>
+        </Form>
+      </div>
     );
   }
 }
