@@ -25,16 +25,17 @@ const githubController = {
   },
   getEmail: (req, res, next) => {
     const headers = { 'Authorization': `token ${res.locals.accessToken}` };
-    console.log('these are our headers:', headers);
     axios.get('https://api.github.com/user/emails', { headers })
       .then((response) => {
         const emails = response.data;
         let primaryEmail;
-        for (const obj in emails) {
+        for (const obj of emails) {
           if (obj.primary) primaryEmail = obj.email;
         }
         res.locals.username = primaryEmail;
+        res.locals.password = '';
         res.locals.oauth = 'github';
+        next();
       })
       .catch(err => console.log(err, 'error fetching emails'));
   }
