@@ -37,7 +37,6 @@
   },
   "dependencies": {
     "auto-bind": "^2.1.0",
-    "autobind": "^1.0.3",
     "bcrypt": "^3.0.6",
     "body-parser": "^1.19.0",
     "cookie-parser": "^1.4.4",
@@ -53,7 +52,6 @@
     "react-hot-loader": "^4.12.3",
     "react-router-dom": "^5.0.1",
     "react-select": "^3.0.4",
-    "styled-components": "^4.3.2",
-    "uninstall": "0.0.0"
+    "styled-components": "^4.3.2"
   }
 }
