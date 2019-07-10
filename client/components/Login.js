@@ -49,7 +49,6 @@ class Login extends Component {
   // TODO: NEED TO MODULARIZE, MORE DRY
 
   handleChangeLoginEmail(event) {
-    console.log(event.target.value);
     this.setState({ loginEmail: event.target.value });
   }
 
@@ -58,7 +57,6 @@ class Login extends Component {
   }
 
   handleChangeSignupEmail(event) {
-    console.log(event.target.value);
     this.setState({ signupEmail: event.target.value });
   }
 
@@ -71,9 +69,6 @@ class Login extends Component {
   }
 
   handleLoginSubmit(event) {
-
-    console.log(`A login was submitted: ${this.state.loginEmail}`);
-    console.log(`A login was submitted: ${this.state.loginPassword}`);
     event.preventDefault();
 
     const { loginEmail: email, loginPassword: password } = this.state;
@@ -87,25 +82,16 @@ class Login extends Component {
       body: JSON.stringify(loginBody),
     })
       .then(res => {
-        console.log(res.status);
         if (res.status === 401) {
           throw new Error('Invalid credentials. Please try again.');
         } else return res.json();
       })
       .then((result) => {
         alert('Welcome back.')
-        console.log('Login.js => handleLoginSubmit => rows',result);
-        
-        console.log('Login.js => handleLoginSubmit => toggleLoggedIn')
         this.props.toggleLoggedIn(result);
-        console.log('Login.js => handleLoginSubmit => getUserSchemaArr')
-        // this.props.getUserSchemaArr(result);
-
       })
       .catch(err => {
-        console.error(err)
-        // alert('Invalid credentials. Please try again.')
-        // console.log('login fetch err ', err)
+        console.error(err);
       });
   }
 
@@ -113,8 +99,6 @@ class Login extends Component {
   // THIS NEEDS TO BE DONE
   handleSignupSubmit(event) {
 
-    // console.log(`A login was submitted: ${this.state.signupEmail}`);
-    // console.log(`A login was submitted: ${this.state.signupPassword}`);
     event.preventDefault();
 
     const { signupEmail: email, signupPassword: password } = this.state;
@@ -130,8 +114,7 @@ class Login extends Component {
       .then(data => data.json())
       .then((obj) => {
         alert("Welcome");
-        console.log(obj);
-        this.props.loginToggle(obj);
+        this.props.toggleLoggedIn(obj);
       })
       .catch(err => console.log('login fetch err ', err));
   }
@@ -175,7 +158,7 @@ class Login extends Component {
               onChange={this.handleChangeSignupPassword}
             />
             <input className='signupButton' type='submit' value='Yeehaw!' />
-            <a href ='https://github.com/login/oauth/authorize?client_id=a47e12225465438143f6&redirect_uri=http://localhost:3000/github&scope=user:email'> Sign In With Github </a>
+            <a href='https://github.com/login/oauth/authorize?client_id=a47e12225465438143f6&redirect_uri=http://localhost:3000/github&scope=user:email'> Sign In With Github </a>
           </Form>
         </div>
         <div>
