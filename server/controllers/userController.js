@@ -37,7 +37,6 @@ const userController = {
 
   login: (req, res, next) => {
     const { email: username, password } = req.body;
-    // console.log(username);
     pool.query(`SELECT * FROM users WHERE username = '${username}'`)
       .then((data) => {
         console.log('data rows:\n\n', data.rows[0]);
