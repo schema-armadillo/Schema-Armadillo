@@ -10,7 +10,7 @@ const mapStateToProps = store => ({
 });
 const mapDispatchToProps = dispatch => ({
   addRow: () => dispatch(addRow()),
-  deleteRow:() => dispatch(deleteRow())
+  deleteRow:(index) => dispatch(deleteRow(index))
 });
 
 class Dashboard extends Component {
@@ -107,14 +107,6 @@ class Dashboard extends Component {
 
   createRow() {
     let schema = Object.assign({}, this.state.schema);
-    // let { rows } = schema;
-    // console.log("Dashboard => createRow => this.state.schema.rows", rows);
-    // rows.push({
-    //   key: "",
-    //   type: "",
-    //   required: false
-    // });
-    console.log(JSON.stringify(this.props.myrows),this.props.totalRows);
     schema.rows = this.props.myrows;
     this.setState({ schema });
   }
@@ -126,7 +118,10 @@ class Dashboard extends Component {
     //   if (index === rowIndex) return false;
     //   return true;
     // });
-    schema.rows = this.props.rows;
+    console.log('before',this.props.myrows)
+    this.props.deleteRow(rowIndex);
+    console.log('after',this.props.myrows);
+    schema.rows = this.props.myrows;
     console.log("Dashboard => deleteRow => rows", rows);
     this.setState({ schema });
   }
@@ -192,7 +187,7 @@ class Dashboard extends Component {
 
     let rows = [];
     // console.log(this.totalRows);
-    for (let i = 0; i < this.props.totalRows; i++) {
+    for (let i = 0; i < this.props.myrows.length; i++) {
       rows.push(
         <KeyValue
           key={"row" + i}

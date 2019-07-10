@@ -1,7 +1,7 @@
 import * as types from "../constants/types";
 
 export const addRow = () => ({
-  type: types.ADD_KEY,
+  type: types.ADD_ROW,
   payload: {
     key: '',
     type: '',
@@ -10,7 +10,12 @@ export const addRow = () => ({
   },
 });
 
-export const deleteRow = (key) => ({
-  type: types.DELETE_KEY,
-  payload: key,
+export const deleteRow = (index) => ({
+  type: types.DELETE_ROW,
+  payload: index,
 });
+
+export const updateRow = (rowObj) => ({
+  type: types.UPDATE_ROW,
+  payload: rowObj,
+})
