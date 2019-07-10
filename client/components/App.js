@@ -51,29 +51,14 @@ class App extends Component {
   }
 
   checkIfLoggedIn() {
-    if (/google/g.test(JSON.stringify(window.location.href))) {
-      // fetch('/google')
-      //   // .then(data => data.json())
-      //   .then(data => {
-      //     // this.setState({ isLogged: data.isLoggedIn })
-      //     // console.log('inside check if logged in ', this.state.isLogged)
-      //     console.log(data)
-      //   })
-      //   .catch(e => {
-      //     console.log('googleInit no work', e);
-      //     // console.log(this.state.isLogged);
-      //   })
-    }
-    else {
-      fetch('/auth/verify', { method: 'POST' })
-        .then(data => data.json())
-        .then(data => {
-          this.setState({ isLogged: data.isLoggedIn })
-        })
-        .catch(e => {
-          console.error(e);
-        })
-    }
+    fetch('/auth/verify', { method: 'POST' })
+      .then(data => data.json())
+      .then(data => {
+        this.setState({ isLogged: data.isLoggedIn })
+      })
+      .catch(e => {
+        console.error(e);
+      })
   }
 
   componentDidMount() {
