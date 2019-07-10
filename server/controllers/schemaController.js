@@ -1,6 +1,4 @@
-///////////////////////////////////////////////////////////////
-// Backend: user_id should not be assigned to an object called data. Assign it directly to res.locals. Make sure everything that accesses user_id is adjusted. => => => DONE ///////////////////
-///////////////////////////////////////////////////////////////
+
 
 const pool = require('./database');
 

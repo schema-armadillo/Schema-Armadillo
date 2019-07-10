@@ -67,6 +67,9 @@ class Dashboard extends Component {
       body: JSON.stringify(this.state.schema)
     })
       .then(data => data.json());
+
+    // add code here to add functionality to refersh storage of saved schemas
+    
   }
 
   handleCreateSchema(state) {
@@ -185,6 +188,8 @@ class Dashboard extends Component {
     // for (let i=0; i<this.props.userSchemaArr; i++) {
     //   schemaButtons.push(<button>{}</button>)
     // }
+    //////////////////////////////////////////////////////////
+    // trying to find this.props.userSchemaArr
     schemaButtons = this.props.userSchemaArr.map(el => {
       return (<button>{el.schema_name}</button>)
     })
