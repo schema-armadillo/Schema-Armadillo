@@ -7,11 +7,11 @@ const googleController = {
         console.log("IN THE GET CODE")
         axios.get(`https://accounts.google.com/o/oauth2/v2/auth?client_id=${process.env.GOOGLE_CLIENT_ID}&response_type=code&scope=openid%20email&redirect_uri=http://localhost:3000/dashboard`)
             .then((response) => {
-                console.log("google response", response)
+                // console.log("google response", response.data)
                 res.send(response.data);
             })
             .catch((error) => {
-                console.log('Error in getting the code:', error);
+                console.log('Error in getting the code:');
             });
         // res.status(200).send("IN THE GETCODE THING")
     },
