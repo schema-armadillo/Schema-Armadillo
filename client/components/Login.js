@@ -185,7 +185,6 @@ class Login extends Component {
         </div>
         <div>
           <button onClick={this.handleGoogleOAuth}>GOOGLE OAUTH</button>
-          <a href={`https://accounts.google.com/o/oauth2/v2/auth?client_id=387435863357-nrvmhlof3oo1hgbeviticr0hc35nib90.apps.googleusercontent.com&response_type=code&scope=openid%20email&redirect_uri=http://localhost:3000/dashboard`}>OAUTH2</a>
         </div>
       </div>
     );

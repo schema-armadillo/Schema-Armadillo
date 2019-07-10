@@ -10,10 +10,10 @@ import Dashboard from './Dashboard';
 const route = (isLogged, toggleLoggedIn, getUserSchemaArr, userSchemaArr) => {
   return (<Switch>
 
-    <Route exact path="/" render={() => (isLogged ? <Dashboard userSchemaArr={userSchemaArr} /> : <Redirect to="/login" />)} />
+    <Route exact path="/" render={() => (isLogged ? <Dashboard userSchemaArr={userSchemaArr} getUserSchemaArr={getUserSchemaArr} /> : <Redirect to="/login" />)} />
     <Route path="/login" render={() => (isLogged ? <Redirect to="/dashboard" /> : <Login isLoggedIn={isLogged} toggleLoggedIn={toggleLoggedIn} getUserSchemaArr={getUserSchemaArr} />)} />
     <Route path="/signup" render={() => (isLogged ? <Redirect to="/dashboard" /> : <Login isLoggedIn={isLogged} toggleLoggedIn={toggleLoggedIn} getUserSchemaArr={getUserSchemaArr} />)} />
-    <Route path="/dashboard" render={() => (isLogged ? <Dashboard userSchemaArr={userSchemaArr} /> : <Redirect to="/login" />)} />
+    <Route path="/dashboard" render={() => (isLogged ? <Dashboard userSchemaArr={userSchemaArr} getUserSchemaArr={getUserSchemaArr} /> : <Redirect to="/login" />)} />
     <Route path="/myschema" />
 
   </Switch>)

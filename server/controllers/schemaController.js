@@ -1,8 +1,9 @@
 const pool = require('./database');
+const querystring = require('query-string')
 
 const schemaController = {
   createSchemaId: (req, res, next) => {
-    console.log('inside create schema id middleware', req.body);
+    // console.log('inside create schema id middleware', req.body);
     pool.query(`CREATE TABLE IF NOT EXISTS Schema_IDs (schema_id SERIAL PRIMARY KEY, schema_name VARCHAR(50), user_id INT)`, (err, result) => {
       if (err) {
         console.error('error in creating schema_id table');
@@ -11,7 +12,8 @@ const schemaController = {
 
       const { schemaName } = req.body;
       const { user_id } = res.locals;
-      console.log('schemaController => createSchemaId => schemaName, user_id', schemaName, user_id)
+      res.locals.schema_name = schemaName
+      // console.log('schemaController => createSchemaId => schemaName, user_id', schemaName, user_id)
 
       pool.query(`INSERT INTO Schema_IDs (user_id, schema_name) VALUES ('${user_id}', '${schemaName}') RETURNING *`, (err, result) => {
         if (err) {
@@ -19,7 +21,7 @@ const schemaController = {
           throw new Error(err);
         }
         res.locals.schema_id = result.rows[0].schema_id;
-        console.log('schemaController => createSchemaId => result', result)
+        // console.log('schemaController => createSchemaId => result', result)
         return next();
       })
     })
@@ -79,7 +81,7 @@ const schemaController = {
             isUnique,
             isRequired
           ];
-          console.log('query values here: ', queryValues);
+          // console.log('query values here: ', queryValues);
           pool.query(queryText, queryValues, (rowErr, result) => {
             if (rowErr) {
               console.log('error in adding row to DB');
@@ -96,7 +98,11 @@ const schemaController = {
   // gets one specific schema
   getSchema: (req, res, next) => {
     // expecting to receive user_id and schema_id from req.body
-    const { user_id, schema_id } = req.body;
+    console.log('hi from get schema!')
+    console.log('getSchema req.query', req.query)
+    const { user_id, schema_id } = req.query;
+    console.log('in getSchema')
+    console.log('getSchema user_id, schema_id ', user_id, schema_id)
     // query the table using user_id and schema_id
     pool.query(
       'SELECT * FROM Schemas WHERE user_id=$1 AND schema_id=$2',
@@ -106,7 +112,7 @@ const schemaController = {
           console.error(err);
           return res.status(400).json({ error: 'error from getSchema' });
         }
-        console.log('schemaController => getSchema', result.rows);
+        // console.log('schemaController => getSchema', result.rows);
         return res.status(200).json(result.rows);
       }
     );
@@ -123,34 +129,23 @@ const schemaController = {
       return next();
       // return res.status(200).json(result.rows);
 
+    })
+  },
+  refreshAllSchema: (req, res, next) => {
+    const { user_id } = res.locals;
+    pool.query(`SELECT * FROM schema_ids WHERE user_id='${user_id}'`, (err, result) => {
+      if (err) {
+        console.error(err);
+        return res.status(400).json({ error: 'error from getAllSchema' });
+      }
+      //  console.log('schemaContorller => getAllSechama', result.rows);
+      // need to make data in a more workable format. currently a bigass array
 
-      // result.rows.forEach(el => {
-      //   console.log(el.schema_id, el.schema_name)
-      // })
-      // const schemaParsed = [];
-      // let tempObj = {};
-      // result.rows.forEach((row, idx) => {
-      //   console.log('inside foreach loop');
-      //   if (tempObj.hasOwnProperty('schema_id')) {
-      //     const tempNewRow = {};
-      //     const { options_check, unique_check, required_check, type, key } = row;
-      //     tempNewRow.key = key;
-      //     tempNewRow.type = type;
-      //     if (options_check) {
-      //       tempNewRow.options = {};
-      //       tempNewRow.options.unique = unique_check ? unique_check : false;
-      //       tempNewRow.options.required = required_check ? required_check : false;
-      //     }
-      //     console.log('checking temp new row: ', tempNewRow)
-      //     tempObj.rows.push(tempNewRow);
-      //   } else {
-      //     if (schemaParsed.length !== 0) schemaParsed.push(tempObj);
-      //     console.log('setting up tempobj: ', row.schema_id);
+      console.log('schemaController => refreshAllSchema => result', result)
+      return res.locals.userSchema = result.rows;
 
-      //     tempObj = { schema_id: row.schema_id, schema_name: row.schema_name, rows: [] };
-      //   }
-      // });
-      // console.log('my schema pasrsed: ', schemaParsed);
+      // return res.status(200).json(result.rows);
+
     })
   },
   updateSchema: (req, res, next) => {
@@ -184,7 +179,7 @@ const schemaController = {
           console.error(err);
           return res.status(400).json({ error: 'error from updateSchema' });
         }
-        console.log('schemaController => updateSchema', result.rows);
+        // console.log('schemaController => updateSchema', result.rows);
         return res.status(200).json(result.rows);
       }
     );
@@ -202,7 +197,7 @@ const schemaController = {
           console.error(err);
           return res.status(400).json({ error: 'error from deleteSchema' });
         }
-        console.log('schemaController => deleteSchema', result.rows);
+        // console.log('schemaController => deleteSchema', result.rows);
         return res.status(200).json(result.rows);
       }
     );
