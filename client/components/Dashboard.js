@@ -4,6 +4,11 @@ import KeyValue from './KeyValue';
 import schemaGenerator from '../../utils/modelCodeMaker2';
 import LogoutButton from './LogoutButton';
 import SchemaStorage from './SchemaStorage.jsx';
+import SchemaName from './SchemaName';
+import SchemaHeaders from './SchemaHeaders'
+import Rows from './Rows'
+import OptionButtons from './OptionButtons'
+import SaveButton from './SaveButton'
 
 const autoBind = require('auto-bind');
 
@@ -65,7 +70,6 @@ class Dashboard extends Component {
     }, 650);
 
   }
-
 
   handleSaveSchema() {
     if (this.state.schema.schemaName.length === 0) {
@@ -177,72 +181,28 @@ class Dashboard extends Component {
   }
 
   render() {
-    let rows = [];
-    for (let i = 0; i < this.state.schema.rows.length; i++) {
-      rows.push(
-        <KeyValue
-          key={'row' + i}
-          rowIndex={i}
-          deleteRow={this.deleteRow}
-          handleChangeRequired={this.handleChangeRequired}
-          handleChangeUnique={this.handleChangeUnique}
-          handleChangeKey={this.handleChangeKey}
-          handleChangeType={this.handleChangeType}
-          rowData={this.state.schema.rows[i]}
-        />
-      );
-    }
-
     return (
       <div>
         <LogoutButton />
+        <br />
+        <SchemaName schemaName={this.state.schema.schemaName} handleSchemaName={this.handleSchemaName} />
 
-        <div className='schemaName'>
-          <input
-            type='text'
-            placeholder='Schema Name'
-            value={this.state.schema.schemaName}
-            onChange={this.handleSchemaName}
-          />
-          <br />
-        </div>
         <div className='container'>
-          {/* ADDED TABLE HEADS - SHOULD BE STYLED */}
-          <div className='headers'>
-            <p>Key</p>
-            <p>Type</p>
-            <p>Required</p>
-            <p>Unique</p>
-            <p>Delete</p>
-          </div>
+          <SchemaHeaders />
           <br />
-          <div className='form'>{rows}</div>
-          <SchemaStorage userSchemaArr={this.state.userSchemaArr} setKeyValueTable={this.setKeyValueTable} />
-          <div className="buttons">
-            <button
-              className="submit"
-              onClick={() => this.handleCreateSchema(this.state.schema)}
-              type="button"
-            >
-              Create Schema
-            </button>
-            <button
-              className='createrow'
-              onClick={this.createRow}
-              type="button"
-            >
-              Add a New Key
-            </button>
-          </div>
-        </div>
-        <button
-          className='saveButton'
-          onClick={this.handleSaveSchema}
-          type="button"
-        >
-          Save
-        </button>
+          <Rows deleteRow={this.deleteRow}
+            handleChangeRequired={this.handleChangeRequired}
+            handleChangeUnique={this.handleChangeUnique}
+            handleChangeKey={this.handleChangeKey}
+            handleChangeType={this.handleChangeType}
+            rows={this.state.schema.rows}
+          />
 
+          <SchemaStorage userSchemaArr={this.state.userSchemaArr} />
+          <OptionButtons schema={this.state.schema} handleCreateSchema={this.handleCreateSchema} createRow={this.createRow} />
+        </div>
+
+        <SaveButton result={this.state.result} />
         <pre onClick={this.handleCopySchema}>
           <div className='clipboard-message' />
           <code>{this.state.result}</code>
