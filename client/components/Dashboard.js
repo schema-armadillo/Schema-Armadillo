@@ -8,7 +8,7 @@ import SchemaName from './SchemaName';
 import SchemaHeaders from './SchemaHeaders'
 import Rows from './Rows'
 import OptionButtons from './OptionButtons'
-import SaveButton  from './SaveButton'
+import SaveButton from './SaveButton'
 
 class Dashboard extends Component {
   constructor(props) {
@@ -30,8 +30,6 @@ class Dashboard extends Component {
       },
       userSchemaArr: [],
     };
-
-    this.refreshSchemas();
 
     this.refreshSchemas = this.refreshSchemas.bind(this);
     this.handleSchemaName = this.handleSchemaName.bind(this);
@@ -76,11 +74,10 @@ class Dashboard extends Component {
 
   }
 
-
   handleSaveSchema() {
-  if(this.state.schema.schemaName.length === 0){
-    return alert('Schema Name must be filled out')
-  }
+    if (this.state.schema.schemaName.length === 0) {
+      return alert('Schema Name must be filled out')
+    }
     fetch('/api/schema', {
       method: 'POST',
       headers: {
@@ -190,27 +187,25 @@ class Dashboard extends Component {
     return (
       <div>
         <LogoutButton />
-        <br/>
-        <SchemaName schemaName = {this.state.schema.schemaName} handleSchemaName={this.handleSchemaName} />
-        <br/>
+        <br />
+        <SchemaName schemaName={this.state.schema.schemaName} handleSchemaName={this.handleSchemaName} />
 
         <div className='container'>
-          <SchemaHeaders />   
-          <br/>
+          <SchemaHeaders />
+          <br />
           <Rows deleteRow={this.deleteRow}
-          handleChangeRequired={this.handleChangeRequired}
-          handleChangeUnique={this.handleChangeUnique}
-          handleChangeKey={this.handleChangeKey}
-          handleChangeType={this.handleChangeType}
-          rows = {this.state.schema.rows}
+            handleChangeRequired={this.handleChangeRequired}
+            handleChangeUnique={this.handleChangeUnique}
+            handleChangeKey={this.handleChangeKey}
+            handleChangeType={this.handleChangeType}
+            rows={this.state.schema.rows}
           />
-         
-          <SchemaStorage userSchemaArr={this.state.userSchemaArr} />
-          <OptionButtons schema = {this.state.schema} handleCreateSchema={this.handleCreateSchema} createRow = {this.createRow}/>
-        </div>
-        <SaveButton result = {this.state.result}/>
 
-      
+          <SchemaStorage userSchemaArr={this.state.userSchemaArr} />
+          <OptionButtons schema={this.state.schema} handleCreateSchema={this.handleCreateSchema} createRow={this.createRow} />
+        </div>
+
+        <SaveButton result={this.state.result} />
         <pre onClick={this.handleCopySchema}>
           <div className='clipboard-message' />
           <code>{this.state.result}</code>

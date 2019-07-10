@@ -9,8 +9,8 @@ function SchemaHeaders(){
         <p>Required</p>
         <p>Unique</p>
         <p>Delete</p>
-       <br/>
       </div>
+
     )
 }
 
