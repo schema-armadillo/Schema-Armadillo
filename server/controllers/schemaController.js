@@ -106,6 +106,7 @@ const schemaController = {
         return res.status(400).json({ error: 'error from getAllSchema' });
       }
       res.locals.userSchema = result.rows;
+      console.log('schemaController -> getAllSchema -> res.locals.userSchema', res.locals.userSchema);
       return next();
     })
   },

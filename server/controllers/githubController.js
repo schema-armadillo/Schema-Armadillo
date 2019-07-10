@@ -12,7 +12,6 @@ const githubController = {
     uri += '&client_secret=a7035357a23db9f14ed840d0fb58fafc376c09c7';
     uri += `&code=${res.locals.code}`;
     uri += '&redirect_uri=http://localhost:3000/github'
-    // res.status(200).end();
     axios.post(uri)
       .then(response => {
         res.locals.accessToken = queryString.parse(response.data).access_token;

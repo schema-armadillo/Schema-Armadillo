@@ -79,7 +79,7 @@ const userController = {
   checkJwt: (req, res, next) => {
     const { ssid } = req.cookies;
     jwt.verify(ssid, process.env.SECRET_KEY, (err, result) => {
-      if (err) { return res.status(200).json({ isLoggedIn: false }); }
+      if (err) { return res.status(401).json({ isLoggedIn: false }); }
       res.locals.user_id = result.user_id;
       return next();
     });

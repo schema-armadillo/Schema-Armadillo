@@ -89,6 +89,7 @@ class Login extends Component {
       .then((result) => {
         alert('Welcome back.')
         this.props.toggleLoggedIn(result);
+        this.props.redirectToDashboard();
       })
       .catch(err => {
         console.error(err);

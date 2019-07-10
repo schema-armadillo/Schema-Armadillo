@@ -188,7 +188,7 @@ class Dashboard extends Component {
     if (savedSchema) {
       return this.setState({
         schema: JSON.parse(savedSchema)
-      });
+      }, this.handleSaveSchema);
     }
   }
 
@@ -211,6 +211,7 @@ class Dashboard extends Component {
     }
 
     let schemaButtons = [];
+    console.log('userSchemaArr', this.props.userSchemaArr);
     if (this.props.userSchemaArr) {
       schemaButtons = this.props.userSchemaArr.map(el => {
         return (<button>{el.schema_name}</button>)
