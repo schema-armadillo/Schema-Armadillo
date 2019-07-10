@@ -9,8 +9,6 @@ const user = require('./routers/user');
 const schema = require('./routers/schema');
 const google = require('./routers/google');
 
-const googleController = require('./controllers/googleController');
-
 const app = express();
 const port = process.env.PORT || 3000;
 
@@ -24,16 +22,14 @@ app.use(
 
 app.use(cookieParser());
 
-// create routers for separate endpoints
-
-if (process.env.NODE_ENV === 'production') {
-  // statically serve everything in the build folder on the route '/build'
-  app.use('/build', express.static(path.join(__dirname, '../build')));
-  // serve index.html on the root route '/'
-  app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, '../client/index.html'));
-  });
-}
+// if (process.env.NODE_ENV === 'production') {
+//   // statically serve everything in the build folder on the route '/build'
+//   app.use('/build', express.static(path.join(__dirname, '../build')));
+//   // serve index.html on the root route '/'
+//   app.get('/', (req, res) => {
+//     res.sendFile(path.join(__dirname, '../client/index.html'));
+//   });
+// }
 
 app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, '../client/index.html'));
@@ -49,7 +45,6 @@ app.post('/test', (req, res) => {
     .status(200)
     .json({ success: true, redirecturl: '/dashboard' });
 });
-
 
 app.use('/auth', user);
 app.use('/api', schema);

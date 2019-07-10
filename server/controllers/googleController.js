@@ -1,16 +1,11 @@
 const axios = require('axios');
 const jwt = require('jsonwebtoken');
 
-
 const googleController = {
     //for initial option to use google oauth
     getCode: (req, res) => {
         console.log("IN THE GET CODE")
-        axios.get(`https://accounts.google.com/o/oauth2/v2/auth?
-        client_id=${process.env.GOOGLE_CLIENT_ID}&
-        response_type=code&
-        scope=openid%20email&
-        redirect_uri='http://localhost:3000/dashboard'`)
+        axios.get(`https://accounts.google.com/o/oauth2/v2/auth?client_id=${process.env.GOOGLE_CLIENT_ID}&response_type=code&scope=openid%20email&redirect_uri=http://localhost:3000/dashboard`)
             .then((response) => {
                 console.log("google response", response)
                 res.send(response.data);
@@ -25,6 +20,7 @@ const googleController = {
     getToken: (req, res, next) => {
         console.log("here I am, in getToken")
         const code = req.query.code;
+        res.locals.code = code;
         // const sessionState = req.query.session_state;
         axios.post(`https://www.googleapis.com/oauth2/v4/token?code=${code}&client_id=${process.env.GOOGLE_CLIENT_ID}&client_secret=${process.env.GOOGLE_CLIENT_SECRET}&redirect_uri=http://localhost:3000/dashboard&grant_type=authorization_code&Content-Type=application/x-www-form-urlencoded`)
             .then(response => {
@@ -38,26 +34,16 @@ const googleController = {
                 // return next();
                 res.status(200).send("DONE GETTING TOKEN?")
             })
-            .catch((err) => { console.log('The error in getting the Token', err) })
-
+            .catch((err) => {
+                console.log('The error in getting the Token', err)
+            })
+    },
+    getEmail: (req, res) => {
+        console.log("in getEmail")
+        const { email } = res.locals;
+        res.status(200).send("got email", email)
     }
 }
-//method getCode
-//axios get to 
-// https://accounts.google.com/o/oauth2/v2/auth?
-//  client_id=387435863357-nrvmhlof3oo1hgbeviticr0hc35nib90.apps.googleusercontent.com&
-//  response_type=code&
-//  scope=openid%20email&
-//  redirect_uri='http://localhost:3000/dashboard'
-// CHANGE THE THINGS (clientID and redirect)
-//send back response.data
-//displays google login box ^
-
-//getToken axios post
-//code =req.query.code
-//googleapis.com/oauth2/v4/tokem?code=laskjfd
-//client id and sercret redirecturi GRANT and content-type
-
 
 module.exports = googleController;
 
