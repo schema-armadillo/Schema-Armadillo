@@ -7,6 +7,6 @@ const userController = require('../controllers/userController')
 // prefix with google
 console.log('routed to google file');
 router.get('/googleInit', googleController.getCode)
-router.post('/googleOAuth', googleController.getCode, googleController.getToken)
+router.post('/googleOAuth', googleController.getToken)
 
 module.exports = router;

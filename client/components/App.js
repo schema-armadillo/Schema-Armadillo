@@ -61,17 +61,17 @@ class App extends Component {
     console.log((/google/g.test(JSON.stringify(window.location.href))))
     if (/google/g.test(JSON.stringify(window.location.href))) {
       console.log("here")
-      fetch('/google')
-        // .then(data => data.json())
-        .then(data => {
-          // this.setState({ isLogged: data.isLoggedIn })
-          // console.log('inside check if logged in ', this.state.isLogged)
-          console.log(data)
-        })
-        .catch(e => {
-          console.log('googleInit no work', e);
-          // console.log(this.state.isLogged);
-        })
+      // fetch('/google')
+      //   // .then(data => data.json())
+      //   .then(data => {
+      //     // this.setState({ isLogged: data.isLoggedIn })
+      //     // console.log('inside check if logged in ', this.state.isLogged)
+      //     console.log(data)
+      //   })
+      //   .catch(e => {
+      //     console.log('googleInit no work', e);
+      //     // console.log(this.state.isLogged);
+      //   })
     }
     else {
       fetch('/auth/verify', { method: 'POST' })

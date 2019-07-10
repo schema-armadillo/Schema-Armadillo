@@ -39,7 +39,6 @@ app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, '../client/index.html'));
   // res.send('hello')
 });
-app.use('/google', googleController.getCode, googleController.getToken);
 
 app.post('/test', (req, res) => {
   console.log('posted to /test');
@@ -51,12 +50,10 @@ app.post('/test', (req, res) => {
     .json({ success: true, redirecturl: '/dashboard' });
 });
 
-// commenting these two routes since sophie and indra may not have database set up yet and it will give them an error
-// app.use('/user', user);
-// changed from user
+
 app.use('/auth', user);
 app.use('/api', schema);
-
+app.use('/google', google);
 
 app.listen(port, () => {
   console.log(`Listening on port ${port}...`);

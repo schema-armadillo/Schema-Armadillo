@@ -137,16 +137,14 @@ class Login extends Component {
     event.preventDefault();
     const metaData = {
       'method': 'GET',
-      'Content-type': 'application/json',
+      'Content-Type': 'application/json',
       'Accept': 'text/html'
     }
 
-    fetch('/google', metaData)
+    fetch('/google/googleInit', metaData)
       .then(response => {
-        console.log("GOT RESPONSE", response);
-        // console.log(process.env.GOOGLE_CLIENT_ID)
-        window.location.pathname = '/google'
-      // <Redirect to='/auth/google-init' />
+        // console.log(process.env.GOOGLE_CLIENT_ID) //need to integrate webpack plugin to use .env variables in frontend https://medium.com/@trekinbami/using-environment-variables-in-react-6b0a99d83cf5
+        window.location = `https://accounts.google.com/o/oauth2/v2/auth?client_id=387435863357-nrvmhlof3oo1hgbeviticr0hc35nib90.apps.googleusercontent.com&response_type=code&scope=openid%20email&redirect_uri=http://localhost:3000/dashboard`
       })
       .then()
       .catch(err => console.error(err))
