@@ -10,7 +10,7 @@ export const addRow = () => ({
   },
 });
 
-export const deleteRow = (key) => ({
+export const deleteRow = (index) => ({
   type: types.DELETE_KEY,
-  payload: key,
+  payload: index,
 });

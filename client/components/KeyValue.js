@@ -63,8 +63,8 @@ const KeyValue = ({
         <button
           className='deleteButton'
           onClick={e => {
-            deleteRow(rowIndex);
             e.preventDefault();
+            deleteRow(rowIndex);
           }}
         >
           Delete Row
