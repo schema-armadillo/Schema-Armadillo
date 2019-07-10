@@ -22,49 +22,18 @@ const schemaController = {
       });
   },
   createSchema: (req, res, next) => {
-    // extract all the form inputs. not there yet
-    // TODO NEED: userId, SchemaID
-    // const testUserId = 999;
-    // const testSchemaId = 999;
-
-    // needs to be assigned something off body
-    // let user_id;
-    // THIS WILL BE AUTO GENERATED: needs to be assigned something off body
     const { schema_id, user_id } = res.locals;
     // need to establish body format for parsing.
     const { schemaName, rows } = req.body;
 
     // check if table has already been made
     pool.query(
-      'CREATE TABLE IF NOT EXISTS Schemas (user_id INT, schema_name VARCHAR (50), schema_id INT, key VARCHAR(50), type VARCHAR(50), options_check BOOLEAN DEFAULT FALSE, unique_check BOOLEAN DEFAULT FALSE, required_check BOOLEAN DEFAULT FALSE)',
-      (err, result) => {
-        if (err) {
-          console.error('error in adding table.');
-          throw new Error(err);
-        }
-
-        // add to table once it has been created
-        // console.log('CREATE TABLE schema', result);
-
-        // populate the table
-
-        const queryText =
-          'INSERT INTO Schemas (user_id, schema_name, schema_id, key, type, options_check, unique_check, required_check) values ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING *;';
-        rows.forEach((row, idx) => {
+      'CREATE TABLE IF NOT EXISTS schemas (user_id INT, schema_name VARCHAR (50), schema_id INT, key VARCHAR(50), type VARCHAR(50), unique_check BOOLEAN DEFAULT FALSE, required_check BOOLEAN DEFAULT FALSE)')
+      .then(() => {
+        const queryText = 'INSERT INTO Schemas (user_id, schema_name, schema_id, key, type, unique_check, required_check) values ($1, $2, $3, $4, $5, $6, $7) RETURNING *;';
+        rows.forEach((row) => {
           // iterate thru keys to create rows in the table
-
-          const { key, type } = row;
-          // see if there are options to be added to the table
-          const areThereOptions = row.hasOwnProperty('options');
-          // if options is false, this will already be false. if not, have to check if unique and required exist
-          const isUnique =
-            areThereOptions && row.options.hasOwnProperty('unique')
-              ? row.options.unique
-              : false;
-          const isRequired =
-            areThereOptions && row.options.hasOwnProperty('required')
-              ? row.options.required
-              : false;
+          const { key, type, options: { unique, required } } = row;
           // init queryValues array to pass into query
           const queryValues = [
             user_id,
@@ -72,22 +41,21 @@ const schemaController = {
             schema_id,
             key,
             type,
-            areThereOptions,
-            isUnique,
-            isRequired
+            unique,
+            required,
           ];
-          console.log('query values here: ', queryValues);
-          pool.query(queryText, queryValues, (rowErr, result) => {
-            if (rowErr) {
-              console.log('error in adding row to DB');
-              throw new Error(rowErr);
-            }
-            console.log('Row added to table.');
-          });
+          pool.query(queryText, queryValues)
+            .catch((err) => {
+              console.log('error in adding row');
+              throw new Error(err);
+            });
         });
         return next();
-      }
-    );
+      })
+      .catch((err) => {
+        console.error('error in creating a new schema.');
+        throw new Error(err);
+      });
   },
 
   // gets one specific schema
