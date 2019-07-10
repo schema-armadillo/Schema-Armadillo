@@ -75,39 +75,33 @@ const schemaController = {
   getAllSchema: (req, res, next) => {
     const { user_id } = res.locals;
 
+    // if user_id is in res locals
     if (user_id) {
-      pool.query('CREATE TABLE IF NOT EXISTS Schema_IDs (schema_id SERIAL PRIMARY KEY, schema_name VARCHAR(50), user_id INT)', (err, result) => {
-        if (err) {
-          console.error('error in creating schema_id table');
-          throw new Error(err);
-        }
-
-        pool.query(`SELECT * FROM schema_ids WHERE user_id='${user_id}'`, (err, result) => {
-          if (err) {
-            return res.status(400).json({ error: 'error from getAllSchema' });
-          }
+      pool.query('CREATE TABLE IF NOT EXISTS schema_IDs (schema_id SERIAL PRIMARY KEY, schema_name VARCHAR(50), user_id INT)')
+        .then(() => pool.query(`SELECT * FROM schema_ids WHERE user_id='${user_id}'`))
+        .then((result) => {
           res.locals.userSchema = result.rows;
           return next();
-
+        })
+        .catch((err) => {
+          console.log('error from getAllSchema table');
+          throw new Error(err);
         });
-      })
-    }
-    else {
+
+      // otherwise user_id is inside our jwt
+    } else {
       const { ssid } = req.cookies;
 
-      jwt.verify(ssid, 'secretkey', (err, result) => {
-        if (err) {
-          return res.status(401).json({ isLoggedIn: false })
-        }
-        const { user_id } = result;
+      try {
+        const { user_id } = jwt.verify(ssid, 'secretkey');
 
-        pool.query(`SELECT * FROM schema_ids WHERE user_id='${user_id}'`, (err1, result1) => {
-          if (err1) {
-            return res.status(400).json({ error: 'error from getAllSchema' });
-          }
-          return res.send(result1.rows);
-        });
-      });
+        pool.query(`SELECT * FROM schema_ids WHERE user_id='${user_id}'`)
+          .then(({ rows }) => res.status(200).send(rows))
+          .catch(err => res.status(400).send('user doesnt exist'));
+      } catch (err) {
+        // jwt is malformed
+        return res.status(500).send('jwt is malformed');
+      }
     }
   },
   updateSchema: (req, res, next) => {
