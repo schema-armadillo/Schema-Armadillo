@@ -66,6 +66,10 @@ class Login extends Component {
     this.setState({ signupPassword: event.target.value });
   }
 
+  handleGithubSignIn(event) {
+
+  }
+
   handleLoginSubmit(event) {
 
     console.log(`A login was submitted: ${this.state.loginEmail}`);
@@ -92,8 +96,8 @@ class Login extends Component {
         alert('Welcome back.')
         console.log('Login.js => handleLoginSubmit => rows',result);
         
-        console.log('Login.js => handleLoginSubmit => loginToggle')
-        this.props.loginToggle(result);
+        console.log('Login.js => handleLoginSubmit => toggleLoggedIn')
+        this.props.toggleLoggedIn(result);
         console.log('Login.js => handleLoginSubmit => getUserSchemaArr')
         // this.props.getUserSchemaArr(result);
 
@@ -109,8 +113,8 @@ class Login extends Component {
   // THIS NEEDS TO BE DONE
   handleSignupSubmit(event) {
 
-    console.log(`A login was submitted: ${this.state.signupEmail}`);
-    console.log(`A login was submitted: ${this.state.signupPassword}`);
+    // console.log(`A login was submitted: ${this.state.signupEmail}`);
+    // console.log(`A login was submitted: ${this.state.signupPassword}`);
     event.preventDefault();
 
     const { signupEmail: email, signupPassword: password } = this.state;
@@ -171,6 +175,7 @@ class Login extends Component {
               onChange={this.handleChangeSignupPassword}
             />
             <input className='signupButton' type='submit' value='Yeehaw!' />
+            <a href ='https://github.com/login/oauth/authorize?client_id=a47e12225465438143f6&redirect_uri=http://localhost:3000/github&scope=user:email'> Sign In With Github </a>
           </Form>
         </div>
         <div>

@@ -3,10 +3,10 @@ const express = require('express');
 const path = require('path');
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
-
 const cors = require('cors');
-const user = require('./routers/user');
 const schema = require('./routers/schema');
+const user = require('./routers/user');
+const githubController = require('./controllers/githubController');
 const google = require('./routers/google');
 
 const app = express();
@@ -48,6 +48,12 @@ app.post('/test', (req, res) => {
 app.use('/auth', user);
 app.use('/api', schema);
 app.use('/google', google);
+
+app.get('/github',
+  githubController.getCode,
+  githubController.postCode,
+  githubController.getEmail
+)
 
 app.listen(port, () => {
   console.log(`Listening on port ${port}...`);
