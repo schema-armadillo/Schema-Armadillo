@@ -76,13 +76,9 @@ const userController = {
 
   checkJwt: (req, res, next) => {
     const { ssid } = req.cookies;
-<<<<<<< HEAD
-    jwt.verify(ssid, 'secretkey', (err, result) => {
-=======
     console.log('looking for jwt');
     console.log(ssid);
     jwt.verify(ssid, process.env.SECRET_KEY, (err, result) => {
->>>>>>> dev
       if (err) {return res.status(401).json({ isLoggedIn: false })}
       res.locals.user_id = result.user_id;
       next();
