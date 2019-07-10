@@ -33,23 +33,22 @@ class Login extends Component {
     this.state = {
       loginEmail: '',
       loginPassword: '',
-      signupEmail: '',
-      signupPassword: '',
+      // signupEmail: '',
+      // signupPassword: '',
     };
 
     this.handleChangeLoginEmail = this.handleChangeLoginEmail.bind(this);
     this.handleChangeLoginPassword = this.handleChangeLoginPassword.bind(this);
-    this.handleChangeSignupEmail = this.handleChangeSignupEmail.bind(this);
-    this.handleChangeSignupPassword = this.handleChangeSignupPassword.bind(this);
+    // this.handleChangeSignupEmail = this.handleChangeSignupEmail.bind(this);
+    // this.handleChangeSignupPassword = this.handleChangeSignupPassword.bind(this);
     this.handleLoginSubmit = this.handleLoginSubmit.bind(this);
-    this.handleSignupSubmit = this.handleSignupSubmit.bind(this);
+    // this.handleSignupSubmit = this.handleSignupSubmit.bind(this);
   }
 
 
   // TODO: NEED TO MODULARIZE, MORE DRY
 
   handleChangeLoginEmail(event) {
-    console.log(event.target.value);
     this.setState({ loginEmail: event.target.value });
   }
 
@@ -57,19 +56,16 @@ class Login extends Component {
     this.setState({ loginPassword: event.target.value });
   }
 
-  handleChangeSignupEmail(event) {
-    console.log(event.target.value);
-    this.setState({ signupEmail: event.target.value });
-  }
+  // handleChangeSignupEmail(event) {
+  //   this.setState({ signupEmail: event.target.value });
+  // }
 
-  handleChangeSignupPassword(event) {
-    this.setState({ signupPassword: event.target.value });
-  }
+  // handleChangeSignupPassword(event) {
+  //   this.setState({ signupPassword: event.target.value });
+  // }
 
   handleLoginSubmit(event) {
 
-    console.log(`A login was submitted: ${this.state.loginEmail}`);
-    console.log(`A login was submitted: ${this.state.loginPassword}`);
     event.preventDefault();
 
     const { loginEmail: email, loginPassword: password } = this.state;
@@ -94,38 +90,33 @@ class Login extends Component {
       })
   }
 
+  // handleSignupSubmit(event) {
 
-  // THIS NEEDS TO BE DONE
-  handleSignupSubmit(event) {
+  //   event.preventDefault();
 
-    console.log(`A login was submitted: ${this.state.signupEmail}`);
-    console.log(`A login was submitted: ${this.state.signupPassword}`);
-    event.preventDefault();
+  //   const { signupEmail: email, signupPassword: password } = this.state;
+  //   const signupBody = { email, password };
 
-    const { signupEmail: email, signupPassword: password } = this.state;
-    const signupBody = { email, password };
-
-    fetch('/auth/create', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(signupBody),
-    })
-      .then(data => data.json())
-      .then((obj) => {
-        alert("Welcome");
-        console.log(obj);
-        this.props.loginToggle(obj);
-      })
-      .catch(alert("Username already taken"));
-  }
+  //   fetch('/auth/create', {
+  //     method: 'POST',
+  //     headers: {
+  //       'Content-Type': 'application/json',
+  //     },
+  //     body: JSON.stringify(signupBody),
+  //   })
+  //     .then(data => data.json())
+  //     .then((obj) => {
+  //       alert("Welcome");
+  //       this.props.loginToggle(obj);
+  //     })
+  //     .catch(alert("Username already taken"));
+  // }
 
   render() {
     return (
 
       <div className='loginContainer'>
-        <div>
+        {/* <div>
           <Form className='signupForm' onSubmit={this.handleSignupSubmit}>
             <h1 className='signup'>Sign up</h1>
             <input
@@ -144,7 +135,7 @@ class Login extends Component {
             />
             <input className='signupButton' type='submit' value='Yeehaw!' />
           </Form>
-        </div>
+        </div> */}
         <div>
           <Form className='loginForm' onSubmit={this.handleLoginSubmit}>
             {/* <img className="armadillo" src={armadillo} alt="armadillo logo" /> */}
@@ -167,7 +158,7 @@ class Login extends Component {
 
           </Form>
         </div>
-      </div>
+      </div> 
     );
   }
 }
