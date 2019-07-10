@@ -4,6 +4,9 @@ import KeyValue from './KeyValue';
 import schemaGenerator from '../../utils/modelCodeMaker2';
 import LogoutButton from './LogoutButton';
 import SchemaStorage from './SchemaStorage.jsx';
+import Select from 'react-select';
+
+
 
 class Dashboard extends Component {
   constructor(props) {
@@ -24,10 +27,13 @@ class Dashboard extends Component {
         ]
       },
       userSchemaArr: [],
+      deleteThisSchema: null,
     };
 
     this.refreshSchemas();
 
+    this.valueHolderFromSelect = this.valueHolderFromSelect.bind(this)
+    this.schemaListOptions = this.schemaListOptions.bind(this);
     this.refreshSchemas = this.refreshSchemas.bind(this);
     this.handleSchemaName = this.handleSchemaName.bind(this);
     this.createRow = this.createRow.bind(this);
@@ -40,6 +46,25 @@ class Dashboard extends Component {
     this.handleChangeType = this.handleChangeType.bind(this);
     this.handleSaveSchema = this.handleSaveSchema.bind(this);
     this.handleCopySchema = this.handleCopySchema.bind(this);
+    this.handleDeleteSchema = this.handleDeleteSchema.bind(this);
+    this.renderItem = this.renderItem.bind(this)
+  }
+
+  schemaListOptions() {
+    let newOptions = [];
+    // must have label and value
+    for(let i = 0; i < this.state.userSchemaArr.length; i++){
+      let { schema_name, schema_id, user_id } = this.state.userSchemaArr[i];
+      newOptions.push( {label: schema_name, value: {schema_id, user_id}} )
+    }
+   return newOptions;
+  }
+
+  // holderVariableForDelete = null;
+  valueHolderFromSelect(obj){
+    console.log('in here')
+    let {schema_id, user_id} = obj;
+    glo
   }
 
   refreshSchemas() {
@@ -85,6 +110,29 @@ class Dashboard extends Component {
     })
       .then(this.refreshSchemas);
   }
+
+  /////////////////////////////////////////////////////////////////////////////////////////////////////
+  /////////////////////////////////////////////////////////////////////////////////////////////////////
+
+  handleDeleteSchema() {
+    let { schema_id, user_id } = this.state.deleteThisSchema;
+    console.log()
+      fetch('/api/schema', {
+        method: 'DELETE', 
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          schema_id,
+          user_id
+        })
+      })
+      .then(this.refreshSchemas);
+  
+    }
+
+  /////////////////////////////////////////////////////////////////////////////////////////////////////
+  /////////////////////////////////////////////////////////////////////////////////////////////////////
 
   handleCreateSchema(state) {
     // check if schemaname is filled out
@@ -181,6 +229,14 @@ class Dashboard extends Component {
     return this.setState({ schema });
   }
 
+  renderItem() {
+    let newArr = [];
+    for(let i = 0; i < this.state.userSchemaArr.length; i++){
+      newArr.push(<div>{this.state.userSchemaArr[i]}</div>)
+    }
+    return newArr
+  }
+
   render() {
     let rows = [];
     for (let i = 0; i < this.state.schema.rows.length; i++) {
@@ -240,6 +296,19 @@ class Dashboard extends Component {
             >
               Add a New Key
             </button>
+{/* //////////////////////////////////////////////////////////////////////////////////////////// */}
+            <button
+              className="submit"
+              // should delete from database => refresh schema storage
+              onClick={() => this.handleDeleteSchema()}
+              type="button"
+            >
+              Delete
+            </button>
+{/* //////////////////////////////////////////////////////////////////////////////////////////// */}
+{/* //////////////////////////////////////////////////////////////////////////////////////////// */}
+            <Select options={this.schemaListOptions()} closeMenuOnSelect='true' onChange={e => this.setState({deleteThisSchema: e.value})} />
+{/* //////////////////////////////////////////////////////////////////////////////////////////// */}
           </div>
         </div>
         <button
