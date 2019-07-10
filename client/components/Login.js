@@ -144,7 +144,6 @@ class Login extends Component {
     fetch('/google/googleInit', metaData)
       .then(response => {
         window.location = `http://localhost:3000/google/googleInit`
-        
       })
       .catch(err => console.error(err))
 
