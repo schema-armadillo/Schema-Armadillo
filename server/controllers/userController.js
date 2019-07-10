@@ -6,6 +6,7 @@ const createToken = user => jwt.sign({ user }, 'secretkey', { expiresIn: 60 * 60
 
 const userController = {
   createUser: (req, res, next) => {
+    console.log('in createUser');
     const { email: username, password } = req.body;
     bcrypt.hash(password, 10, (err, hashResponse) => {
       if (err) {
@@ -27,7 +28,7 @@ const userController = {
     })
     .catch((err) => {
       console.log('error adding user to DB: ', err);
-      return res.status(500).send('Error creating user. PLease try again.');
+      return res.status(500).send('Error creating user. Please try again.');
     }),
 
   //  WHERE username = '${username}'
@@ -70,14 +71,10 @@ const userController = {
     });
   },
   checkJwt: (req, res, next) => {
-    console.log('userController => checkJwt')
     const { ssid } = req.cookies;
-    console.log('looking for jwt');
-    console.log(ssid);
     jwt.verify(ssid, 'secretkey', (err, result) => {
       if (err) {return res.status(401).json({ isLoggedIn: false })}
       res.locals.user_id = result.user_id;
-      console.log('userController => checkJwt => result', result);
       next();
     })
   }

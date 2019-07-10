@@ -2,10 +2,10 @@ const express = require('express');
 const path = require('path');
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
-
 const schema = require('./routers/schema');
 const cors = require('cors');
 const user = require('./routers/user');
+const githubController = require('./controllers/githubController');
 
 const app = express();
 const port = 3000;
@@ -21,7 +21,7 @@ app.use(
 app.use(cookieParser());
 
 // create routers for separate endpoints
-app.get('*', (req, res) => {
+app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, '../client/index.html'));
   // res.send('hello')
 });
@@ -41,6 +41,12 @@ app.post('/test', (req, res) => {
 // changed from user
 app.use('/auth', user);
 app.use('/api', schema);
+
+app.get('/github', 
+  githubController.getCode, 
+  githubController.postCode,
+  githubController.getEmail
+)
 
 app.listen(port, () => {
   console.log(`Listening on port ${port}...`);
