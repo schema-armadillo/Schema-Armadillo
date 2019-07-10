@@ -1,12 +1,9 @@
 import React, { Component } from 'react';
-
 import '../styles/Login.css';
-import { hot } from 'react-hot-loader';
-import {
-  Route, Link, BrowserRouter as Router, Redirect,
-} from 'react-router-dom';
-
+import { Redirect } from 'react-router-dom';
 import styled from 'styled-components';
+
+const autoBind = require('auto-bind');
 
 const Form = styled.form`
     box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
@@ -25,14 +22,8 @@ class Login extends Component {
       redirectSignup: false,
     };
 
-    this.handleChangeLoginEmail = this.handleChangeLoginEmail.bind(this);
-    this.handleChangeLoginPassword = this.handleChangeLoginPassword.bind(this);
-    this.handleLoginSubmit = this.handleLoginSubmit.bind(this);
-    this.handleSignupButton = this.handleSignupButton.bind(this);
+    autoBind(this);
   }
-
-
-  // TODO: NEED TO MODULARIZE, MORE DRY
 
   handleChangeLoginEmail(event) {
     this.setState({ loginEmail: event.target.value });
