@@ -15,4 +15,3 @@ router.put('/schema', schemaController.updateSchema);
 router.post('/schema/all', schemaController.getAllSchema);
 
 module.exports = router;
-
