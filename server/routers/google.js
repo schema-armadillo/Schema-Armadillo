@@ -6,6 +6,6 @@ const userController = require('../controllers/userController')
 // prefix with google
 router.get('/googleInit', googleController.getCode)
 router.get('/googleOAuth', googleController.getToken, googleController.getEmail, userController.addUserToDB,
-userController.setJwt)
+userController.setJwt, userController.redirectToRoot)
 
 module.exports = router;
