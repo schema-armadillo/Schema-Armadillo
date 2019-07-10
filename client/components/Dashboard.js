@@ -2,7 +2,8 @@ import React, { Component } from 'react';
 import '.././styles/Dashboard.css';
 import KeyValue from './KeyValue';
 import schemaGenerator from '../../utils/modelCodeMaker2';
-import LogoutButton from './LogoutButton'
+import LogoutButton from './LogoutButton';
+import SchemaStorage from './SchemaStorage.jsx';
 
 class Dashboard extends Component {
   constructor(props) {
@@ -21,9 +22,13 @@ class Dashboard extends Component {
             }
           }
         ]
-      }
+      },
+      userSchemaArr: [],
     };
 
+    this.refreshSchemas();
+
+    this.refreshSchemas = this.refreshSchemas.bind(this);
     this.handleSchemaName = this.handleSchemaName.bind(this);
     this.createRow = this.createRow.bind(this);
     this.handleCreateSchema = this.handleCreateSchema.bind(this);
@@ -36,6 +41,14 @@ class Dashboard extends Component {
     this.handleSaveSchema = this.handleSaveSchema.bind(this);
     this.handleCopySchema = this.handleCopySchema.bind(this);
   }
+
+  refreshSchemas() {
+    fetch('/api/schema')
+      .then(data => data.json())
+      .then(data => this.setState({ userSchemaArr: data }))
+      .catch(err => console.log('err in fetch', err));
+  }
+
   handleCopySchema() {
     // create a fake element
     // need textarea to copy to clipboard
@@ -58,7 +71,11 @@ class Dashboard extends Component {
 
   }
 
+
   handleSaveSchema() {
+  if(this.state.schema.schemaName.length === 0){
+    return alert('Schema Name must be filled out')
+  }
     fetch('/api/schema', {
       method: 'POST',
       headers: {
@@ -66,10 +83,7 @@ class Dashboard extends Component {
       },
       body: JSON.stringify(this.state.schema)
     })
-      .then(data => data.json());
-
-    // add code here to add functionality to refersh storage of saved schemas
-    
+      .then(this.refreshSchemas);
   }
 
   handleCreateSchema(state) {
@@ -184,16 +198,6 @@ class Dashboard extends Component {
       );
     }
 
-    let schemaButtons = [];
-    // for (let i=0; i<this.props.userSchemaArr; i++) {
-    //   schemaButtons.push(<button>{}</button>)
-    // }
-    //////////////////////////////////////////////////////////
-    // trying to find this.props.userSchemaArr
-    schemaButtons = this.props.userSchemaArr.map(el => {
-      return (<button>{el.schema_name}</button>)
-    })
-
     return (
       <div>
         {/* <button id='logout-button' onClick={this.props.deleteCookie}>Logout</button> */}
@@ -220,25 +224,32 @@ class Dashboard extends Component {
           </div>
           <br />
           <div className='form'>{rows}</div>
-          <div className='optionsKey'>
-            {schemaButtons}
-          </div>
+          <SchemaStorage userSchemaArr={this.state.userSchemaArr} />
           <div className="buttons">
             <button
-              className='submit'
+              className="submit"
               onClick={() => this.handleCreateSchema(this.state.schema)}
+              type="button"
             >
               Create Schema
             </button>
-            <button className='createrow' onClick={this.createRow}>
+            <button
+              className='createrow'
+              onClick={this.createRow}
+              type="button"
+            >
               Add a New Key
             </button>
           </div>
         </div>
-        <button className='saveButton' onClick={this.handleSaveSchema}>
+        <button
+          className='saveButton'
+          onClick={this.handleSaveSchema}
+          type="button"
+        >
           Save
         </button>
-        
+
         <pre onClick={this.handleCopySchema}>
           <div className='clipboard-message' />
           <code>{this.state.result}</code>

@@ -1,5 +1,6 @@
 
 
+const jwt = require('jsonwebtoken');
 const pool = require('./database');
 
 const schemaController = {
@@ -116,21 +117,43 @@ const schemaController = {
   getAllSchema: (req, res, next) => {
     const { user_id } = res.locals;
 
-    pool.query(`CREATE TABLE IF NOT EXISTS Schema_IDs (schema_id SERIAL PRIMARY KEY, schema_name VARCHAR(50), user_id INT)`, (err, result) => {
-      if (err) {
-        console.error('error in creating schema_id table');
-        throw new Error(err);
-      }
-
-      pool.query(`SELECT * FROM schema_ids WHERE user_id='${user_id}'`, (err, result) => {
+    if (user_id) {
+      pool.query(`CREATE TABLE IF NOT EXISTS Schema_IDs (schema_id SERIAL PRIMARY KEY, schema_name VARCHAR(50), user_id INT)`, (err, result) => {
         if (err) {
-          if (err.error !== 'relation "schema_ids" does not exist') return res.status(400).json({ error: 'error from getAllSchema' });
+          console.error('error in creating schema_id table');
+          throw new Error(err);
         }
-        res.locals.userSchema = result.rows;
-        return next();
 
-      });
-    })
+        pool.query(`SELECT * FROM schema_ids WHERE user_id='${user_id}'`, (err, result) => {
+          if (err) {
+            return res.status(400).json({ error: 'error from getAllSchema' });
+          }
+          res.locals.userSchema = result.rows;
+          return next();
+
+        });
+      })
+    }
+    else {
+      const { ssid } = req.cookies;
+
+      jwt.verify(ssid, 'secretkey', (err, result) => {
+        if (err) {
+          return res.status(401).json({ isLoggedIn: false })
+        }
+        if (result) {
+          const { user_id } = result;
+
+          pool.query(`SELECT * FROM schema_ids WHERE user_id='${user_id}'`, (err1, result1) => {
+            if (err1) {
+              return res.status(400).json({ error: 'error from getAllSchema' });
+            }
+            return res.send(result1.rows);
+          });
+        }
+      })
+
+    }
   },
   updateSchema: (req, res, next) => {
     // expecting to receive user_id and post_id and other fields that we want to update from req.body
