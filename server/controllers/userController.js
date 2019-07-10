@@ -4,7 +4,6 @@ const pool = require('./database');
 
 const userController = {
   createUser: (req, res, next) => {
-    console.log('in createUser');
     const { email: username, password } = req.body;
     bcrypt.hash(password, 10, (err, hashResponse) => {
       if (err) {
@@ -18,13 +17,15 @@ const userController = {
 
 
   addUserToDB: (req, res, next) => pool.query(
-    `INSERT INTO users (username, password) VALUES ('${res.locals.username}', '${res.locals.password}') RETURNING user_id, username`,
+    `INSERT INTO users (username, password, oauth) VALUES ('${res.locals.username}', '${res.locals.password}', '${res.locals.oauth}') RETURNING user_id, username`,
   )
     .then((data) => {
-      console.log('data from addUserToDB (usrcntrl): ', data);
       // THIS NEEDS TO CHANGE, IT'S ALL THE DATA
-      res.locals.data = { username: data.rows[0].username, user_id: data.rows[0].user_id };
-      console.log("RES LOCALS USER_ID and stuff", res.locals.data)
+      res.locals.data = {
+        username: data.rows[0].username,
+        user_id: data.rows[0].user_id,
+        oauth: data.rows[0].oauth,
+      };
       res.locals.user_id = data.rows[0].user_id;
       return next();
     })
@@ -36,7 +37,6 @@ const userController = {
 
   login: (req, res, next) => {
     const { email: username, password } = req.body;
-    // console.log(username);
     pool.query(`SELECT * FROM users WHERE username = '${username}'`)
       .then((data) => {
         console.log('data rows:\n\n', data.rows[0]);
@@ -65,11 +65,9 @@ const userController = {
 
 
   setJwt: (req, res) => {
-    console.log('inside of set jwt');
     jwt.sign({ user_id: res.locals.user_id }, process.env.SECRET_KEY, { expiresIn: 60 * 60 }, (err, token) => {
       // sends back username, and user_id
-      console.log('set jwt, ', res.locals.user_id)
-      return res.cookie('ssid', token).status(200).json({user_id: res.locals.user_id, userSchema: res.locals.userSchema});
+      return res.cookie('ssid', token).status(200).json({ user_id: res.locals.user_id, userSchema: res.locals.userSchema });
     });
   },
 
