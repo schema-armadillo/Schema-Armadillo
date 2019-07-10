@@ -105,62 +105,62 @@ const schemaController = {
         console.error(err);
         return res.status(400).json({ error: 'error from getAllSchema' });
       }
-= res.locals.userSchema = result.rows;
-    return next();
-  })
-},
+      res.locals.userSchema = result.rows;
+      return next();
+    })
+  },
   updateSchema: (req, res, next) => {
     // expecting to receive user_id and post_id and other fields that we want to update from req.body
     const {
-  user_id,
-  schema_id,
-  schemaName,
-  key,
-  type,
-  options_check,
-  unique_check,
-  required_check
-} = req.body;
+      user_id,
+      schema_id,
+      schemaName,
+      key,
+      type,
+      options_check,
+      unique_check,
+      required_check
+    } = req.body;
 
-// query for the table
-pool.query(
-  'UPDATE Schemas SET schemaName=$1 key=$2 type=$3 options_check=$4 unique_check=$5 required_check=$6 WHERE user_id=$7 AND schema_id=$8',
-  [
-    schemaName,
-    key,
-    type,
-    options_check,
-    unique_check,
-    required_check,
-    user_id,
-    schema_id
-  ],
-  (err, result) => {
-    if (err) {
-      console.error(err);
-      return res.status(400).json({ error: 'error from updateSchema' });
-    }
-    return res.status(200).json(result.rows);
-  }
-);
-  },
-deleteSchema: (req, res, next) => {
-  // expecting to receive user_id and post_id to find the rows that we want to delete
-  const { user_id, schema_id } = req.body;
-
-  // query for the table
-  pool.query(
-    'DELETE FROM Schemas WHERE user_id=$1 AND schema_id=$2',
-    [user_id, schema_id],
-    (err, result) => {
-      if (err) {
-        console.error(err);
-        return res.status(400).json({ error: 'error from deleteSchema' });
+    // query for the table
+    pool.query(
+      'UPDATE Schemas SET schemaName=$1 key=$2 type=$3 options_check=$4 unique_check=$5 required_check=$6 WHERE user_id=$7 AND schema_id=$8',
+      [
+        schemaName,
+        key,
+        type,
+        options_check,
+        unique_check,
+        required_check,
+        user_id,
+        schema_id
+      ],
+      (err, result) => {
+        if (err) {
+          console.error(err);
+          return res.status(400).json({ error: 'error from updateSchema' });
+        }
+        return res.status(200).json(result.rows);
       }
-      return res.status(200).json(result.rows);
-    }
-  );
-}
+    );
+  },
+  deleteSchema: (req, res, next) => {
+    // expecting to receive user_id and post_id to find the rows that we want to delete
+    const { user_id, schema_id } = req.body;
+
+    // query for the table
+    pool.query(
+      'DELETE FROM Schemas WHERE user_id=$1 AND schema_id=$2',
+      [user_id, schema_id],
+      (err, result) => {
+        if (err) {
+          console.error(err);
+          return res.status(400).json({ error: 'error from deleteSchema' });
+        }
+        return res.status(200).json(result.rows);
+      }
+    );
+  }
 };
 
 module.exports = schemaController;

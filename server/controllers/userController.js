@@ -75,10 +75,11 @@ const userController = {
     return res.cookie('ssid', res.locals.jwtToken).status(200).json({ user_id: res.locals.user_id, userSchema: res.locals.userSchema });
   },
 
+  // TODO: Only check jwt when saving schema
   checkJwt: (req, res, next) => {
     const { ssid } = req.cookies;
     jwt.verify(ssid, process.env.SECRET_KEY, (err, result) => {
-      if (err) { return res.status(401).json({ isLoggedIn: false }); }
+      if (err) { return res.status(200).json({ isLoggedIn: false }); }
       res.locals.user_id = result.user_id;
       return next();
     });

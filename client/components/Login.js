@@ -115,6 +115,7 @@ class Login extends Component {
       .then((obj) => {
         alert("Welcome");
         this.props.toggleLoggedIn(obj);
+        this.props.redirectToDashboard();
       })
       .catch(err => console.log('login fetch err ', err));
   }
