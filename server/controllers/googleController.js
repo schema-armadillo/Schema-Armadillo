@@ -20,30 +20,35 @@ const googleController = {
     getToken: (req, res, next) => {
         console.log("here I am, in getToken")
         const code = req.query.code;
-        console.log("---------------------------------code", code)
+        console.log("code", code)
         res.locals.code = code;
         // const sessionState = req.query.session_state;
         axios.post(`https://www.googleapis.com/oauth2/v4/token?code=${code}&client_id=${process.env.GOOGLE_CLIENT_ID}&client_secret=${process.env.GOOGLE_CLIENT_SECRET}&redirect_uri=http://localhost:3000/google/googleOAuth&grant_type=authorization_code&Content-Type=application/x-www-form-urlencoded`)
             .then(response => {
                 console.log("IN THE GETTOKEN POST REQUEST")
-                let jwt = response.data.id_token;
-                jwt = jwt.split('.')[1];
-                const base64 = Buffer.from(jwt, 'base64').toString();
+                let googlejwt = response.data.id_token;
+                googlejwt = googlejwt.split('.')[1];
+                const base64 = Buffer.from(googlejwt, 'base64').toString();
                 const email = JSON.parse(base64).email;
                 res.locals.email = email;
-                res.cookie('email', email);
-                res.cookie('jwt', jwt, { expires: new Date(Date.now() + 900000) });
-                // return next();
-                res.status(200).send("DONE GETTING TOKEN?")
+                // res.cookie('email', email);
+                res.cookie('googlejwt', googlejwt, { expires: new Date(Date.now() + 900000) });
+                return next();
+                // res.status(200).send("DONE GETTING TOKEN?")
             })
             .catch((err) => {
                 console.log('The error in getting the Token', err)
             })
     },
-    getEmail: (req, res) => {
+    getEmail: (req, res, next) => {
         console.log("in getEmail")
+        console.log("email", res.locals.email)
         const { email } = res.locals;
-        res.status(200).send("got email", email)
+        res.locals.username = email;
+        res.locals.password = '';
+        res.locals.oauth = 'google';
+        console.log("locals: ", res.locals)
+        return next();
     }
 }
 
