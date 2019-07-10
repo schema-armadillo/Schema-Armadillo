@@ -195,7 +195,6 @@ class Dashboard extends Component {
 
     return (
       <div>
-        {/* <button id='logout-button' onClick={this.props.deleteCookie}>Logout</button> */}
         <LogoutButton />
 
         <div className='schemaName'>
