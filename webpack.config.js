@@ -1,3 +1,4 @@
+const dotenv = require('dotenv');
 const path = require('path');
 
 module.exports = {

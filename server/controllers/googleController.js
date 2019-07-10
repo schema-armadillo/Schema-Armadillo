@@ -11,18 +11,34 @@ const googleController = {
         response_type=code&
         scope=openid%20email&
         redirect_uri='http://localhost:3000/dashboard'`)
-        .then((response) => {
-            console.log("google response", response)
-            res.send(response.data);
-        })
-        .catch((error) => {
-            console.log('Error in getting the code:', error);
-        });
+            .then((response) => {
+                console.log("google response", response)
+                res.send(response.data);
+            })
+            .catch((error) => {
+                console.log('Error in getting the code:', error);
+            });
         // res.status(200).send("IN THE GETCODE THING")
     },
 
     //for actually getting token from google
     getToken: (req, res, next) => {
+        console.log("here I am, in getToken")
+        const code = req.query.code;
+        // const sessionState = req.query.session_state;
+        axios.post(`https://www.googleapis.com/oauth2/v4/token?code=${code}&client_id=${process.env.GOOGLE_CLIENT_ID}&client_secret=${process.env.GOOGLE_CLIENT_SECRET}&redirect_uri=http://localhost:3000/dashboard&grant_type=authorization_code&Content-Type=application/x-www-form-urlencoded`)
+            .then(response => {
+                let jwt = response.data.id_token;
+                jwt = jwt.split('.')[1];
+                const base64 = Buffer.from(jwt, 'base64').toString();
+                const email = JSON.parse(base64).email;
+                res.locals.email = email;
+                res.cookie('email', email);
+                res.cookie('jwt', jwt, { expires: new Date(Date.now() + 900000) });
+                // return next();
+                res.status(200).send("DONE GETTING TOKEN?")
+            })
+            .catch((err) => { console.log('The error in getting the Token', err) })
 
     }
 }
@@ -36,9 +52,6 @@ const googleController = {
 // CHANGE THE THINGS (clientID and redirect)
 //send back response.data
 //displays google login box ^
-
-
-
 
 //getToken axios post
 //code =req.query.code

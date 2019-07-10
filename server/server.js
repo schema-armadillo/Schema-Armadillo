@@ -4,9 +4,12 @@ const path = require('path');
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
 
-const schema = require('./routers/schema');
 const cors = require('cors');
 const user = require('./routers/user');
+const schema = require('./routers/schema');
+const google = require('./routers/google');
+
+const googleController = require('./controllers/googleController');
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -31,10 +34,12 @@ if (process.env.NODE_ENV === 'production') {
     res.sendFile(path.join(__dirname, '../client/index.html'));
   });
 }
+
 app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, '../client/index.html'));
   // res.send('hello')
 });
+app.use('/google', googleController.getCode, googleController.getToken);
 
 app.post('/test', (req, res) => {
   console.log('posted to /test');
@@ -51,6 +56,7 @@ app.post('/test', (req, res) => {
 // changed from user
 app.use('/auth', user);
 app.use('/api', schema);
+
 
 app.listen(port, () => {
   console.log(`Listening on port ${port}...`);
