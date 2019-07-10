@@ -124,14 +124,7 @@ const schemaController = {
         console.error(err);
         return res.status(400).json({ error: 'error from getAllSchema' });
       }
-<<<<<<< HEAD
-      //  console.log('schemaContorller => getAllSechama', result.rows);
-      // need to make data in a more workable format. currently a bigass array
-
-      // console.log('schemaController => getAllSchema => result', result)
-=======
       console.log('schemaController => getAllSchema => result', result);
->>>>>>> dev
       res.locals.userSchema = result.rows;
       return next();
       // return res.status(200).json(result.rows);

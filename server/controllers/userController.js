@@ -22,19 +22,12 @@ const userController = {
     RETURNING user_id, username`,
   )
     .then((data) => {
-<<<<<<< HEAD
-      // console.log('data from addUserToDB (usrcntrl): ', data);
-      // THIS NEEDS TO CHANGE, IT'S ALL THE DATA
-      res.locals.data = { username: data.rows[0].username, user_id: data.rows[0].user_id };
-      // console.log("RES LOCALS USER_ID and stuff", res.locals.data)
-=======
       // THIS NEEDS TO CHANGE, IT'S ALL THE DATA
       res.locals.data = {
         username: data.rows[0].username,
         user_id: data.rows[0].user_id,
         oauth: data.rows[0].oauth,
       };
->>>>>>> dev
       res.locals.user_id = data.rows[0].user_id;
       return next();
     })
@@ -47,18 +40,10 @@ const userController = {
     const { email: username, password } = req.body;
     pool.query(`SELECT * FROM users WHERE username = '${username}'`)
       .then((data) => {
-<<<<<<< HEAD
-        // console.log('data rows:\n\n', data.rows[0]);
-=======
->>>>>>> dev
         if (data.rows[0] === undefined) { return res.status(401).send('Unable to login.'); }
         return data.rows[0];
       })
       .then((userFound) => {
-<<<<<<< HEAD
-        // console.log('user has been found: ', userFound);
-=======
->>>>>>> dev
         bcrypt.compare(password, userFound.password, (err, result) => {
           if (err) {
             return res.status(500).send('Internal error authorizing credentials.');
@@ -74,15 +59,6 @@ const userController = {
   },
 
 
-<<<<<<< HEAD
-  setJwt: (req, res) => {
-    // console.log('inside of set jwt');
-    jwt.sign({ user_id: res.locals.user_id }, process.env.SECRET_KEY, { expiresIn: 60 * 60 }, (err, token) => {
-      // sends back username, and user_id
-      // console.log('set jwt, ', res.locals.user_id)
-      return res.cookie('ssid', token).status(200).json({ user_id: res.locals.user_id, userSchema: res.locals.userSchema });
-    });
-=======
   setJwt: (req, res, next) => {
     jwt.sign(
       { user_id: res.locals.user_id },
@@ -93,7 +69,6 @@ const userController = {
         next();
       },
     );
->>>>>>> dev
   },
 
   sendUserIdAndSchema: (req, res) => { //only for logging in the first time (without cookies)
@@ -101,20 +76,6 @@ const userController = {
   },
 
   checkJwt: (req, res, next) => {
-<<<<<<< HEAD
-    // console.log('userController => checkJwt')
-    const { ssid } = req.cookies;
-    // console.log('looking for jwt');
-    // console.log(ssid);
-    jwt.verify(ssid, process.env.SECRET_KEY, (err, result) => {
-      if (err) { return res.status(401).json({ isLoggedIn: false }) }
-      res.locals.user_id = result.user_id;
-      // console.log('userController => checkJwt => result', result);
-      next();
-    })
-  }
-};
-=======
     const { ssid } = req.cookies;
     jwt.verify(ssid, process.env.SECRET_KEY, (err, result) => {
       if (err) { return res.status(401).json({ isLoggedIn: false }); }
@@ -122,7 +83,6 @@ const userController = {
       return next();
     });
   },
->>>>>>> dev
 
   redirectToRoot: (req, res) => {
     if (process.env.NODE_ENV === "development") {

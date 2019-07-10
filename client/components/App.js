@@ -10,17 +10,10 @@ import Dashboard from './Dashboard';
 const route = (isLogged, toggleLoggedIn, getUserSchemaArr, userSchemaArr) => {
   return (<Switch>
 
-<<<<<<< HEAD
     <Route exact path="/" render={() => (isLogged ? <Dashboard userSchemaArr={userSchemaArr} getUserSchemaArr={getUserSchemaArr} /> : <Redirect to="/login" />)} />
-    <Route path="/login" render={() => (isLogged ? <Redirect to="/dashboard" /> : <Login isLoggedIn={isLogged} loginToggle={loginToggle} getUserSchemaArr={getUserSchemaArr} />)} />
-    <Route path="/signup" render={() => (isLogged ? <Redirect to="/dashboard" /> : <Login isLoggedIn={isLogged} loginToggle={loginToggle} getUserSchemaArr={getUserSchemaArr} />)} />
-    <Route path="/dashboard" render={() => (isLogged ? <Dashboard userSchemaArr={userSchemaArr} getUserSchemaArr={getUserSchemaArr} /> : <Redirect to="/login" />)} />
-=======
-    <Route exact path="/" render={() => (isLogged ? <Dashboard userSchemaArr={userSchemaArr} /> : <Redirect to="/login" />)} />
     <Route path="/login" render={() => (isLogged ? <Redirect to="/dashboard" /> : <Login isLoggedIn={isLogged} toggleLoggedIn={toggleLoggedIn} getUserSchemaArr={getUserSchemaArr} />)} />
     <Route path="/signup" render={() => (isLogged ? <Redirect to="/dashboard" /> : <Login isLoggedIn={isLogged} toggleLoggedIn={toggleLoggedIn} getUserSchemaArr={getUserSchemaArr} />)} />
-    <Route path="/dashboard" render={() => (isLogged ? <Dashboard userSchemaArr={userSchemaArr} /> : <Redirect to="/login" />)} />
->>>>>>> dev
+    <Route path="/dashboard" render={() => (isLogged ? <Dashboard userSchemaArr={userSchemaArr} getUserSchemaArr={getUserSchemaArr} /> : <Redirect to="/login" />)} />
     <Route path="/myschema" />
 
   </Switch>)
@@ -58,33 +51,17 @@ class App extends Component {
   }
 
   checkIfLoggedIn() {
-<<<<<<< HEAD
-    // console.log('inside did mount func')
-=======
->>>>>>> dev
     fetch('/auth/verify', { method: 'POST' })
       .then(data => data.json())
       .then(data => {
         this.setState({ isLogged: data.isLoggedIn })
-<<<<<<< HEAD
-        // console.log('inside check if logged in ', this.state.isLogged)
-      })
-      .catch(e => {
-        console.log('no jwt, inside catch e');
-        // console.log(this.state.isLogged);        
-=======
       })
       .catch(e => {
         console.error(e);
->>>>>>> dev
       })
   }
 
   componentDidMount() {
-<<<<<<< HEAD
-    // console.log('component mounting, about to check jwt');
-=======
->>>>>>> dev
     this.checkIfLoggedIn();
   }
 

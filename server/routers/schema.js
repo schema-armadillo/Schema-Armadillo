@@ -6,13 +6,8 @@ const userController = require('../controllers/userController')
 
 // prefix with api
 router.post('/schema', userController.checkJwt, schemaController.createSchemaId, schemaController.createSchema, (req, res) => {
-<<<<<<< HEAD
   let { schema_id, user_id, schema_name } = res.locals;
   res.status(200).json({ schema_id, user_id, schema_name });
-=======
-  let { schema_id } = res.locals;
-  res.status(200).json({ schema_id });
->>>>>>> dev
 });
 router.delete('/schema', schemaController.deleteSchema);
 router.put('/schema', schemaController.updateSchema);
