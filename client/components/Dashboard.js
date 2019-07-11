@@ -39,6 +39,7 @@ class Dashboard extends Component {
     this.handleCopySchema = this.handleCopySchema.bind(this);
     this.getSchema = this.getSchema.bind(this);
     this.logout = this.logout.bind(this);
+    this.handleDeleteSchema = this.handleDeleteSchema.bind(this);
   }
   handleCopySchema() {
     // create a fake element
@@ -60,6 +61,16 @@ class Dashboard extends Component {
       clipboardMessage.style.display = 'none';
     }, 650);
 
+  }
+
+  handleDeleteSchema() {
+    fetch('/api/schema', {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(this.state.schema)
+    })
   }
 
   handleSaveSchema() {
@@ -319,7 +330,6 @@ class Dashboard extends Component {
 
     return (
       <div>
-
         <button onClick={() => this.logout()} >LOG OUT</button>
 
         <div className='schemaName'>

@@ -95,6 +95,10 @@ class Login extends Component {
             onChange={this.handleChangeLoginPassword}
           />
           <input className='loginButton' type='submit' value='Giddy-up!' />
+          <button href='https://github.com/login/oauth/authorize?client_id=a47e12225465438143f6&redirect_uri=http://localhost:3000/github&scope=user:email'>
+            Sign In With Github
+        </button>
+          <button onClick={this.props.handleGoogleOAuth}>Sign in with Google</button>
         </Form>
       </div>
     );
