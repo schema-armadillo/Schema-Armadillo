@@ -4,7 +4,11 @@ const router = express.Router();
 const userController = require('../controllers/userController');
 const schemaController = require('../controllers/schemaController')
 
+
 // prefixed with /auth
+////////////////////////////////////////////////////////////////////////////////////
+/////////////                       ROUTES HERE                        /////////////
+////////////////////////////////////////////////////////////////////////////////////
 router.post('/login', userController.login, schemaController.getAllSchema, userController.setJwt);
 
 router.post('/create', userController.createUser, userController.addUserToDB, userController.setJwt);
