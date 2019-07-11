@@ -130,38 +130,66 @@ const schemaController = {
   },
   updateSchema: (req, res, next) => {
     // expecting to receive user_id and post_id and other fields that we want to update from req.body
+    console.log('req.body in update Schema ', req.body)
     const {
       user_id,
       schema_id,
       schemaName,
-      key,
-      type,
-      options_check,
-      unique_check,
-      required_check
+      rows,
     } = req.body;
+    console.log('deconstructed variables ', user_id, schema_id, schemaName, rows)
 
-    // query for the table
-    pool.query(
-      'UPDATE Schemas SET schemaName=$1 key=$2 type=$3 options_check=$4 unique_check=$5 required_check=$6 WHERE user_id=$7 AND schema_id=$8',
-      [
+    rows.forEach((row, idx) => {
+      const { key, type } = row;
+
+      console.log('deconstructed variables in row ', key, type)
+
+      const areThereOptions = row.hasOwnProperty('options');
+      // if options is false, this will already be false. if not, have to check if unique and required exist
+      const isUnique =
+        areThereOptions && row.options.hasOwnProperty('unique')
+          ? row.options.unique
+          : false;
+      const isRequired =
+        areThereOptions && row.options.hasOwnProperty('required')
+          ? row.options.required
+          : false;
+      console.log('paramaterized variables ',
         schemaName,
         key,
         type,
-        options_check,
-        unique_check,
-        required_check,
+        areThereOptions,
+        isUnique,
+        isRequired,
         user_id,
         schema_id
-      ],
-      (err, result) => {
-        if (err) {
-          console.error(err);
-          return res.status(400).json({ error: 'error from updateSchema' });
+      )
+      pool.query(
+        'UPDATE Schemas SET schema_name=$1, key=$2, type=$3, options_check=$4, unique_check=$5, required_check=$6 WHERE user_id=$7 AND schema_id=$8',
+        [
+          schemaName,
+          key,
+          type,
+          areThereOptions,
+          isUnique,
+          isRequired,
+          user_id,
+          schema_id
+        ],
+        (err, result) => {
+          if (err) {
+            console.error(err);
+            return res.status(400).json({ error: 'error from updateSchema at index ', idx });
+          }
+          // else console.log(result)
         }
-        return res.status(200).json(result.rows);
-      }
+      )
+
+    }
+
+
     );
+    // query for the table
   },
   deleteSchema: (req, res, next) => {
     // expecting to receive user_id and post_id to find the rows that we want to delete
