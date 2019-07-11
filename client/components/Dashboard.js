@@ -244,8 +244,8 @@ class Dashboard extends Component {
 
   logout() {
     console.log(' clicked log out ')
-    fetch('/logout')
-      .catch(err => console.log(err))
+    fetch('/auth/logout')
+      .catch(err => console.log("error logging out", err))
   }
 
 
@@ -278,6 +278,9 @@ class Dashboard extends Component {
 
     return (
       <div>
+
+      <button onClick={() => this.logout()} >LOG OUT</button>
+
         <div className='schemaName'>
           <input
             type='text'
