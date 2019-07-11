@@ -75,10 +75,12 @@ const schemaController = {
     }
   },
   getAllSchema: (req, res, next) => {
-    const { user_id } = res.locals;
-    // if user_id is in res locals
-    if (user_id) {
-      // create schemas table first
+    const { ssid } = req.cookies;
+
+    try {
+      const { user_id } = jwt.verify(ssid, 'secretkey');
+
+      // create schemas table
       pool.query(
         `CREATE TABLE IF NOT EXISTS schemas(
         user_id INT,
@@ -88,35 +90,14 @@ const schemaController = {
         unique_check BOOLEAN DEFAULT FALSE,
         required_check BOOLEAN DEFAULT FALSE)`,
       )
-        // grab all schemas from user
         .then(() => pool.query('SELECT * FROM schemas WHERE user_id=$1', [user_id]))
         .then(({ rows }) => {
-          // convert all keys into schemas
-          res.locals.userSchema = convertKeysToSchemas(rows);
-          return next();
+          res.status(200).send(convertKeysToSchemas(rows));
         })
-        .catch((err) => {
-          console.log('error from getAllSchema table');
-          throw new Error(err);
-        });
-
-      // otherwise user_id is inside our jwt
-    } else {
-      const { ssid } = req.cookies;
-
-      try {
-        const { user_id } = jwt.verify(ssid, 'secretkey');
-
-        pool.query('SELECT * FROM schemas WHERE user_id=$1', [user_id])
-          .then(({ rows }) => {
-            res.locals.userSchema = convertKeysToSchemas(rows);
-            return next();
-          })
-          .catch(err => res.status(400).send('user doesnt exist'));
-      } catch (err) {
-        // jwt is malformed
-        return res.status(400).send('jwt is malformed');
-      }
+        .catch(err => res.status(400).send('user doesnt exist'));
+    } catch (err) {
+      // jwt is malformed
+      return res.status(400).send('jwt is malformed');
     }
   },
   deleteSchema: (req, res, next) => {
