@@ -1,3 +1,4 @@
+const dotenv = require('dotenv');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 const pool = require('./database');
@@ -86,11 +87,15 @@ const userController = {
   },
 
   redirectToRoot: (req, res) => {
-    if (process.env.NODE_ENV === "development") {
+
+    console.log("NODE ENV", process.env.NODE_ENV)
+    if (process.env.NODE_ENV !== "production") { //=== "development"
       return res.cookie('ssid', res.locals.jwtToken).redirect('http://localhost:8080');
     }
     else return res.cookie('ssid', res.locals.jwtToken).redirect('/');
   },
+
+
 };
 
 module.exports = userController;

@@ -36,6 +36,8 @@ class Dashboard extends Component {
     this.handleSaveSchema = this.handleSaveSchema.bind(this);
     this.handleCopySchema = this.handleCopySchema.bind(this);
     this.getSchema = this.getSchema.bind(this);
+    this.logout = this.logout.bind(this);
+
   }
   handleCopySchema() {
     // console.log('Dashboard.js => handleCopySchema => this.state.result', this.state.result)
@@ -229,6 +231,7 @@ class Dashboard extends Component {
     // console.log(`Option selected:`, selectedOption.label);
   }
 
+
   componentDidMount() {
     // grab schema from local storage, add to state
     const savedSchema = window.localStorage.getItem('schema');
@@ -238,6 +241,14 @@ class Dashboard extends Component {
       }, this.handleSaveSchema);
     }
   }
+
+  logout() {
+    console.log(' clicked log out ')
+    fetch('/logout')
+      .catch(err => console.log(err))
+  }
+
+
 
   render() {
     // add a clear button that clears local storage
