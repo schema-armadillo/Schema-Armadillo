@@ -36,7 +36,6 @@ class Signup extends React.Component {
 
   // THIS NEEDS TO BE DONE
   handleSignupSubmit(event) {
-
     event.preventDefault();
 
     const { signupEmail: email, signupPassword: password } = this.state;
@@ -61,8 +60,8 @@ class Signup extends React.Component {
 
   render() {
     return (
-      <Form className='signupForm' onSubmit={this.handleSignupSubmit}>
-        <h1 className='signup'>Sign up</h1>
+      <Form className='signupForm'>
+        <h1 className='signup'>Signup</h1>
         <input
           className='entry emailField'
           type='text'
@@ -77,12 +76,12 @@ class Signup extends React.Component {
           value={this.state.signupPassword}
           onChange={this.handleChangeSignupPassword}
         />
-        <input className='signupButton' type='submit' value='Yeehaw!' />
+        <input className='signupButton' type='submit' value='Yeehaw!' onClick={this.handleSignupSubmit} />
         <button href='https://github.com/login/oauth/authorize?client_id=a47e12225465438143f6&redirect_uri=http://localhost:3000/github&scope=user:email'>
-          Sign In With Github
+          Signup With Github
         </button>
-        <button onClick={this.props.handleGoogleOAuth}>Sign in with Google</button>
-      </Form>
+        <button onClick={this.props.handleGoogleOAuth}>Signup with Google</button>
+      </Form >
     );
   }
 }

@@ -25,7 +25,7 @@ const NavContainer = styled.div`
     }
 
     button:hover {
-      border-bottom: 1.5px solid blue;
+      border-bottom: 1.5px solid coral;
     }
 
     button:focus {
