@@ -27,7 +27,7 @@ const schemaController = {
         // remove all the current schemas before adding any new ones
         return pool.query('DELETE FROM schemas WHERE user_id=$1 AND schema_name=$2', [user_id, schemaName])
           // create new schema
-          .then(next);
+          .then(() => next());
       })
       .catch((err) => {
         console.error('error in creating new schema id');
