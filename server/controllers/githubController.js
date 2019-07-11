@@ -1,6 +1,7 @@
 const axios = require('axios');
 const pool = require('./database');
 const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
 
 
 
@@ -39,7 +40,7 @@ githubController.accessAPI = (req, res, next) =>{
             }
             res.locals.username = response.data.login;
             res.locals.password = hashResponse; // store hasedResponse to sql database
-            res.locals.gitId = response.data.id; //need this for bcrypt compare
+            res.locals.gitId = response.data.id.toString(); //need this for bcrypt compare
             return next();
             // return res.send('done bcrypting')
         })
@@ -61,7 +62,7 @@ githubController.login  = (req, res, next) => {
     pool.query(`SELECT * FROM users WHERE username = '${res.locals.username}'`)
       .then((data) => {
         const userFound = data.rows[0];
-        bcrypt.compare(res.locals.gitId.toString(), userFound.password)
+        bcrypt.compare(res.locals.gitId, userFound.password)
           .then((valid)=>{
               if(valid){
                 res.locals.user_id = userFound.user_id;
@@ -72,6 +73,17 @@ githubController.login  = (req, res, next) => {
           .catch(err => res.status(500).send('Internal error authorizing credentials.'));
       })
       .catch(err => res.status(500).send('Error when trying to bcrypt compare passwords'));
+}
+
+githubController.setJwt = (req, res, next) => {
+    jwt.sign({ user_id: res.locals.user_id }, 'secretkey', { expiresIn: 60 * 60 }, (err, token) => {
+        // sends back username, and user_id
+        res.cookie('ssid', token)
+        // .status(200).json({
+        //   user_id: res.locals.user_id, userSchema: res.locals.userSchema,
+        // });
+        return next();
+      });  
 }
 
 module.exports = githubController;

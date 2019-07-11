@@ -12,7 +12,7 @@ module.exports = {
     hot: true,
     port: 8080,
     proxy: {
-      '/': 'http://localhost:3000',
+      // '/': 'http://localhost:3000',
       '/api/': 'http://localhost:3000',
       '/auth/': 'http://localhost:3000',
       '/test/': 'http://localhost:3000',
