@@ -5,15 +5,22 @@ const schemaController = require('../controllers/schemaController');
 const userController = require('../controllers/userController')
 
 // prefix with api
-console.log('routed to schema file');
-router.post('/schema', userController.checkJwt, schemaController.createSchemaId, schemaController.createSchema, (req, res) => {
-  let {schema_id} = res.locals;
-  res.status(200).json({schema_id});
-});
+router.post('/schema',
+  userController.checkJwt,
+  schemaController.createSchemaId,
+  schemaController.createSchema,
+  (req, res) => {
+    let { schema_id, user_id, schema_name } = res.locals;
+    res.status(200).json({ schema_id, user_id, schema_name });
+  }
+);
 router.delete('/schema', schemaController.deleteSchema);
-router.put('/schema', schemaController.updateSchema);
+router.post('/schema/update', schemaController.deleteSchema, schemaController.updateSchema);
 // returns all stored schema for a specific user
 router.post('/schema/all', schemaController.getAllSchema);
 
-module.exports = router;
+router.get('/schema/refresh', schemaController.refreshAllSchema)
 
+router.get('/schema/one', schemaController.getSchema)
+
+module.exports = router;

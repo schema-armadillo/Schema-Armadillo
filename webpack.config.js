@@ -1,3 +1,4 @@
+// const dotenv = require('dotenv');
 const path = require('path');
 
 module.exports = {
@@ -48,5 +49,8 @@ module.exports = {
         ]
       }
     ]
+  },
+  node: {
+    fs: "empty"
   }
 };

@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import '.././styles/Dashboard.css';
 import KeyValue from './KeyValue';
 import schemaGenerator from '../../utils/modelCodeMaker2';
+const url = require('url')
 
 class Dashboard extends Component {
   constructor(props) {
@@ -9,6 +10,8 @@ class Dashboard extends Component {
     this.state = {
       result: '',
       schema: {
+        user_id: null,
+        schema_id: null,
         schemaName: '',
         rows: [
           {
@@ -25,25 +28,24 @@ class Dashboard extends Component {
 
     this.handleSchemaName = this.handleSchemaName.bind(this);
     this.createRow = this.createRow.bind(this);
-    this.handleCreateSchema = this.handleCreateSchema.bind(this);
     this.updateRow = this.updateRow.bind(this);
     this.deleteRow = this.deleteRow.bind(this);
+    this.handleCreateSchema = this.handleCreateSchema.bind(this);
     this.handleChangeRequired = this.handleChangeRequired.bind(this);
     this.handleChangeUnique = this.handleChangeUnique.bind(this);
     this.handleChangeKey = this.handleChangeKey.bind(this);
     this.handleChangeType = this.handleChangeType.bind(this);
     this.handleSaveSchema = this.handleSaveSchema.bind(this);
     this.handleCopySchema = this.handleCopySchema.bind(this);
+    this.getSchema = this.getSchema.bind(this);
   }
   handleCopySchema() {
-    console.log('Dashboard.js => handleCopySchema => this.state.result', this.state.result)
     // create a fake element
     // don't display it on page
     // need textarea to copy to clipboard
     let copyText = document.createElement('textarea');
     copyText.value = this.state.result;
     document.body.appendChild(copyText);
-    console.log('Dashboard => handleCopySchema => copyText', copyText);
 
     copyText.select();
     document.execCommand('copy');
@@ -59,16 +61,122 @@ class Dashboard extends Component {
 
   }
 
-  handleSaveSchema() {
+  handleDeleteSchema() {
     fetch('/api/schema', {
-      method: 'POST',
+      method: 'DELETE',
       headers: {
         'Content-Type': 'application/json'
       },
       body: JSON.stringify(this.state.schema)
     })
+  }
+
+  handleSaveSchema() {
+    if (!this.props.isLogged) {
+      // window.localStorage.setItem('schema', JSON.stringify(this.state.schema));
+      // alert('Please sign up with Schema Armadillo, so we can save your work!');
+      // this.props.redirectToSignup();
+      // return;
+      if (this.state.schema.schemaName.trim() === '') {
+        return this.setState({ result: 'Enter a schema name' });
+      }
+  
+      let rows = this.state.schema.rows;
+      for (let i = 0; i < rows.length; i += 1) {
+        // check if key or type is empty
+        if (rows[i].key.trim() === '')
+          return this.setState({ result: 'Assign name for all keys' });
+        if (rows[i].type.trim() === '')
+          return this.setState({ result: 'Select type for all keys' });
+      }
+      window.localStorage.setItem('schema', JSON.stringify(this.state.schema));
+      this.props.redirectToSignup();
+      return;
+    }
+    if (this.state.schema.schema_id !== null) {
+      fetch('/api/schema/update', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(this.state.schema)
+      })
+        .then(data => data.json())
+        .then(result => {
+          console.log('save schema result ', result)
+          let stateCopy = Object.assign(this.state.schema, {});
+          stateCopy.rows = [
+            {
+              key: '',
+              type: '',
+              options: {
+                required: false,
+                unique: false
+              }
+            }
+          ];
+          stateCopy.schemaName = '';
+          this.setState({ schema: stateCopy })
+          this.props.getUserSchemaArr([{
+            schema_id: result.schema_id, schema_name: result.schema_name, user_id: result.user_id
+          }])
+        })
+    }
+    else if (this.state.schema.schema_id === null) {
+      fetch('/api/schema', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(this.state.schema)
+      })
+        .then(data => data.json())
+        .then(result => {
+          console.log('save schema result ', result)
+          let stateCopy = Object.assign(this.state.schema, {});
+          stateCopy.rows = [
+            {
+              key: '',
+              type: '',
+              options: {
+                required: false,
+                unique: false
+              }
+            }
+          ];
+          stateCopy.schemaName = '';
+          this.setState({ schema: stateCopy })
+          this.props.getUserSchemaArr([{
+            schema_id: result.schema_id, schema_name: result.schema_name, user_id: result.user_id
+          }])
+        })
+    }
+
+
+  }
+
+  getSchema(user_id, schema_id) {
+    const url = '/api/schema/one?user_id=' + user_id + '&schema_id=' + schema_id;
+    fetch(url)
       .then(data => data.json())
-      .then(result => console.log(result));
+      .then(result => {
+        let stateCopy = Object.assign(this.state.schema, {})
+        stateCopy.rows = [];
+        result.forEach(el => {
+          stateCopy.user_id = el.user_id;
+          stateCopy.schemaName = el.schema_name;
+          stateCopy.schema_id = el.schema_id;
+          stateCopy.rows.push({
+            key: el.key,
+            type: el.type,
+            options: {
+              required: el.required_check,
+              unique: el.unique_check
+            }
+          })
+        })
+        this.setState({ schema: stateCopy });
+      })
   }
 
   handleCreateSchema(state) {
@@ -100,7 +208,6 @@ class Dashboard extends Component {
   createRow() {
     let schema = Object.assign({}, this.state.schema);
     let { rows } = schema;
-    console.log('Dashboard => createRow => this.state.schema.rows', rows);
     rows.push({
       key: '',
       type: '',
@@ -118,14 +225,13 @@ class Dashboard extends Component {
       if (index === rowIndex) return false;
       return true;
     });
-    console.log('Dashboard => deleteRow => rows', rows);
     this.setState({ schema });
   }
 
   updateRow(key, type, required) {
     let schema = Object.assign({}, this.state.schema);
     let { rows } = schema;
-    console.log('Dashboard => updateRow => this.state.schema.rows', rows);
+    // console.log('Dashboard => updateRow => this.state.schema.rows', rows);
 
     rows[rows.length - 1] = {
       key,
@@ -138,10 +244,6 @@ class Dashboard extends Component {
   handleChangeRequired(event, rowIndex) {
     let schema = Object.assign({}, this.state.schema);
     let { rows } = schema;
-    console.log(
-      'Dashboard => handleChangeRequired => event.target',
-      event.target.checked
-    );
     rows[rowIndex].options.required = event.target.checked;
     return this.setState({ schema });
   }
@@ -149,10 +251,6 @@ class Dashboard extends Component {
   handleChangeUnique(event, rowIndex) {
     let schema = Object.assign({}, this.state.schema);
     let { rows } = schema;
-    console.log(
-      'Dashboard => handleChangeUnique => event.target',
-      event.target.checked
-    );
     rows[rowIndex].options.unique = event.target.checked;
     return this.setState({ schema });
   }
@@ -178,8 +276,18 @@ class Dashboard extends Component {
     // console.log(`Option selected:`, selectedOption.label);
   }
 
+  componentDidMount() {
+    // grab schema from local storage, add to state
+    const savedSchema = window.localStorage.getItem('schema');
+    if (savedSchema) {
+      return this.setState({
+        schema: JSON.parse(savedSchema)
+      }, this.handleSaveSchema);
+    }
+  }
+
   render() {
-    console.log('Dashboard => this.state.schema', this.state.schema);
+    // add a clear button that clears local storage
     let rows = [];
     for (let i = 0; i < this.state.schema.rows.length; i++) {
       rows.push(
@@ -197,26 +305,26 @@ class Dashboard extends Component {
     }
 
     let schemaButtons = [];
-    // for (let i=0; i<this.props.userSchemaArr; i++) {
-    //   schemaButtons.push(<button>{}</button>)
-    // }
-    schemaButtons = this.props.userSchemaArr.map(el => {
-      return (<button>{el.schema_name}</button>)
-    })
+
+    if (this.props.userSchemaArr) {
+      schemaButtons = this.props.userSchemaArr.map(el => {
+        return (<button onClick={() => this.getSchema(el.user_id, el.schema_id)}>{el.schema_name}</button>)
+      })
+    }
 
     return (
-      <div>
-        <div className='schemaName'>
-          <input
-            type='text'
-            value='Schema Name'
-            placeholder='Schema Name'
-            value={this.state.schema.schemaName}
-            onChange={this.handleSchemaName}
-          />
-          <br />
-        </div>
+      <>
         <div className='container'>
+          <div className='schemaName'>
+            <input
+              type='text'
+              value='Schema Name'
+              placeholder='Schema Name'
+              value={this.state.schema.schemaName}
+              onChange={this.handleSchemaName}
+            />
+          </div>
+          <br />
           {/* ADDED TABLE HEADS - SHOULD BE STYLED */}
           <div className='headers'>
             <p>Key</p>
@@ -237,19 +345,15 @@ class Dashboard extends Component {
             >
               Create Schema
             </button>
-            <button className='createrow' onClick={this.createRow}>
-              Add a New Key
-            </button>
+            <button className='createrow' onClick={this.createRow}>Add a New Key</button>
+            <button className='saveButton' onClick={this.handleSaveSchema}>Save</button>
           </div>
         </div>
-        <button className='saveButton' onClick={this.handleSaveSchema}>
-          Save
-        </button>
         <pre onClick={this.handleCopySchema}>
           <code>{this.state.result}</code>
         </pre>
         <div className='clipboard-message' />
-      </div>
+      </>
     );
   }
 }

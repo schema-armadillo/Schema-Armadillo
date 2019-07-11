@@ -1,29 +1,16 @@
 import React, { Component } from 'react';
-
-import '../styles/App.css';
-import { hot } from 'react-hot-loader';
-import {
-  Route,
-  Link,
-  BrowserRouter as Router,
-  Redirect,
-  Switch
-} from 'react-router-dom';
-
+import { Route, Link, BrowserRouter as Router, Redirect, Switch } from 'react-router-dom';
 import Login from './Login';
+import Nav from './Nav';
 import Dashboard from './Dashboard';
+import Signup from './Signup';
+import styled from 'styled-components';
 
-const route = (isLogged, loginToggle, getUserSchemaArr, userSchemaArr) => {
-  return (<Switch>
-
-    <Route exact path="/" render={() => (isLogged ? <Dashboard userSchemaArr={userSchemaArr}/> : <Redirect to="/login" />)} />
-    <Route path="/login" render={() => (isLogged ? <Redirect to="/dashboard" /> : <Login isLoggedIn={isLogged} loginToggle={loginToggle} getUserSchemaArr={getUserSchemaArr}/>)}/>
-    <Route path="/signup" render={() => (isLogged ? <Redirect to="/dashboard" /> : <Login isLoggedIn={isLogged} loginToggle={loginToggle} getUserSchemaArr={getUserSchemaArr}/>)}/>
-    <Route path="/dashboard" render={() => (isLogged ? <Dashboard userSchemaArr={userSchemaArr}/> : <Redirect to="/login" />)} />
-    <Route path="/myschema" />
-
-  </Switch>)
-}
+const SAuthentication = styled.div`
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    `;
 
 class App extends Component {
 
@@ -32,24 +19,36 @@ class App extends Component {
     this.state = {
       userSchemaArr: [],
       isLogged: false,
+      username: null,
+      screen: 'dashboard'
     }
     this.checkIfLoggedIn = this.checkIfLoggedIn.bind(this);
     this.toggleLoggedIn = this.toggleLoggedIn.bind(this);
     this.getUserSchemaArr = this.getUserSchemaArr.bind(this);
+    this.redirectToLogin = this.redirectToLogin.bind(this);
+    this.redirectToDashboard = this.redirectToDashboard.bind(this);
+    this.redirectToSignup = this.redirectToSignup.bind(this);
+    this.handleGoogleOAuth = this.handleGoogleOAuth.bind(this);
+    this.clearAppState = this.clearAppState.bind(this);
+    this.setUsername = this.setUsername.bind(this);
+  }
+
+  setUsername(username) {
+    this.setState({ ...this.state, username });
   }
 
   getUserSchemaArr(result) {
     const userSchemaArr = [...this.state.userSchemaArr];
     result.forEach(el => userSchemaArr.push(el));
-    this.setState({userSchemaArr});
+    this.setState({ userSchemaArr });
   }
 
   toggleLoggedIn(result) {
     // JUST FOR THE SAKE OF DEMO
     const userSchemaArr = [...this.state.userSchemaArr];
     // undefined check, handles create user
-    if(result.userSchema !== undefined) result.userSchema.forEach(el => userSchemaArr.push(el));
-    this.setState({isLogged: true, userSchemaArr});
+    if (result.userSchema !== undefined) result.userSchema.forEach(el => userSchemaArr.push(el));
+    this.setState({ isLogged: true, userSchemaArr });
     // REVIEW THIS CODE HERE
 
     // this.setState({ isLogged: true });
@@ -57,30 +56,91 @@ class App extends Component {
   }
 
   checkIfLoggedIn() {
-    console.log('inside did mount func')
-    fetch('/auth/verify', {method:'POST'})
+    fetch('/auth/verify', { method: 'POST' })
       .then(data => data.json())
       .then(data => {
         this.setState({ isLogged: data.isLoggedIn })
-        console.log('inside check if logged in ', this.state.isLogged)
       })
       .catch(e => {
-        console.log('no jwt, inside catch e');
-        console.log(this.state.isLogged);        
+        console.error(e);
       })
   }
 
+  clearAppState() {
+    const reinitAppState = {
+      userSchemaArr: [],
+      isLogged: false,
+      screen: 'dashboard'
+    }
+    this.setState(reinitAppState);
+  }
+
+  redirectToLogin() {
+    this.setState({ ...this.state, screen: 'login' });
+  }
+
+  redirectToDashboard() {
+    this.setState({ ...this.state, screen: 'dashboard' });
+  }
+
+  redirectToSignup() {
+    this.setState({ ...this.state, screen: 'signup' });
+  }
+
+  handleGoogleOAuth(event) {
+    event.preventDefault();
+    fetch('/google/googleInit')
+      .then(response => {
+        window.location = `http://localhost:3000/google/googleInit`
+      })
+      .catch(err => console.error(err))
+  }
+
   componentDidMount() {
-    console.log('component mounting, about to check jwt');
     this.checkIfLoggedIn();
   }
 
   render() {
     return (
-      <Router>
-        {/* invoke route with isLogged */}
-        {route(this.state.isLogged, this.toggleLoggedIn, this.getUserSchemaArr, this.state.userSchemaArr)}
-      </Router>
+      <>
+        <Nav
+          isLogged={this.state.isLogged}
+          redirectToLogin={this.redirectToLogin}
+          redirectToDashboard={this.redirectToDashboard}
+          redirectToSignup={this.redirectToSignup}
+          clearAppState={this.clearAppState}
+          username={this.state.username}
+          setUsername ={this.setUsername}
+        />
+        {this.state.screen === 'dashboard' &&
+          <Dashboard
+            userSchemaArr={this.state.userSchemaArr}
+            isLogged={this.state.isLogged}
+            redirectToSignup={this.redirectToSignup}
+            getUserSchemaArr={this.getUserSchemaArr}
+            clearAppState={this.clearAppState}
+          />
+        }
+        <SAuthentication>
+          {this.state.screen === 'login' &&
+            <Login
+              toggleLoggedIn={this.toggleLoggedIn}
+              getUserSchemaArr={this.getUserSchemaArr}
+              redirectToDashboard={this.redirectToDashboard}
+              handleGoogleOAuth={this.handleGoogleOAuth}
+              setUsername={this.setUsername}
+            />
+          }
+          {this.state.screen === 'signup' &&
+            <Signup
+              toggleLoggedIn={this.toggleLoggedIn}
+              redirectToDashboard={this.redirectToDashboard}
+              handleGoogleOAuth={this.handleGoogleOAuth}
+              setUsername={this.setUsername}
+            />
+          }
+        </SAuthentication>
+      </>
     );
   }
 }

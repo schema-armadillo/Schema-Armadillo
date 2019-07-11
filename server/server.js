@@ -1,46 +1,45 @@
+require('dotenv').config();
 const express = require('express');
 const path = require('path');
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
-
-const schema = require('./routers/schema');
 const cors = require('cors');
+const schema = require('./routers/schema');
 const user = require('./routers/user');
+const google = require('./routers/google');
+const github = require('./routers/github');
 
 const app = express();
-const port = 3000;
+const port = process.env.PORT || 3000;
 
+app.use(express.static('client'));
 app.use(cors());
 app.use(bodyParser.json());
-app.use(
-  bodyParser.urlencoded({
-    extended: true
-  })
-);
+app.use(bodyParser.urlencoded({ extended: true }));
 
 app.use(cookieParser());
 
-// create routers for separate endpoints
-app.get('*', (req, res) => {
+if (process.env.NODE_ENV === 'production') {
+  app.use('/build', express.static(path.join(__dirname, '../build')));
+}
+
+app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, '../client/index.html'));
-  // res.send('hello')
 });
 
-app.post('/test', (req, res) => {
-  console.log('posted to /test');
-  console.log(req.body);
-  // return res.status(200).redirect('/dashboard');
-  return res
-    .set('Content-Type', 'application/json')
-    .status(200)
-    .json({ success: true, redirecturl: '/dashboard' });
-});
-
-// commenting these two routes since sophie and indra may not have database set up yet and it will give them an error
-// app.use('/user', user);
-// changed from user
+// localhost/auth/*
+// /auth/[login, create. verify, logout]
 app.use('/auth', user);
+// localhost/api/...
 app.use('/api', schema);
+// localhost/google/...
+app.use('/google', google);
+
+// localhost/github/....
+app.use('/github', github);
+
+
+
 
 app.listen(port, () => {
   console.log(`Listening on port ${port}...`);
