@@ -36,6 +36,8 @@ class Dashboard extends Component {
     this.handleSaveSchema = this.handleSaveSchema.bind(this);
     this.handleCopySchema = this.handleCopySchema.bind(this);
     this.getSchema = this.getSchema.bind(this);
+    this.logout = this.logout.bind(this);
+
   }
   handleCopySchema() {
     // console.log('Dashboard.js => handleCopySchema => this.state.result', this.state.result)
@@ -62,6 +64,11 @@ class Dashboard extends Component {
   }
 
   handleSaveSchema() {
+    if (!this.props.isLogged) {
+      window.localStorage.setItem('schema', JSON.stringify(this.state.schema));
+      this.props.redirectToLogin();
+      return;
+    }
     fetch('/api/schema', {
       method: 'POST',
       headers: {
@@ -148,7 +155,6 @@ class Dashboard extends Component {
   createRow() {
     let schema = Object.assign({}, this.state.schema);
     let { rows } = schema;
-    // console.log('Dashboard => createRow => this.state.schema.rows', rows);
     rows.push({
       key: '',
       type: '',
@@ -166,7 +172,6 @@ class Dashboard extends Component {
       if (index === rowIndex) return false;
       return true;
     });
-    // console.log('Dashboard => deleteRow => rows', rows);
     this.setState({ schema });
   }
 
@@ -227,7 +232,26 @@ class Dashboard extends Component {
   }
 
 
+  componentDidMount() {
+    // grab schema from local storage, add to state
+    const savedSchema = window.localStorage.getItem('schema');
+    if (savedSchema) {
+      return this.setState({
+        schema: JSON.parse(savedSchema)
+      }, this.handleSaveSchema);
+    }
+  }
+
+  logout() {
+    console.log(' clicked log out ')
+    fetch('/auth/logout')
+      .catch(err => console.log("error logging out", err))
+  }
+
+
+
   render() {
+    // add a clear button that clears local storage
     let rows = [];
     for (let i = 0; i < this.state.schema.rows.length; i++) {
       rows.push(
@@ -245,13 +269,18 @@ class Dashboard extends Component {
     }
 
     let schemaButtons = [];
-    schemaButtons = this.props.userSchemaArr.map(el => {
-      console.log('el ', el)
-      return (<button onClick={() => this.getSchema(el.user_id, el.schema_id)}>{el.schema_name}</button>)
-    })
+
+    if (this.props.userSchemaArr) {
+      schemaButtons = this.props.userSchemaArr.map(el => {
+        return (<button onClick={() => this.getSchema(el.user_id, el.schema_id)}>{el.schema_name}</button>)
+      })
+    }
 
     return (
       <div>
+
+      <button onClick={() => this.logout()} >LOG OUT</button>
+
         <div className='schemaName'>
           <input
             type='text'
@@ -283,14 +312,10 @@ class Dashboard extends Component {
             >
               Create Schema
             </button>
-            <button className='createrow' onClick={this.createRow}>
-              Add a New Key
-            </button>
+            <button className='createrow' onClick={this.createRow}>Add a New Key</button>
+            <button className='saveButton' onClick={this.handleSaveSchema}>Save</button>
           </div>
         </div>
-        <button className='saveButton' onClick={this.handleSaveSchema}>
-          Save
-        </button>
         <pre onClick={this.handleCopySchema}>
           <code>{this.state.result}</code>
         </pre>

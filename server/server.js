@@ -19,23 +19,11 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser());
 
 if (process.env.NODE_ENV === 'production') {
-  // statically serve everything in the build folder on the route '/build'
   app.use('/build', express.static(path.join(__dirname, '../build')));
-  // serve index.html on the root route '/'
-  // app.get('/', (req, res) => {
-  //   res.sendFile(path.join(__dirname, '../client/index.html'));
-  // });
 }
 
 app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, '../client/index.html'));
-});
-
-app.post('/test', (req, res) => {
-  return res
-    .set('Content-Type', 'application/json')
-    .status(200)
-    .json({ success: true, redirecturl: '/dashboard' });
 });
 
 app.use('/auth', user);

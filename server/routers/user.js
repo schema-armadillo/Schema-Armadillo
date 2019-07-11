@@ -26,4 +26,6 @@ router.post('/verify', userController.checkJwt, (req, res) => {
   return res.status(200).json({ isLoggedIn: true });
 });
 
+router.get('/logout', userController.logout)
+
 module.exports = router;

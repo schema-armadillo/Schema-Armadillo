@@ -1,3 +1,4 @@
+const dotenv = require('dotenv');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 const pool = require('./database');
@@ -75,6 +76,7 @@ const userController = {
     return res.cookie('ssid', res.locals.jwtToken).status(200).json({ user_id: res.locals.user_id, userSchema: res.locals.userSchema });
   },
 
+  // TODO: Only check jwt when saving schema
   checkJwt: (req, res, next) => {
     const { ssid } = req.cookies;
     jwt.verify(ssid, process.env.SECRET_KEY, (err, result) => {
@@ -85,11 +87,28 @@ const userController = {
   },
 
   redirectToRoot: (req, res) => {
-    if (process.env.NODE_ENV === "development") {
+
+    console.log("NODE ENV", process.env.NODE_ENV)
+    if (process.env.NODE_ENV !== "production") { //=== "development"
       return res.cookie('ssid', res.locals.jwtToken).redirect('http://localhost:8080');
     }
     else return res.cookie('ssid', res.locals.jwtToken).redirect('/');
   },
+
+  logout: (req, res) => {
+    console.log("IN THE LOGOUT FOO")
+    // console.log("req ", req.cookie)
+    // console.log("req s ", req.cookies)
+    // console.log(" ", res.cookie)
+    // console.log("s", res.cookies)
+    res.clearCookie("ssid")
+    if (req.cookies.googlejwt) {res.clearCookie("googlejwt")}
+
+    // res.redirect(307, 'http://localhost:8080');
+    res.render('');
+  }
+
+
 };
 
 module.exports = userController;
