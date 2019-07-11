@@ -239,8 +239,15 @@ class Dashboard extends Component {
           />
 
           <SchemaStorage userSchemaArr={this.state.userSchemaArr} setKeyValueTable={this.setKeyValueTable} />
-          <OptionButtons schema={this.state.schema} handleCreateSchema={this.handleCreateSchema} createRow={this.createRow} />
-          <DeleteButton handleDeleteSchema={this.handleDeleteSchema} />
+
+          <OptionButtons
+            schema={this.state.schema}
+            handleCreateSchema={this.handleCreateSchema}
+            createRow={this.createRow}
+            result={this.state.result}
+            handleSaveSchema={this.handleSaveSchema}
+          />
+
           <Select
             options={this.schemaListOptions()}
             closeMenuOnSelect='true'
@@ -248,11 +255,12 @@ class Dashboard extends Component {
             placeholder="Select Schemas"
             isSearchable={true}
             isMulti={true}
-
           />
+
         </div>
 
-        <SaveButton result={this.state.result} handleSaveSchema={this.handleSaveSchema} />
+        <DeleteButton handleDeleteSchema={this.handleDeleteSchema} />
+
         <pre onClick={this.handleCopySchema}>
           <div className='clipboard-message' />
           <code>{this.state.result}</code>
