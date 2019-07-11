@@ -9,7 +9,7 @@ const pool = new Pool({
 });
 
 pool.query(
-  'CREATE TABLE IF NOT EXISTS users(user_id SERIAL PRIMARY KEY, username VARCHAR(50) UNIQUE, password VARCHAR(100), team_id INT)',
+  `CREATE TABLE IF NOT EXISTS users(user_id SERIAL PRIMARY KEY, username VARCHAR(50) , password VARCHAR(100), team_id INT, type VARCHAR(100) DEFAULT 'Armadillo')`,
   (err, result) => {
     if (err) return console.error(err);
   },

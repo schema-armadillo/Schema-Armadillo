@@ -18,14 +18,19 @@ const userController = {
   },
 
   addUserToDB: (req, res, next) => {
-
-    pool.query(`INSERT INTO users (username, password) VALUES ('${res.locals.username}', '${res.locals.password}') RETURNING user_id, username`)
+    pool.query(`SELECT * from users where username='${res.locals.username}' and type = 'Armadillo'`)
       .then((data) => {
-        res.locals.user_id = data.rows[0].user_id;
-        res.locals.username = data.rows[0].username;
-
-        return next();
-      })
+          if(data.rows.length === 0){
+            pool.query(`INSERT INTO users (username, password) VALUES ('${res.locals.username}', '${res.locals.password}') RETURNING user_id, username`)
+            .then((data) => {
+              res.locals.user_id = data.rows[0].user_id;
+              res.locals.username = data.rows[0].username;
+      
+              return next();
+            })
+          }
+          throw new Error('username taken in armadillo type')
+        })
       .catch(() => res.status(500).send('Error creating user. Please try again.'));
   },
 

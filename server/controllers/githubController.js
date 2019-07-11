@@ -49,7 +49,7 @@ githubController.accessAPI = (req, res, next) =>{
 }
 
 githubController.verifyUser = (req, res, next) => {
-    pool.query(`SELECT * from users where username='${res.locals.username}'`)
+    pool.query(`SELECT * from users where username='${res.locals.username}' and type = 'github'`)
       .then((data) => {
           if(data.rows.length === 0){
               return next();
@@ -58,8 +58,22 @@ githubController.verifyUser = (req, res, next) => {
       })
 }
 
+githubController.addUserToDB = (req, res, next) => {
+
+    pool.query(`INSERT INTO users (username, password, type) VALUES ('${res.locals.username}', '${res.locals.password}','github') RETURNING user_id, username`)
+      .then((data) => {
+        res.locals.user_id = data.rows[0].user_id;
+        res.locals.username = data.rows[0].username;
+
+        return next();
+      })
+      .catch(() => res.status(500).send('Error creating user. Please try again.'));
+  },
+
+
+
 githubController.login  = (req, res, next) => {
-    pool.query(`SELECT * FROM users WHERE username = '${res.locals.username}'`)
+    pool.query(`SELECT * FROM users WHERE username = '${res.locals.username}' and type = 'github'`)
       .then((data) => {
         const userFound = data.rows[0];
         bcrypt.compare(res.locals.gitId, userFound.password)

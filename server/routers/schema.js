@@ -13,11 +13,7 @@ router.post('/schema', userController.checkJwt, schemaController.createSchemaId,
 });
 router.delete('/schema', schemaController.deleteSchema);;
 // returns all stored schema for a specific user
-router.get('/schema', schemaController.getAllSchema, (req, res) => {
-  const { locals: { userSchema } } = res;
-  console.log(userSchema);
-  res.status(200).send(userSchema);
-});
+router.get('/schema', schemaController.getAllSchema);
 router.get('/schema/:schema_name', schemaController.getSchema);
 
 module.exports = router;
