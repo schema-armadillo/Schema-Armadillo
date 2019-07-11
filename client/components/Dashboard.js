@@ -36,6 +36,8 @@ class Dashboard extends Component {
     this.handleSaveSchema = this.handleSaveSchema.bind(this);
     this.handleCopySchema = this.handleCopySchema.bind(this);
     this.getSchema = this.getSchema.bind(this);
+    this.logout = this.logout.bind(this);
+
   }
   handleCopySchema() {
     // console.log('Dashboard.js => handleCopySchema => this.state.result', this.state.result)
@@ -224,6 +226,12 @@ class Dashboard extends Component {
     rows[rowIndex].type = selectedOption.label;
     return this.setState({ schema });
     // console.log(`Option selected:`, selectedOption.label);
+  }
+
+  logout() {
+    console.log(' clicked log out ')
+    fetch('/logout')
+      .catch(err => console.log(err))
   }
 
 
