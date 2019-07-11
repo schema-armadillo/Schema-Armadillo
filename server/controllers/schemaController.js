@@ -13,8 +13,7 @@ function convertKeysToSchemas(keys) {
 }
 
 const schemaController = {
-
-  createSchemaId: (req, res, next) => {
+  checkDuplicate: (req, res, next) => {
     const { schemaName } = req.body;
     const { user_id } = res.locals;
 
@@ -60,7 +59,7 @@ const schemaController = {
           throw new Error(err);
         });
     });
-    return next();
+    res.status(200).send(schemaName);
   },
 
   // gets one specific schema
