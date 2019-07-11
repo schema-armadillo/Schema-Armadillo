@@ -1,4 +1,5 @@
 import React from 'react'
+import SaveButton from './SaveButton'
 
 function OptionButtons(props) {
   return (
@@ -16,7 +17,9 @@ function OptionButtons(props) {
         type="button"
       >
         Add a New Key
-            </button>
+      </button>
+      <SaveButton result={props.result} handleSaveSchema={props.handleSaveSchema} />
+
     </div>
   )
 }
