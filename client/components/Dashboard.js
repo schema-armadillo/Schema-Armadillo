@@ -98,17 +98,13 @@ class Dashboard extends Component {
   }
 
   getSchema(user_id, schema_id) {
-    console.log('getSchema Dashboard user_id, schema_id ', user_id, schema_id)
     const url = '/api/schema/one?user_id=' + user_id + '&schema_id=' + schema_id;
     fetch(url)
       .then(data => data.json())
       .then(result => {
-        console.log('result from getSchema in dashboard ', result)
         let stateCopy = Object.assign(this.state.schema, {})
-        console.log('stateCopy ', stateCopy)
         stateCopy.rows = [];
         result.forEach(el => {
-          console.log('el ', el)
           stateCopy.schemaName = el.schema_name
           stateCopy.rows.push({
             key: el.key,
