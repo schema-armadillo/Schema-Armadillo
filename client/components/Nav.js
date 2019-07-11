@@ -46,6 +46,7 @@ const Nav = (props) => {
   const logout = () => {
     fetch('/auth/logout')
       .then(props.clearAppState)
+      .then(props.setUsername)
       .then(props.redirectToSignup)
       .catch(err => console.log("error logging out", err))
   }
