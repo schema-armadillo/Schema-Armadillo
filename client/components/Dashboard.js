@@ -47,11 +47,11 @@ class Dashboard extends Component {
   schemaListOptions() {
     let newOptions = [];
     // must have label and value
-    for(let i = 0; i < this.state.userSchemaArr.length; i++){
+    for (let i = 0; i < this.state.userSchemaArr.length; i++) {
       let { schema_name, schema_id, user_id } = this.state.userSchemaArr[i];
-      newOptions.push( {label: schema_name, value: {schema_id, user_id}} )
+      newOptions.push({ label: schema_name, value: { schema_id, user_id } })
     }
-   return newOptions;
+    return newOptions;
   }
 
   refreshSchemas() {
@@ -94,50 +94,43 @@ class Dashboard extends Component {
       },
       body: JSON.stringify(this.state.schema)
     })
-      .then(data => data.json())
-      .then(console.log)
-      .then(this.refreshSchemas);
+      .then(this.refreshSchemas)
+      .catch(console.log);
   }
 
-  /////////////////////////////////////////////////////////////////////////////////////////////////////
-  /////////////////////////////////////////////////////////////////////////////////////////////////////
-
   handleDeleteSchema() {
-    let { schema_id, user_id } = this.state.deleteThisSchema;
-    console.log()
-      fetch('/api/schema', {
-        method: 'DELETE', 
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          schema_id,
-          user_id
-        })
+    let { deleteThisSchema: { schema_id, user_id } } = this.state;
+    fetch('/api/schema', {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        schema_id,
+        user_id,
       })
-      .then(this.refreshSchemas);
-  
-    }
+    })
+      .then(this.refreshSchemas)
+      .catch(console.log);
 
-  /////////////////////////////////////////////////////////////////////////////////////////////////////
-  /////////////////////////////////////////////////////////////////////////////////////////////////////
+  }
 
   handleCreateSchema(state) {
+    const { schema: { schemaName, rows } } = this.state;
+
     // check if schemaname is filled out
-    if (this.state.schema.schemaName.trim() === '') {
+    if (schemaName.trim() === '') {
       return this.setState({ result: 'Enter a schema name' });
     }
 
-    let rows = this.state.schema.rows;
     for (let i = 0; i < rows.length; i += 1) {
+      const { key, type } = rows[i];
       // check if key or type is empty
-      if (rows[i].key.trim() === '')
-        return this.setState({ result: 'Assign name for all keys' });
-      if (rows[i].type.trim() === '')
-        return this.setState({ result: 'Select type for all keys' });
+      if (key.trim() === '') return this.setState({ result: 'Assign name for all keys' });
+      if (type.trim() === '') return this.setState({ result: 'Select type for all keys' });
     }
 
-    let result = schemaGenerator(state);
+    const result = schemaGenerator(state);
     this.setState({ result });
     event.preventDefault();
   }
@@ -219,7 +212,7 @@ class Dashboard extends Component {
 
   renderItem() {
     let newArr = [];
-    for(let i = 0; i < this.state.userSchemaArr.length; i++){
+    for (let i = 0; i < this.state.userSchemaArr.length; i++) {
       newArr.push(<div>{this.state.userSchemaArr[i]}</div>)
     }
     return newArr
@@ -246,19 +239,15 @@ class Dashboard extends Component {
 
           <SchemaStorage userSchemaArr={this.state.userSchemaArr} setKeyValueTable={this.setKeyValueTable} />
           <OptionButtons schema={this.state.schema} handleCreateSchema={this.handleCreateSchema} createRow={this.createRow} />
-{/* //////////////////////////////////////////////////////////////////////////////////////////// */}
-      <button
-          className="submit"
-          // should delete from database => refresh schema storage
-          onClick={() => this.handleDeleteSchema()}
-          type="button"
-        >
-          Delete
+          <button
+            className="submit"
+            // should delete from database => refresh schema storage
+            onClick={() => this.handleDeleteSchema()}
+            type="button"
+          >
+            Delete
         </button>
-{/* //////////////////////////////////////////////////////////////////////////////////////////// */}
-{/* //////////////////////////////////////////////////////////////////////////////////////////// */}
-        <Select options={this.schemaListOptions()} closeMenuOnSelect='true' onChange={e => this.setState({deleteThisSchema: e.value})} />
-{/* //////////////////////////////////////////////////////////////////////////////////////////// */}
+          <Select options={this.schemaListOptions()} closeMenuOnSelect='true' onChange={e => this.setState({ deleteThisSchema: e.value })} />
         </div>
 
         <SaveButton result={this.state.result} handleSaveSchema={this.handleSaveSchema} />
