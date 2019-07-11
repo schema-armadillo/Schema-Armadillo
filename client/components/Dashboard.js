@@ -36,7 +36,6 @@ class Dashboard extends Component {
     this.handleSaveSchema = this.handleSaveSchema.bind(this);
     this.handleCopySchema = this.handleCopySchema.bind(this);
     this.getSchema = this.getSchema.bind(this);
-    this.logout = this.logout.bind(this);
   }
   handleCopySchema() {
     // create a fake element
@@ -255,8 +254,6 @@ class Dashboard extends Component {
 
     return (
       <div>
-        <button onClick={() => this.logout()} >LOG OUT</button>
-
         <div className='schemaName'>
           <input
             type='text'
