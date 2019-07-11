@@ -4,7 +4,6 @@ import Login from './Login';
 import Nav from './Nav';
 import Dashboard from './Dashboard';
 import Signup from './Signup';
-import '../styles/App.css';
 
 class App extends Component {
 

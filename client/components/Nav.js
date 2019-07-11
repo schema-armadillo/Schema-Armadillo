@@ -2,8 +2,16 @@ import React from 'react';
 import styled from 'styled-components';
 
 const NavContainer = styled.div`
-    width: 100%;
+    height: 50px;
     background-color: lightblue;
+    display: flex;
+    justify-content: space-between;
+
+    div {
+      height: 50px
+      display: flex;
+      justify-content: center;
+    }
     `;
 
 const Nav = (props) => {
@@ -19,17 +27,21 @@ const Nav = (props) => {
 
   return (
     <NavContainer id='nav'>
-      <img src='../Armadillo-icon.jpg' style={{ width: '100px' }} />
-      <a onClick={props.redirectToDashboard}>Schema Armadillo</a>
-      {props.isLogged && <h1>Log out</h1>}
-      {!props.isLogged && <>
-        <a onClick={props.redirectToLogin}>Login</a>
-        <a onClick={props.redirectToSignup}>Signup</a>
-        <a href='https://github.com/login/oauth/authorize?client_id=a47e12225465438143f6&redirect_uri=http://localhost:3000/github&scope=user:email'>
-          Sign In With Github
-        </a>
-        <a onClick={handleGoogleOAuth}>Sign in with Google</a>
-      </>}
+      <div id='nav-left'>
+        <img src='../Armadillo-icon.jpg' style={{ width: '50px', borderRadius: '50%' }} />
+        <button onClick={props.redirectToDashboard}>Schema Armadillo</button>
+      </div>
+      <div id='nav-right'>
+        {props.isLogged && <h1>Log out</h1>}
+        {!props.isLogged && <>
+          <button href='https://github.com/login/oauth/authorize?client_id=a47e12225465438143f6&redirect_uri=http://localhost:3000/github&scope=user:email'>
+            Sign In With Github
+        </button>
+          <button onClick={handleGoogleOAuth}>Sign in with Google</button>
+          <button onClick={props.redirectToLogin}>Login</button>
+          <button onClick={props.redirectToSignup}>Signup</button>
+        </>}
+      </div>
     </NavContainer>
   );
 }
