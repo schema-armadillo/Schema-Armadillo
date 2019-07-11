@@ -38,11 +38,10 @@ const userController = {
             .then((data) => {
               res.locals.user_id = data.rows[0].user_id;
               res.locals.username = data.rows[0].username;
-      
               return next();
             })
           }
-          throw new Error('username taken in armadillo type')
+          else throw new Error('username taken in armadillo type')
         })
       .catch(() => res.status(500).send('Error creating user. Please try again.'));
   },
