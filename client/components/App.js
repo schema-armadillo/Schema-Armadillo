@@ -19,6 +19,8 @@ class App extends Component {
     this.getUserSchemaArr = this.getUserSchemaArr.bind(this);
     this.redirectToLogin = this.redirectToLogin.bind(this);
     this.redirectToDashboard = this.redirectToDashboard.bind(this);
+    //reinit app state
+    this.clearAppState = this.clearAppState.bind(this)
   }
 
   getUserSchemaArr(result) {
@@ -50,6 +52,15 @@ class App extends Component {
       })
   }
 
+  clearAppState() {
+    const reinitAppState = {
+      userSchemaArr: [],
+      isLogged: false,
+      screen: 'dashboard'
+    }
+    this.setState(reinitAppState);
+  }
+
   redirectToLogin() {
     this.setState({ ...this.state, screen: 'login' });
   }
@@ -72,6 +83,8 @@ class App extends Component {
             isLogged={this.state.isLogged}
             redirectToLogin={this.redirectToLogin}
             getUserSchemaArr={this.getUserSchemaArr}
+            clearAppState={this.clearAppState}
+            //reinit
           />
         }
         {this.state.screen === 'login' &&

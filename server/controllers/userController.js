@@ -97,17 +97,10 @@ const userController = {
 
   logout: (req, res) => {
     console.log("IN THE LOGOUT FOO")
-    // console.log("req ", req.cookie)
-    // console.log("req s ", req.cookies)
-    // console.log(" ", res.cookie)
-    // console.log("s", res.cookies)
     res.clearCookie("ssid")
     if (req.cookies.googlejwt) {res.clearCookie("googlejwt")}
-
-    // res.redirect(307, 'http://localhost:8080');
-    res.render('');
+    res.status(200).send();
   }
-
 
 };
 
