@@ -6,6 +6,7 @@ function convertKeysToSchemas(keys) {
   keys.forEach((key) => {
     schemas[key.schema_name] = schemas[key.schema_name] || { rows: [] };
     schemas[key.schema_name].schema_name = key.schema_name;
+    schemas[key.schema_name].user_id = key.user_id;
     schemas[key.schema_name].rows.push(key);
   });
   return Object.values(schemas);
@@ -104,17 +105,12 @@ const schemaController = {
     // expecting to receive user_id and post_id to find the rows that we want to delete
     const { user_id, schema_name } = req.body;
     // query for the table
-    pool.query(
-      'DELETE FROM schemas WHERE user_id=$1 AND schema_name=$2',
-      [user_id, schema_name],
-      (err, result) => {
-        if (err) {
-          console.error(err);
-          return res.status(400).json({ error: 'error from delete Schema' });
-        }
-        return res.status(200).json(result.rows);
-      },
-    );
+    pool.query('DELETE FROM schemas WHERE user_id=$1 AND schema_name=$2', [user_id, schema_name])
+      .then(result => res.status(200).json(result.rows))
+      .catch((err) => {
+        console.error(err);
+        return res.status(400).json({ error: 'error from delete Schema' });
+      });
   },
 };
 
