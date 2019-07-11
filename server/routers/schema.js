@@ -1,10 +1,13 @@
 const express = require('express');
-
 const router = express.Router();
 const schemaController = require('../controllers/schemaController');
 const userController = require('../controllers/userController')
 
 // prefix with api
+
+////////////////////////////////////////////////////////////////////////////////////
+/////////////                       ROUTES HERE                        /////////////
+////////////////////////////////////////////////////////////////////////////////////
 
 // save a new schema to database
 router.post('/schema', userController.checkJwt, schemaController.checkDuplicate, schemaController.createSchema);

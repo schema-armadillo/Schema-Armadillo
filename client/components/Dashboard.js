@@ -4,10 +4,10 @@ import schemaGenerator from '../../utils/modelCodeMaker2';
 import LogoutButton from './LogoutButton';
 import SchemaStorage from './SchemaStorage.jsx';
 import SchemaName from './SchemaName';
-import SchemaHeaders from './SchemaHeaders'
-import Rows from './Rows'
-import OptionButtons from './OptionButtons'
-import SaveButton from './SaveButton'
+import SchemaHeaders from './SchemaHeaders';
+import Rows from './Rows';
+import OptionButtons from './OptionButtons';
+import SaveButton from './SaveButton';
 import Select from 'react-select';
 
 
