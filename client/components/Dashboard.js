@@ -10,6 +10,8 @@ class Dashboard extends Component {
     this.state = {
       result: '',
       schema: {
+        user_id: null,
+        schema_id: null,
         schemaName: '',
         rows: [
           {
@@ -59,6 +61,16 @@ class Dashboard extends Component {
 
   }
 
+  handleDeleteSchema() {
+    fetch('/api/schema', {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(this.state.schema)
+    })
+  }
+
   handleSaveSchema() {
     if (!this.props.isLogged) {
       window.localStorage.setItem('schema', JSON.stringify(this.state.schema));
@@ -66,33 +78,64 @@ class Dashboard extends Component {
       this.props.redirectToSignup();
       return;
     }
-    fetch('/api/schema', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(this.state.schema)
-    })
-      .then(data => data.json())
-      .then(result => {
-        let stateCopy = Object.assign(this.state.schema, {});
-        stateCopy.rows = [
-          {
-            key: '',
-            type: '',
-            options: {
-              required: false,
-              unique: false
-            }
-          }
-        ];
-        stateCopy.schemaName = '';
-        this.setState({ schema: stateCopy })
-        this.props.getUserSchemaArr([{
-          schema_id: result.schema_id, schema_name: result.schema_name, user_id: result.user_id
-        }])
-        delete window.localStorage.schema;
+    if (this.state.schema.schema_id !== null) {
+      fetch('/api/schema/update', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(this.state.schema)
       })
+        .then(data => data.json())
+        .then(result => {
+          console.log('save schema result ', result)
+          let stateCopy = Object.assign(this.state.schema, {});
+          stateCopy.rows = [
+            {
+              key: '',
+              type: '',
+              options: {
+                required: false,
+                unique: false
+              }
+            }
+          ];
+          stateCopy.schemaName = '';
+          this.setState({ schema: stateCopy })
+          this.props.getUserSchemaArr([{
+            schema_id: result.schema_id, schema_name: result.schema_name, user_id: result.user_id
+          }])
+        })
+    }
+    else if (this.state.schema.schema_id === null) {
+      fetch('/api/schema', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(this.state.schema)
+      })
+        .then(data => data.json())
+        .then(result => {
+          console.log('save schema result ', result)
+          let stateCopy = Object.assign(this.state.schema, {});
+          stateCopy.rows = [
+            {
+              key: '',
+              type: '',
+              options: {
+                required: false,
+                unique: false
+              }
+            }
+          ];
+          stateCopy.schemaName = '';
+          this.setState({ schema: stateCopy })
+          this.props.getUserSchemaArr([{
+            schema_id: result.schema_id, schema_name: result.schema_name, user_id: result.user_id
+          }])
+        })
+    }
 
 
   }
@@ -105,7 +148,9 @@ class Dashboard extends Component {
         let stateCopy = Object.assign(this.state.schema, {})
         stateCopy.rows = [];
         result.forEach(el => {
-          stateCopy.schemaName = el.schema_name
+          stateCopy.user_id = el.user_id;
+          stateCopy.schemaName = el.schema_name;
+          stateCopy.schema_id = el.schema_id;
           stateCopy.rows.push({
             key: el.key,
             type: el.type,
@@ -115,7 +160,7 @@ class Dashboard extends Component {
             }
           })
         })
-        this.setState({ schema: stateCopy })
+        this.setState({ schema: stateCopy });
       })
   }
 
