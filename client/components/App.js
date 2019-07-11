@@ -76,7 +76,7 @@ class App extends Component {
   render() {
     return (
       <>
-        <Nav />
+        <Nav isLogged={this.state.isLogged} />
         {this.state.screen === 'dashboard' &&
           <Dashboard
             userSchemaArr={this.state.userSchemaArr}
@@ -84,7 +84,6 @@ class App extends Component {
             redirectToLogin={this.redirectToLogin}
             getUserSchemaArr={this.getUserSchemaArr}
             clearAppState={this.clearAppState}
-            //reinit
           />
         }
         {this.state.screen === 'login' &&

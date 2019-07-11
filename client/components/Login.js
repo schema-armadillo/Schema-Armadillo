@@ -121,23 +121,6 @@ class Login extends Component {
       .catch(err => console.log('login fetch err ', err));
   }
 
-  handleGoogleOAuth(event) {
-    console.log(`CLICKED THE GOOGLE AUTH BUTTON`);
-    event.preventDefault();
-    const metaData = {
-      'method': 'GET',
-      'Content-Type': 'application/json',
-      'Accept': 'text/html'
-    }
-
-    fetch('/google/googleInit', metaData)
-      .then(response => {
-        window.location = `http://localhost:3000/google/googleInit`
-      })
-      .catch(err => console.error(err))
-
-  }
-
   render() {
     return (
 
@@ -160,7 +143,6 @@ class Login extends Component {
               onChange={this.handleChangeSignupPassword}
             />
             <input className='signupButton' type='submit' value='Yeehaw!' />
-            <a href='https://github.com/login/oauth/authorize?client_id=a47e12225465438143f6&redirect_uri=http://localhost:3000/github&scope=user:email'> Sign In With Github </a>
           </Form>
         </div>
         <div>
@@ -184,9 +166,6 @@ class Login extends Component {
             <input className='loginButton' type='submit' value='Giddy-up!' />
 
           </Form>
-        </div>
-        <div>
-          <button onClick={this.handleGoogleOAuth}>GOOGLE OAUTH</button>
         </div>
       </div>
     );
