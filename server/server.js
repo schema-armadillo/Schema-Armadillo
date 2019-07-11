@@ -26,10 +26,19 @@ app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, '../client/index.html'));
 });
 
+// localhost/auth/*
+// /auth/[login, create. verify, logout]
 app.use('/auth', user);
+// localhost/api/...
 app.use('/api', schema);
+// localhost/google/...
 app.use('/google', google);
+
+// localhost/github/....
 app.use('/github', github);
+
+
+
 
 app.listen(port, () => {
   console.log(`Listening on port ${port}...`);
