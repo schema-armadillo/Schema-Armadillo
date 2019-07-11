@@ -2,7 +2,7 @@ import React from 'react';
 import SchemaButton from './SchemaButton.jsx';
 
 function setNewKeyValueTable(schema, setKeyValueTable) {
-  fetch(`/api/schema/${schema.schema_id}`)
+  fetch(`/api/schema/${schema.schema_name}`)
     .then(data => data.json())
     .then((data) => {
       setKeyValueTable({

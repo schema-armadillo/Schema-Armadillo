@@ -47,10 +47,11 @@ class Dashboard extends Component {
 
   schemaListOptions() {
     let newOptions = [];
+    const { userSchemaArr } = this.state;
     // must have label and value
-    for (let i = 0; i < this.state.userSchemaArr.length; i++) {
-      let { schema_name, schema_id, user_id } = this.state.userSchemaArr[i];
-      newOptions.push({ label: schema_name, value: { schema_id, user_id } })
+    for (let i = 0; i < userSchemaArr.length; i++) {
+      let { schema_name, user_id } = userSchemaArr[i];
+      newOptions.push({ label: schema_name, value: { schema_name, user_id } })
     }
     return newOptions;
   }
@@ -58,6 +59,7 @@ class Dashboard extends Component {
   refreshSchemas() {
     fetch('/api/schema')
       .then(data => data.json())
+      // .then(data => {console.log(data); return data;})
       .then(data => this.setState({ userSchemaArr: data }))
       .catch(err => console.log('err in fetch', err));
   }
@@ -95,9 +97,8 @@ class Dashboard extends Component {
       },
       body: JSON.stringify(this.state.schema)
     })
-      .then(data => data.json())
-      .then(console.log)
-      .then(this.refreshSchemas);
+      .then(this.refreshSchemas)
+      .catch(console.log);
   }
 
 
@@ -116,21 +117,21 @@ class Dashboard extends Component {
 
 
   handleCreateSchema(state) {
+    const { schema: { schemaName, rows } } = this.state;
+
     // check if schemaname is filled out
-    if (this.state.schema.schemaName.trim() === '') {
+    if (schemaName.trim() === '') {
       return this.setState({ result: 'Enter a schema name' });
     }
 
-    let rows = this.state.schema.rows;
     for (let i = 0; i < rows.length; i += 1) {
+      const { key, type } = rows[i];
       // check if key or type is empty
-      if (rows[i].key.trim() === '')
-        return this.setState({ result: 'Assign name for all keys' });
-      if (rows[i].type.trim() === '')
-        return this.setState({ result: 'Select type for all keys' });
+      if (key.trim() === '') return this.setState({ result: 'Assign name for all keys' });
+      if (type.trim() === '') return this.setState({ result: 'Select type for all keys' });
     }
 
-    let result = schemaGenerator(state);
+    const result = schemaGenerator(state);
     this.setState({ result });
     event.preventDefault();
   }
