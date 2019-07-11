@@ -1,9 +1,5 @@
 import React from 'react';
-<<<<<<< HEAD
 import styled from 'styled-components'
-=======
-import styled from 'styled-components';
->>>>>>> dev
 
 const NavContainer = styled.div`
     height: 50px;
@@ -20,6 +16,14 @@ const NavContainer = styled.div`
       cursor: pointer;
     }
 
+    #greeting {
+      background-color: white;
+      border: none;
+      border-bottom: 1.5px solid transparent;
+      font-size: 20px;
+      padding: 10px;
+    }
+
     button {
       background-color: white;
       border: none;
@@ -29,7 +33,7 @@ const NavContainer = styled.div`
     }
 
     button:hover {
-      border-bottom: 1.5px solid blue;
+      border-bottom: 1.5px solid coral;
     }
 
     button:focus {
@@ -39,16 +43,24 @@ const NavContainer = styled.div`
 
 const Nav = (props) => {
 
+  const logout = () => {
+    fetch('/auth/logout')
+      .then(props.clearAppState)
+      .then(props.redirectToSignup)
+      .catch(err => console.log("error logging out", err))
+  }
 
   return (
     <NavContainer id='nav'>
       <div id='nav-left'>
         <img onClick={props.redirectToDashboard} src='../Armadillo-icon.jpg' style={{ width: '50px', borderRadius: '50%' }} />
+        <span id='greeting'>Hello {props.username}👋 </span>
       </div>
       <div id='nav-right'>
-        {props.isLogged && <h1>Log out</h1>}
+        {props.isLogged && <>
+          <button onClick={logout}>Log out</button>
+        </>}
         {!props.isLogged && <>
-
           <button onClick={props.redirectToLogin}>Login</button>
           <button onClick={props.redirectToSignup}>Signup</button>
         </>}

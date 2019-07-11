@@ -28,9 +28,9 @@ class Dashboard extends Component {
 
     this.handleSchemaName = this.handleSchemaName.bind(this);
     this.createRow = this.createRow.bind(this);
-    this.handleCreateSchema = this.handleCreateSchema.bind(this);
     this.updateRow = this.updateRow.bind(this);
     this.deleteRow = this.deleteRow.bind(this);
+    this.handleCreateSchema = this.handleCreateSchema.bind(this);
     this.handleChangeRequired = this.handleChangeRequired.bind(this);
     this.handleChangeUnique = this.handleChangeUnique.bind(this);
     this.handleChangeKey = this.handleChangeKey.bind(this);
@@ -38,8 +38,6 @@ class Dashboard extends Component {
     this.handleSaveSchema = this.handleSaveSchema.bind(this);
     this.handleCopySchema = this.handleCopySchema.bind(this);
     this.getSchema = this.getSchema.bind(this);
-    this.logout = this.logout.bind(this);
-    this.handleDeleteSchema = this.handleDeleteSchema.bind(this);
   }
   handleCopySchema() {
     // create a fake element
@@ -76,7 +74,8 @@ class Dashboard extends Component {
   handleSaveSchema() {
     if (!this.props.isLogged) {
       window.localStorage.setItem('schema', JSON.stringify(this.state.schema));
-      this.props.redirectToLogin();
+      alert('Please sign up with Schema Armadillo, so we can save your work!');
+      this.props.redirectToSignup();
       return;
     }
     if (this.state.schema.schema_id !== null) {
@@ -142,17 +141,13 @@ class Dashboard extends Component {
   }
 
   getSchema(user_id, schema_id) {
-    console.log('getSchema Dashboard user_id, schema_id ', user_id, schema_id)
     const url = '/api/schema/one?user_id=' + user_id + '&schema_id=' + schema_id;
     fetch(url)
       .then(data => data.json())
       .then(result => {
-        console.log('result from getSchema in dashboard ', result)
         let stateCopy = Object.assign(this.state.schema, {})
-        console.log('stateCopy ', stateCopy)
         stateCopy.rows = [];
         result.forEach(el => {
-          console.log('el ', el)
           stateCopy.user_id = el.user_id;
           stateCopy.schemaName = el.schema_name;
           stateCopy.schema_id = el.schema_id;
@@ -266,7 +261,6 @@ class Dashboard extends Component {
     // console.log(`Option selected:`, selectedOption.label);
   }
 
-
   componentDidMount() {
     // grab schema from local storage, add to state
     const savedSchema = window.localStorage.getItem('schema');
@@ -275,31 +269,6 @@ class Dashboard extends Component {
         schema: JSON.parse(savedSchema)
       }, this.handleSaveSchema);
     }
-  }
-
-  logout() {
-    fetch('/auth/logout')
-      .then(() => {
-        const reinitDashboardState = {
-          result: '',
-          schema: {
-            schemaName: '',
-            rows: [
-              {
-                key: '',
-                type: '',
-                options: {
-                  required: false,
-                  unique: false
-                }
-              }
-            ]
-          }
-        }
-        this.setState(reinitDashboardState);
-        this.props.clearAppState();
-      })
-      .catch(err => console.log("error logging out", err))
   }
 
   render() {
@@ -330,8 +299,6 @@ class Dashboard extends Component {
 
     return (
       <div>
-        <button onClick={() => this.logout()} >LOG OUT</button>
-
         <div className='schemaName'>
           <input
             type='text'

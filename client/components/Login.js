@@ -67,6 +67,7 @@ class Login extends Component {
       .then((result) => {
         alert('Welcome back.')
         this.props.toggleLoggedIn(result);
+        this.props.setUsername(email);
         this.props.redirectToDashboard();
       })
       .catch(err => {
@@ -77,9 +78,9 @@ class Login extends Component {
   render() {
     return (
       <div className='loginContainer'>
-        <Form className='loginForm' onSubmit={this.handleLoginSubmit}>
+        <Form className='loginForm' >
           {/* <img className="armadillo" src={armadillo} alt="armadillo logo" /> */}
-          <h1>Log in to Schema Armadillo</h1>
+          <h1>Login to Schema Armadillo</h1>
           <input
             className='entry emailField'
             type='text'
@@ -94,11 +95,11 @@ class Login extends Component {
             value={this.state.loginPassword}
             onChange={this.handleChangeLoginPassword}
           />
-          <input className='loginButton' type='submit' value='Giddy-up!' />
+          <input className='loginButton' type='submit' value='Giddy-up!' onClick={this.handleLoginSubmit} />
           <button href='https://github.com/login/oauth/authorize?client_id=a47e12225465438143f6&redirect_uri=http://localhost:3000/github&scope=user:email'>
-            Sign In With Github
+            Login With Github
         </button>
-          <button onClick={this.props.handleGoogleOAuth}>Sign in with Google</button>
+          <button onClick={this.props.handleGoogleOAuth}>Login with Google</button>
         </Form>
       </div>
     );

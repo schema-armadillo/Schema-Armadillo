@@ -19,6 +19,7 @@ class App extends Component {
     this.state = {
       userSchemaArr: [],
       isLogged: false,
+      username: null,
       screen: 'dashboard'
     }
     this.checkIfLoggedIn = this.checkIfLoggedIn.bind(this);
@@ -28,8 +29,12 @@ class App extends Component {
     this.redirectToDashboard = this.redirectToDashboard.bind(this);
     this.redirectToSignup = this.redirectToSignup.bind(this);
     this.handleGoogleOAuth = this.handleGoogleOAuth.bind(this);
-    //reinit app state
-    this.clearAppState = this.clearAppState.bind(this)
+    this.clearAppState = this.clearAppState.bind(this);
+    this.setUsername = this.setUsername.bind(this);
+  }
+
+  setUsername(username) {
+    this.setState({ ...this.state, username });
   }
 
   getUserSchemaArr(result) {
@@ -103,12 +108,14 @@ class App extends Component {
           redirectToLogin={this.redirectToLogin}
           redirectToDashboard={this.redirectToDashboard}
           redirectToSignup={this.redirectToSignup}
+          clearAppState={this.clearAppState}
+          username={this.state.username}
         />
         {this.state.screen === 'dashboard' &&
           <Dashboard
             userSchemaArr={this.state.userSchemaArr}
             isLogged={this.state.isLogged}
-            redirectToLogin={this.redirectToLogin}
+            redirectToSignup={this.redirectToSignup}
             getUserSchemaArr={this.getUserSchemaArr}
             clearAppState={this.clearAppState}
           />
@@ -116,16 +123,19 @@ class App extends Component {
         <SAuthentication>
           {this.state.screen === 'login' &&
             <Login
-              isLoggedIn={this.state.isLogged}
               toggleLoggedIn={this.toggleLoggedIn}
               getUserSchemaArr={this.getUserSchemaArr}
               redirectToDashboard={this.redirectToDashboard}
               handleGoogleOAuth={this.handleGoogleOAuth}
+              setUsername={this.setUsername}
             />
           }
           {this.state.screen === 'signup' &&
             <Signup
+              toggleLoggedIn={this.toggleLoggedIn}
+              redirectToDashboard={this.redirectToDashboard}
               handleGoogleOAuth={this.handleGoogleOAuth}
+              setUsername={this.setUsername}
             />
           }
         </SAuthentication>
