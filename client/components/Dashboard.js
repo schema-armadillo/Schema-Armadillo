@@ -284,7 +284,6 @@ class Dashboard extends Component {
 
     return (
       <div>
-
         <button onClick={() => this.logout()} >LOG OUT</button>
 
         <div className='schemaName'>

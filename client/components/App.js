@@ -4,6 +4,14 @@ import Login from './Login';
 import Nav from './Nav';
 import Dashboard from './Dashboard';
 import Signup from './Signup';
+import styled from 'styled-components';
+
+const SAuthentication = styled.div`
+    background-color: darkblue;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    `;
 
 class App extends Component {
 
@@ -106,20 +114,22 @@ class App extends Component {
             clearAppState={this.clearAppState}
           />
         }
-        {this.state.screen === 'login' &&
-          <Login
-            isLoggedIn={this.state.isLogged}
-            toggleLoggedIn={this.toggleLoggedIn}
-            getUserSchemaArr={this.getUserSchemaArr}
-            redirectToDashboard={this.redirectToDashboard}
-            handleGoogleOAuth={this.handleGoogleOAuth}
-          />
-        }
-        {this.state.screen === 'signup' &&
-          <Signup
-            handleGoogleOAuth={this.handleGoogleOAuth}
-          />
-        }
+        <SAuthentication>
+          {this.state.screen === 'login' &&
+            <Login
+              isLoggedIn={this.state.isLogged}
+              toggleLoggedIn={this.toggleLoggedIn}
+              getUserSchemaArr={this.getUserSchemaArr}
+              redirectToDashboard={this.redirectToDashboard}
+              handleGoogleOAuth={this.handleGoogleOAuth}
+            />
+          }
+          {this.state.screen === 'signup' &&
+            <Signup
+              handleGoogleOAuth={this.handleGoogleOAuth}
+            />
+          }
+        </SAuthentication>
       </>
     );
   }
