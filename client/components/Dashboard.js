@@ -243,31 +243,27 @@ class Dashboard extends Component {
 
   logout() {
     fetch('/auth/logout')
-    .then(() => {
-    //reinit Dashboard state
-    const reinitDashboardState = {
-      result: '',
-      schema: {
-        schemaName: '',
-        rows: [
-          {
-            key: '',
-            type: '',
-            options: {
-              required: false,
-              unique: false
-            }
+      .then(() => {
+        //reinit Dashboard state
+        const reinitDashboardState = {
+          result: '',
+          schema: {
+            schemaName: '',
+            rows: [
+              {
+                key: '',
+                type: '',
+                options: {
+                  required: false,
+                  unique: false
+                }
+              }
+            ]
           }
-        ]
-      }
-    }
-    this.setState(reinitDashboardState); //YES   
-    //reinit app state 
-    console.log("before", this.props.userSchemaArr) //PROOF
-    this.props.clearAppState();
-    console.log("after", this.props.userSchemaArr) //YES
-
-    })
+        }
+        this.setState(reinitDashboardState);
+        this.props.clearAppState();
+      })
       .catch(err => console.log("error logging out", err))
   }
 
@@ -302,7 +298,7 @@ class Dashboard extends Component {
     return (
       <div>
 
-      <button onClick={() => this.logout()} >LOG OUT</button>
+        <button onClick={() => this.logout()} >LOG OUT</button>
 
         <div className='schemaName'>
           <input
