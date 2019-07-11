@@ -73,8 +73,23 @@ class Dashboard extends Component {
 
   handleSaveSchema() {
     if (!this.props.isLogged) {
+      // window.localStorage.setItem('schema', JSON.stringify(this.state.schema));
+      // alert('Please sign up with Schema Armadillo, so we can save your work!');
+      // this.props.redirectToSignup();
+      // return;
+      if (this.state.schema.schemaName.trim() === '') {
+        return this.setState({ result: 'Enter a schema name' });
+      }
+  
+      let rows = this.state.schema.rows;
+      for (let i = 0; i < rows.length; i += 1) {
+        // check if key or type is empty
+        if (rows[i].key.trim() === '')
+          return this.setState({ result: 'Assign name for all keys' });
+        if (rows[i].type.trim() === '')
+          return this.setState({ result: 'Select type for all keys' });
+      }
       window.localStorage.setItem('schema', JSON.stringify(this.state.schema));
-      alert('Please sign up with Schema Armadillo, so we can save your work!');
       this.props.redirectToSignup();
       return;
     }
