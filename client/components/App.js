@@ -7,7 +7,6 @@ import Signup from './Signup';
 import styled from 'styled-components';
 
 const SAuthentication = styled.div`
-    background-color: darkblue;
     display: flex;
     flex-direction: row;
     justify-content: center;
