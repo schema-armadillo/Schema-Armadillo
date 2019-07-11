@@ -15,7 +15,7 @@ router.post('/schema',
   }
 );
 router.delete('/schema', schemaController.deleteSchema);
-router.put('/schema', schemaController.updateSchema);
+router.post('/schema/update', schemaController.deleteSchema, schemaController.updateSchema);
 // returns all stored schema for a specific user
 router.post('/schema/all', schemaController.getAllSchema);
 

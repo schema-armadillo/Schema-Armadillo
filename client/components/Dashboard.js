@@ -69,8 +69,8 @@ class Dashboard extends Component {
       return;
     }
     if (this.state.schema.schema_id !== null) {
-      fetch('/api/schema', {
-        method: 'PUT',
+      fetch('/api/schema/update', {
+        method: 'POST',
         headers: {
           'Content-Type': 'application/json'
         },

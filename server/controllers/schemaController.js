@@ -135,10 +135,10 @@ const schemaController = {
       user_id,
       schema_id,
       schemaName,
-      rows,
+      rows
     } = req.body;
     console.log('deconstructed variables ', user_id, schema_id, schemaName, rows)
-
+    const length = rows.length;
     rows.forEach((row, idx) => {
       const { key, type } = row;
 
@@ -164,17 +164,16 @@ const schemaController = {
         user_id,
         schema_id
       )
-      pool.query(
-        'UPDATE Schemas SET schema_name=$1, key=$2, type=$3, options_check=$4, unique_check=$5, required_check=$6 WHERE user_id=$7 AND schema_id=$8',
+      pool.query('INSERT INTO Schemas (user_id, schema_name, schema_id, key, type, options_check, unique_check, required_check) values ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING *;',
         [
+          user_id,
           schemaName,
+          schema_id,
           key,
           type,
           areThereOptions,
           isUnique,
-          isRequired,
-          user_id,
-          schema_id
+          isRequired
         ],
         (err, result) => {
           if (err) {
@@ -204,7 +203,8 @@ const schemaController = {
           console.error(err);
           return res.status(400).json({ error: 'error from deleteSchema' });
         }
-        return res.status(200).json(result.rows);
+        res.status(200).json(result.rows);
+        next()
       }
     );
   }
