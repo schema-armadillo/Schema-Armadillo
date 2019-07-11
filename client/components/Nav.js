@@ -16,6 +16,14 @@ const NavContainer = styled.div`
       cursor: pointer;
     }
 
+    #greeting {
+      background-color: white;
+      border: none;
+      border-bottom: 1.5px solid transparent;
+      font-size: 20px;
+      padding: 10px;
+    }
+
     button {
       background-color: white;
       border: none;
@@ -46,10 +54,10 @@ const Nav = (props) => {
     <NavContainer id='nav'>
       <div id='nav-left'>
         <img onClick={props.redirectToDashboard} src='../Armadillo-icon.jpg' style={{ width: '50px', borderRadius: '50%' }} />
+        <span id='greeting'>Hello {props.username}👋 </span>
       </div>
       <div id='nav-right'>
         {props.isLogged && <>
-          <span>Logged in as {props.username}</span>
           <button onClick={logout}>Log out</button>
         </>}
         {!props.isLogged && <>
