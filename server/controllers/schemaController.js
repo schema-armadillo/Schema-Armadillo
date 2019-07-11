@@ -6,12 +6,14 @@ function convertKeysToSchemas(keys) {
   keys.forEach((key) => {
     schemas[key.schema_name] = schemas[key.schema_name] || { rows: [] };
     schemas[key.schema_name].schema_name = key.schema_name;
+    schemas[key.schema_name].user_id = key.user_id;
     schemas[key.schema_name].rows.push(key);
   });
   return Object.values(schemas);
 }
 
 const schemaController = {
+
   createSchemaId: (req, res, next) => {
     const { schemaName } = req.body;
     const { user_id } = res.locals;
@@ -34,6 +36,7 @@ const schemaController = {
         throw new Error(err);
       });
   },
+
   createSchema: (req, res, next) => {
     const { user_id } = res.locals;
     const { schemaName, rows } = req.body;
@@ -65,7 +68,9 @@ const schemaController = {
     const { ssid } = req.cookies;
     const { schema_name } = req.params;
 
+
     try {
+      // decontructs the result of jwt.verify and uses that user_id to get a specific schema
       const { user_id } = jwt.verify(ssid, 'secretkey');
       pool.query('SELECT * FROM schemas WHERE user_id=$1 AND schema_name=$2', [user_id, schema_name])
         .then(schemaInfo => res.status(200).json(schemaInfo.rows))
@@ -74,11 +79,14 @@ const schemaController = {
       res.status(500).send('jwt has been tampered with');
     }
   },
+
   getAllSchema: (req, res, next) => {
-    const { user_id } = res.locals;
-    // if user_id is in res locals
-    if (user_id) {
-      // create schemas table first
+    const { ssid } = req.cookies;
+
+    try {
+      const { user_id } = jwt.verify(ssid, 'secretkey');
+
+      // if table "schemas" does not exist, create one.
       pool.query(
         `CREATE TABLE IF NOT EXISTS schemas(
         user_id INT,
@@ -88,71 +96,15 @@ const schemaController = {
         unique_check BOOLEAN DEFAULT FALSE,
         required_check BOOLEAN DEFAULT FALSE)`,
       )
-        // grab all schemas from user
         .then(() => pool.query('SELECT * FROM schemas WHERE user_id=$1', [user_id]))
         .then(({ rows }) => {
-          // convert all keys into schemas
-          res.locals.userSchema = convertKeysToSchemas(rows);
-          return next();
+          res.status(200).send(convertKeysToSchemas(rows));
         })
-        .catch((err) => {
-          console.log('error from getAllSchema table');
-          throw new Error(err);
-        });
-
-      // otherwise user_id is inside our jwt
-    } else {
-      const { ssid } = req.cookies;
-
-      try {
-        const { user_id } = jwt.verify(ssid, 'secretkey');
-
-        pool.query('SELECT * FROM schemas WHERE user_id=$1', [user_id])
-          .then(({ rows }) => {
-            res.locals.userSchema = convertKeysToSchemas(rows);
-            return next();
-          })
-          .catch(err => res.status(400).send('user doesnt exist'));
-      } catch (err) {
-        // jwt is malformed
-        return res.status(400).send('jwt is malformed');
-      }
+        .catch(err => res.status(400).send('user doesnt exist'));
+    } catch (err) {
+      // jwt is malformed
+      return res.status(400).send('jwt is malformed');
     }
-  },
-  updateSchema: (req, res, next) => {
-    // expecting to receive user_id and post_id and other fields that we want to update from req.body
-    const {
-      user_id,
-      schema_id,
-      schemaName,
-      key,
-      type,
-      options_check,
-      unique_check,
-      required_check
-    } = req.body;
-
-    // query for the table
-    pool.query(
-      'UPDATE Schemas SET schemaName=$1 key=$2 type=$3 options_check=$4 unique_check=$5 required_check=$6 WHERE user_id=$7 AND schema_id=$8',
-      [
-        schemaName,
-        key,
-        type,
-        options_check,
-        unique_check,
-        required_check,
-        user_id,
-        schema_id
-      ],
-      (err, result) => {
-        if (err) {
-          console.error(err);
-          return res.status(400).json({ error: 'error from updateSchema' });
-        }
-        return res.status(200).json(result.rows);
-      }
-    );
   },
   deleteSchema: (req, res) => {
 
