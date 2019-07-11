@@ -105,7 +105,7 @@ const schemaController = {
         return res.status(400).json({ error: 'error from getAllSchema' });
       }
       res.locals.userSchema = result.rows;
-      console.log('schemaController -> getAllSchema -> res.locals.userSchema', res.locals.userSchema);
+      // console.log('schemaController -> getAllSchema -> res.locals.userSchema', res.locals.userSchema);
       return next();
       // return res.status(200).json(result.rows);
 
@@ -121,7 +121,7 @@ const schemaController = {
       //  console.log('schemaContorller => getAllSechama', result.rows);
       // need to make data in a more workable format. currently a bigass array
 
-      console.log('schemaController => refreshAllSchema => result', result)
+      // console.log('schemaController => refreshAllSchema => result', result)
       return res.locals.userSchema = result.rows;
 
       // return res.status(200).json(result.rows);

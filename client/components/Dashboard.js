@@ -10,6 +10,8 @@ class Dashboard extends Component {
     this.state = {
       result: '',
       schema: {
+        user_id: null,
+        schema_id: null,
         schemaName: '',
         rows: [
           {
@@ -68,33 +70,64 @@ class Dashboard extends Component {
       this.props.redirectToLogin();
       return;
     }
-    fetch('/api/schema', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(this.state.schema)
-    })
-      .then(data => data.json())
-      .then(result => {
-        console.log('save schema result ', result)
-        let stateCopy = Object.assign(this.state.schema, {});
-        stateCopy.rows = [
-          {
-            key: '',
-            type: '',
-            options: {
-              required: false,
-              unique: false
-            }
-          }
-        ];
-        stateCopy.schemaName = '';
-        this.setState({ schema: stateCopy })
-        this.props.getUserSchemaArr([{
-          schema_id: result.schema_id, schema_name: result.schema_name, user_id: result.user_id
-        }])
+    if (this.state.schema.schema_id !== null) {
+      fetch('/api/schema', {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(this.state.schema)
       })
+        .then(data => data.json())
+        .then(result => {
+          console.log('save schema result ', result)
+          let stateCopy = Object.assign(this.state.schema, {});
+          stateCopy.rows = [
+            {
+              key: '',
+              type: '',
+              options: {
+                required: false,
+                unique: false
+              }
+            }
+          ];
+          stateCopy.schemaName = '';
+          this.setState({ schema: stateCopy })
+          this.props.getUserSchemaArr([{
+            schema_id: result.schema_id, schema_name: result.schema_name, user_id: result.user_id
+          }])
+        })
+    }
+    else if (this.state.schema.schema_id === null) {
+      fetch('/api/schema', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(this.state.schema)
+      })
+        .then(data => data.json())
+        .then(result => {
+          console.log('save schema result ', result)
+          let stateCopy = Object.assign(this.state.schema, {});
+          stateCopy.rows = [
+            {
+              key: '',
+              type: '',
+              options: {
+                required: false,
+                unique: false
+              }
+            }
+          ];
+          stateCopy.schemaName = '';
+          this.setState({ schema: stateCopy })
+          this.props.getUserSchemaArr([{
+            schema_id: result.schema_id, schema_name: result.schema_name, user_id: result.user_id
+          }])
+        })
+    }
 
 
   }
@@ -111,7 +144,9 @@ class Dashboard extends Component {
         stateCopy.rows = [];
         result.forEach(el => {
           console.log('el ', el)
-          stateCopy.schemaName = el.schema_name
+          stateCopy.user_id = el.user_id;
+          stateCopy.schemaName = el.schema_name;
+          stateCopy.schema_id = el.schema_id;
           stateCopy.rows.push({
             key: el.key,
             type: el.type,
@@ -121,7 +156,7 @@ class Dashboard extends Component {
             }
           })
         })
-        this.setState({ schema: stateCopy })
+        this.setState({ schema: stateCopy });
       })
   }
 
@@ -243,31 +278,31 @@ class Dashboard extends Component {
 
   logout() {
     fetch('/auth/logout')
-    .then(() => {
-    //reinit Dashboard state
-    const reinitDashboardState = {
-      result: '',
-      schema: {
-        schemaName: '',
-        rows: [
-          {
-            key: '',
-            type: '',
-            options: {
-              required: false,
-              unique: false
-            }
+      .then(() => {
+        //reinit Dashboard state
+        const reinitDashboardState = {
+          result: '',
+          schema: {
+            schemaName: '',
+            rows: [
+              {
+                key: '',
+                type: '',
+                options: {
+                  required: false,
+                  unique: false
+                }
+              }
+            ]
           }
-        ]
-      }
-    }
-    this.setState(reinitDashboardState); //YES   
-    //reinit app state 
-    console.log("before", this.props.userSchemaArr) //PROOF
-    this.props.clearAppState();
-    console.log("after", this.props.userSchemaArr) //YES
+        }
+        this.setState(reinitDashboardState); //YES   
+        //reinit app state 
+        console.log("before", this.props.userSchemaArr) //PROOF
+        this.props.clearAppState();
+        console.log("after", this.props.userSchemaArr) //YES
 
-    })
+      })
       .catch(err => console.log("error logging out", err))
   }
 
@@ -302,7 +337,7 @@ class Dashboard extends Component {
     return (
       <div>
 
-      <button onClick={() => this.logout()} >LOG OUT</button>
+        <button onClick={() => this.logout()} >LOG OUT</button>
 
         <div className='schemaName'>
           <input
