@@ -4,7 +4,13 @@ import Login from './Login';
 import Nav from './Nav';
 import Dashboard from './Dashboard';
 import Signup from './Signup';
-import '../styles/App.css';
+import styled from 'styled-components';
+
+const SAuthentication = styled.div`
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    `;
 
 class App extends Component {
 
@@ -21,6 +27,7 @@ class App extends Component {
     this.redirectToLogin = this.redirectToLogin.bind(this);
     this.redirectToDashboard = this.redirectToDashboard.bind(this);
     this.redirectToSignup = this.redirectToSignup.bind(this);
+    this.handleGoogleOAuth = this.handleGoogleOAuth.bind(this);
     //reinit app state
     this.clearAppState = this.clearAppState.bind(this)
   }
@@ -75,6 +82,15 @@ class App extends Component {
     this.setState({ ...this.state, screen: 'signup' });
   }
 
+  handleGoogleOAuth(event) {
+    event.preventDefault();
+    fetch('/google/googleInit')
+      .then(response => {
+        window.location = `http://localhost:3000/google/googleInit`
+      })
+      .catch(err => console.error(err))
+  }
+
   componentDidMount() {
     this.checkIfLoggedIn();
   }
@@ -97,16 +113,22 @@ class App extends Component {
             clearAppState={this.clearAppState}
           />
         }
-        {this.state.screen === 'login' &&
-          <Login
-            isLoggedIn={this.state.isLogged}
-            toggleLoggedIn={this.toggleLoggedIn}
-            getUserSchemaArr={this.getUserSchemaArr}
-            redirectToDashboard={this.redirectToDashboard} />
-        }
-        {this.state.screen === 'signup' &&
-          <Signup />
-        }
+        <SAuthentication>
+          {this.state.screen === 'login' &&
+            <Login
+              isLoggedIn={this.state.isLogged}
+              toggleLoggedIn={this.toggleLoggedIn}
+              getUserSchemaArr={this.getUserSchemaArr}
+              redirectToDashboard={this.redirectToDashboard}
+              handleGoogleOAuth={this.handleGoogleOAuth}
+            />
+          }
+          {this.state.screen === 'signup' &&
+            <Signup
+              handleGoogleOAuth={this.handleGoogleOAuth}
+            />
+          }
+        </SAuthentication>
       </>
     );
   }
