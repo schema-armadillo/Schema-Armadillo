@@ -92,6 +92,7 @@ class Dashboard extends Component {
         this.props.getUserSchemaArr([{
           schema_id: result.schema_id, schema_name: result.schema_name, user_id: result.user_id
         }])
+        delete window.localStorage.schema;
       })
 
 
