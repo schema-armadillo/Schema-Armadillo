@@ -165,8 +165,7 @@ const schemaController = {
     let schemas = req.body
     let queries=  []
     schemas.forEach(schema => {
-       queries.push(pool.query('DELETE FROM schemas WHERE user_id=$1 AND schema_id=$2', [schema.user_id, schema.schema_id]))
-       queries.push(pool.query('DELETE FROM schema_ids WHERE user_id=$1 AND schema_id=$2', [schema.user_id, schema.schema_id]))
+       queries.push(pool.query('DELETE FROM schemas WHERE user_id=$1 AND schema_name=$2', [schema.user_id, schema.schema_name]))
     })
     Promise.all(queries).then(() => {
       res.status(200).send('Deleted')
