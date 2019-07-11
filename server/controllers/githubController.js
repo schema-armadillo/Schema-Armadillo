@@ -1,7 +1,11 @@
 const axios = require('axios');
+const pool = require('./database');
+const bcrypt = require('bcrypt');
+
 
 
 const githubController = {};
+
 
 
 githubController.getAccessToken = (req, res, next) => {
@@ -21,20 +25,53 @@ githubController.getAccessToken = (req, res, next) => {
             throw new Error("error in getting access token")
         }
     })
-    .catch(() => res.status(500).send("External Server error"))
+    .catch(() => res.status(500).send("External server error. Failed to get access token from github"))
 }
 
-githubController.accessAPI = (req, res) =>{
+githubController.accessAPI = (req, res, next) =>{
     axios.get('https://api.github.com/user',{
         headers: { Authorization: `token ${res.locals.access_token}`}
     })
-    // .then(response => response.json())
     .then(response => {
-        console.log('hello', response)
-        return res.json('response')
+        bcrypt.hash(response.data.id.toString(), 10, (err, hashResponse) => {
+            if (err) {
+              return res.status(500).send('error encrypting pw');
+            }
+            res.locals.username = response.data.login;
+            res.locals.password = hashResponse; // store hasedResponse to sql database
+            res.locals.gitId = response.data.id; //need this for bcrypt compare
+            return next();
+            // return res.send('done bcrypting')
+        })
     })
-    .catch(error => console.log('hello', error))
+    .catch(() => res.status(500).send('External server error. Failed to get user information from github'))
 }
 
+githubController.verifyUser = (req, res, next) => {
+    pool.query(`SELECT * from users where username='${res.locals.username}'`)
+      .then((data) => {
+          if(data.rows.length === 0){
+              return next();
+          }
+          return next('route');
+      })
+}
+
+githubController.login  = (req, res, next) => {
+    pool.query(`SELECT * FROM users WHERE username = '${res.locals.username}'`)
+      .then((data) => {
+        const userFound = data.rows[0];
+        bcrypt.compare(res.locals.gitId.toString(), userFound.password)
+          .then((valid)=>{
+              if(valid){
+                res.locals.user_id = userFound.user_id;
+                return next();  
+              }
+              return res.status(401).send('Unable to login.');
+          })
+          .catch(err => res.status(500).send('Internal error authorizing credentials.'));
+      })
+      .catch(err => res.status(500).send('Error when trying to bcrypt compare passwords'));
+}
 
 module.exports = githubController;

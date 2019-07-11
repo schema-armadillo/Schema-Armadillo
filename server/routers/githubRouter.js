@@ -1,9 +1,20 @@
 const express = require('express');
 const router = express.Router();
-const githubController = require('../controllers/githubController');
+
+const github = require('../controllers/githubController');
+const user = require('../controllers/userController');
+const schema = require('../controllers/schemaController')
 
 
 
-router.get('*', githubController.getAccessToken,githubController.accessAPI)
+
+
+// first github oauth route
+router.get('*', github.getAccessToken,github.accessAPI, github.verifyUser, user.addUserToDB, (req, res) => res.send(`normal case ${res.locals.username}`))
+
+
+// existing github oauth route
+router.get('*', github.login, schema.getAllSchema, user.setJwt)
+//  , (req,res) => res.send('login successful'))
 
 module.exports = router;

@@ -3,72 +3,58 @@ const pool = require('./database');
 
 const schemaController = {
   createSchemaId: (req, res, next) => {
-    console.log('inside create schema id middleware', req.body);
-    pool.query(`CREATE TABLE IF NOT EXISTS Schema_IDs (schema_id SERIAL PRIMARY KEY, schema_name VARCHAR(50), user_id INT)`, (err, result) => {
-      if (err) {
-        console.error('error in creating schema_id table');
-        throw new Error(err);
-      }
-
-      const { schemaName } = req.body;
-      const { user_id } = res.locals;
-      console.log('schemaController => createSchemaId => schemaName, user_id', schemaName, user_id)
-
-      pool.query(`INSERT INTO Schema_IDs (user_id, schema_name) VALUES ('${user_id}', '${schemaName}') RETURNING *`, (err, result) => {
-        if (err) {
-          console.error('Error in adding table to DB');
-          throw new Error(err);
-        }
-        res.locals.schema_id = result.rows[0].schema_id;
-        console.log('schemaController => createSchemaId => result', result)
-        return next();
+    // create schema_ids table if not already existing
+    const { schemaName } = req.body;
+    const { user_id } = res.locals;
+    pool.query('CREATE TABLE IF NOT EXISTS schema_IDs (schema_id SERIAL PRIMARY KEY, schema_name VARCHAR(50), user_id INT)')
+      .then(() => {
+        // search for duplicate
+        return pool.query('SELECT schema_id FROM schema_IDS WHERE user_id=$1 AND schema_name=$2', [user_id, schemaName]);
       })
-    })
+      .then(({ rows: dupes }) => {
+        // if the search result is empty, then there is no duplicate
+        if (!dupes.length) {
+          // insert new schema id into schema_ids table
+          pool.query('INSERT INTO schema_IDs (user_id, schema_name) VALUES ($1, $2) RETURNING schema_id', [user_id, schemaName])
+            .then((insertResult) => {
+              res.locals.schema_id = insertResult.rows[0].schema_id;
+              return next();
+            });
+        // update the schema instead
+        } else {
+          // remove all the current schemas before adding any new ones
+          const schemaDelete = pool.query('DELETE FROM schemas WHERE user_id=$1 AND schema_name=$2', [user_id, schemaName]);
+          const schemaIdDelete = pool.query('DELETE FROM schema_ids WHERE user_id=$1 AND schema_name=$2', [user_id, schemaName]);
+
+          return Promise.all([schemaDelete, schemaIdDelete])
+            .then(() => {
+              // insert new schema
+              pool.query('INSERT INTO schema_IDs (user_id, schema_name) VALUES ($1, $2) RETURNING schema_id', [user_id, schemaName])
+                .then((insertResult) => {
+                  res.locals.schema_id = insertResult.rows[0].schema_id;
+                  return next();
+                });
+            });
+        }
+      })
+      .catch((err) => {
+        console.error('error in creating new schema id');
+        throw new Error(err);
+      });
   },
   createSchema: (req, res, next) => {
-    // extract all the form inputs. not there yet
-    // TODO NEED: userId, SchemaID
-    // const testUserId = 999;
-    // const testSchemaId = 999;
-
-    // needs to be assigned something off body
-    // let user_id;
-    // THIS WILL BE AUTO GENERATED: needs to be assigned something off body
     const { schema_id, user_id } = res.locals;
     // need to establish body format for parsing.
     const { schemaName, rows } = req.body;
 
     // check if table has already been made
     pool.query(
-      'CREATE TABLE IF NOT EXISTS Schemas (user_id INT, schema_name VARCHAR (50), schema_id INT, key VARCHAR(50), type VARCHAR(50), options_check BOOLEAN DEFAULT FALSE, unique_check BOOLEAN DEFAULT FALSE, required_check BOOLEAN DEFAULT FALSE)',
-      (err, result) => {
-        if (err) {
-          console.error('error in adding table.');
-          throw new Error(err);
-        }
-
-        // add to table once it has been created
-        // console.log('CREATE TABLE schema', result);
-
-        // populate the table
-
-        const queryText =
-          'INSERT INTO Schemas (user_id, schema_name, schema_id, key, type, options_check, unique_check, required_check) values ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING *;';
-        rows.forEach((row, idx) => {
+      'CREATE TABLE IF NOT EXISTS schemas (user_id INT, schema_name VARCHAR (50), schema_id INT, key VARCHAR(50), type VARCHAR(50), unique_check BOOLEAN DEFAULT FALSE, required_check BOOLEAN DEFAULT FALSE)')
+      .then(() => {
+        const queryText = 'INSERT INTO Schemas (user_id, schema_name, schema_id, key, type, unique_check, required_check) values ($1, $2, $3, $4, $5, $6, $7) RETURNING *;';
+        rows.forEach((row) => {
           // iterate thru keys to create rows in the table
-
-          const { key, type } = row;
-          // see if there are options to be added to the table
-          const areThereOptions = row.hasOwnProperty('options');
-          // if options is false, this will already be false. if not, have to check if unique and required exist
-          const isUnique =
-            areThereOptions && row.options.hasOwnProperty('unique')
-              ? row.options.unique
-              : false;
-          const isRequired =
-            areThereOptions && row.options.hasOwnProperty('required')
-              ? row.options.required
-              : false;
+          const { key, type, options: { unique, required } } = row;
           // init queryValues array to pass into query
           const queryValues = [
             user_id,
@@ -76,22 +62,21 @@ const schemaController = {
             schema_id,
             key,
             type,
-            areThereOptions,
-            isUnique,
-            isRequired
+            unique,
+            required,
           ];
-          console.log('query values here: ', queryValues);
-          pool.query(queryText, queryValues, (rowErr, result) => {
-            if (rowErr) {
-              console.log('error in adding row to DB');
-              throw new Error(rowErr);
-            }
-            console.log('Row added to table.');
-          });
+          pool.query(queryText, queryValues)
+            .catch((err) => {
+              console.log('error in adding row');
+              throw new Error(err);
+            });
         });
         return next();
-      }
-    );
+      })
+      .catch((err) => {
+        console.error('error in creating a new schema.');
+        throw new Error(err);
+      });
   },
 
   // gets one specific schema
@@ -99,54 +84,45 @@ const schemaController = {
     const { ssid } = req.cookies;
     const { schema_id } = req.params;
 
-    jwt.verify(ssid, 'secretkey', (err, result) => {
-      if (err) {
-        return res.status(401).json({ isLoggedIn: false })
-      }
-      const { user_id } = result;
-
-      // query the table using user_id and schema_id
+    try {
+      const { user_id } = jwt.verify(ssid, 'secretkey');
       pool.query('SELECT * FROM Schemas WHERE user_id=$1 AND schema_id=$2', [user_id, schema_id])
         .then(schemaInfo => res.status(200).json(schemaInfo.rows))
-        .catch(err => res.status(400).send(err));
-    });
+        .catch((err) => { throw new Error(err); });
+    } catch (err) {
+      res.status(500).send('jwt has been tampered with');
+    }
   },
   getAllSchema: (req, res, next) => {
     const { user_id } = res.locals;
 
+    // if user_id is in res locals
     if (user_id) {
-      pool.query(`CREATE TABLE IF NOT EXISTS Schema_IDs (schema_id SERIAL PRIMARY KEY, schema_name VARCHAR(50), user_id INT)`, (err, result) => {
-        if (err) {
-          console.error('error in creating schema_id table');
-          throw new Error(err);
-        }
-
-        pool.query(`SELECT * FROM schema_ids WHERE user_id='${user_id}'`, (err, result) => {
-          if (err) {
-            return res.status(400).json({ error: 'error from getAllSchema' });
-          }
+      pool.query('CREATE TABLE IF NOT EXISTS schema_IDs (schema_id SERIAL PRIMARY KEY, schema_name VARCHAR(50), user_id INT)')
+        .then(() => pool.query(`SELECT * FROM schema_ids WHERE user_id='${user_id}'`))
+        .then((result) => {
           res.locals.userSchema = result.rows;
           return next();
-
+        })
+        .catch((err) => {
+          console.log('error from getAllSchema table');
+          throw new Error(err);
         });
-      })
-    }
-    else {
+
+      // otherwise user_id is inside our jwt
+    } else {
       const { ssid } = req.cookies;
 
-      jwt.verify(ssid, 'secretkey', (err, result) => {
-        if (err) {
-          return res.status(401).json({ isLoggedIn: false })
-        }
-        const { user_id } = result;
+      try {
+        const { user_id } = jwt.verify(ssid, 'secretkey');
 
-        pool.query(`SELECT * FROM schema_ids WHERE user_id='${user_id}'`, (err1, result1) => {
-          if (err1) {
-            return res.status(400).json({ error: 'error from getAllSchema' });
-          }
-          return res.send(result1.rows);
-        });
-      });
+        pool.query(`SELECT * FROM schema_ids WHERE user_id='${user_id}'`)
+          .then(({ rows }) => res.status(200).send(rows))
+          .catch(err => res.status(400).send('user doesnt exist'));
+      } catch (err) {
+        // jwt is malformed
+        return res.status(500).send('jwt is malformed');
+      }
     }
   },
   updateSchema: (req, res, next) => {
@@ -187,15 +163,25 @@ const schemaController = {
   deleteSchema: (req, res, next) => {
     // expecting to receive user_id and post_id to find the rows that we want to delete
     const { user_id, schema_id } = req.body;
-
     // query for the table
     pool.query(
-      'DELETE FROM Schemas WHERE user_id=$1 AND schema_id=$2',
+      'DELETE FROM schemas WHERE user_id=$1 AND schema_id=$2',
       [user_id, schema_id],
       (err, result) => {
         if (err) {
           console.error(err);
-          return res.status(400).json({ error: 'error from deleteSchema' });
+          return res.status(400).json({ error: 'error from delete Schema' });
+        }
+        // return res.status(200).json(result.rows);
+      }
+    );
+    pool.query(
+      'DELETE FROM schema_ids WHERE user_id=$1 AND schema_id=$2',
+      [user_id, schema_id],
+      (err, result) => {
+        if (err) {
+          console.error(err);
+          return res.status(400).json({ error: 'error from delete Schema_ids' });
         }
         return res.status(200).json(result.rows);
       }
