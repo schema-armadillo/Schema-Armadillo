@@ -81,6 +81,7 @@ class Signup extends React.Component {
         <button href='https://github.com/login/oauth/authorize?client_id=a47e12225465438143f6&redirect_uri=http://localhost:3000/github&scope=user:email'>
           Signup With Github
         </button>
+        <br />
         <button onClick={this.props.handleGoogleOAuth}>Signup with Google</button>
       </Form >
     );

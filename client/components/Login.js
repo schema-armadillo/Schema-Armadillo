@@ -99,6 +99,7 @@ class Login extends Component {
           <button href='https://github.com/login/oauth/authorize?client_id=a47e12225465438143f6&redirect_uri=http://localhost:3000/github&scope=user:email'>
             Login With Github
         </button>
+          <br />
           <button onClick={this.props.handleGoogleOAuth}>Login with Google</button>
         </Form>
       </div>

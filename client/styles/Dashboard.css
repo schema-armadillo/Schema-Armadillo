@@ -5,10 +5,21 @@ body {
   justify-content: stretch;
 }
 
+.container button {
+  /* border: 1px; */
+  background-color: #fffafa;
+}
+
+.container button:hover {
+  cursor: pointer;
+  transition: 0.5s;
+  transform: scale(1.01);
+}
+
 .schemaName {
-  color: #fff;
+  /* color: #fff; */
   font-size: 20px;
-  margin-left: 40px;
+  margin-left: 10px;
 }
 
 .schemaName input[type='text'] {
@@ -17,12 +28,17 @@ body {
 }
 
 .container {
-  background-color: #4a4e69;
+  background-color:#6E4555;
   display: grid;
   grid-template-columns: 70% auto;
-  grid-template-rows: 10% auto 10%;
-  margin: 30px 30px 0 30px;
+  grid-template-rows: 10% 5% 80% 5%;
+  /* margin: 0px 30px 0 30px; */
+  padding: 10px;
   min-height: 500px;
+  /* max-width: 1200px; */
+  border-radius: 5px;
+  box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+
 }
 .container .headers {
   color: white;
@@ -68,7 +84,7 @@ code {
 }
 
 .saveButton {
-  margin: 20px 0 20px 30px;
+  margin: 0px 0 20px 30px;
 }
 pre {
   margin: 0 0 0 30px;

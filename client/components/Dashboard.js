@@ -298,18 +298,18 @@ class Dashboard extends Component {
     }
 
     return (
-      <div>
-        <div className='schemaName'>
-          <input
-            type='text'
-            value='Schema Name'
-            placeholder='Schema Name'
-            value={this.state.schema.schemaName}
-            onChange={this.handleSchemaName}
-          />
-          <br />
-        </div>
+      <>
         <div className='container'>
+          <div className='schemaName'>
+            <input
+              type='text'
+              value='Schema Name'
+              placeholder='Schema Name'
+              value={this.state.schema.schemaName}
+              onChange={this.handleSchemaName}
+            />
+          </div>
+          <br />
           {/* ADDED TABLE HEADS - SHOULD BE STYLED */}
           <div className='headers'>
             <p>Key</p>
@@ -338,7 +338,7 @@ class Dashboard extends Component {
           <code>{this.state.result}</code>
         </pre>
         <div className='clipboard-message' />
-      </div>
+      </>
     );
   }
 }

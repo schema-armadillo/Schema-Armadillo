@@ -5,6 +5,8 @@ const NavContainer = styled.div`
     height: 50px;
     display: flex;
     justify-content: space-between;
+    padding-bottom: 10px;
+    background-color: white;
 
     div {
       height: 50px
@@ -54,7 +56,7 @@ const Nav = (props) => {
     <NavContainer id='nav'>
       <div id='nav-left'>
         <img onClick={props.redirectToDashboard} src='../Armadillo-icon.jpg' style={{ width: '50px', borderRadius: '50%' }} />
-        <span id='greeting'>Hello {props.username}👋 </span>
+        <span id='greeting'>Hello {props.username} 👋 </span>
       </div>
       <div id='nav-right'>
         {props.isLogged && <>
