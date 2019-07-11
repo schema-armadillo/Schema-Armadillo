@@ -35,6 +35,12 @@ const NavContainer = styled.div`
 
 const Nav = (props) => {
 
+  const logout = () => {
+    fetch('/auth/logout')
+      .then(props.clearAppState)
+      .then(props.redirectToSignup)
+      .catch(err => console.log("error logging out", err))
+  }
 
   return (
     <NavContainer id='nav'>
@@ -43,7 +49,8 @@ const Nav = (props) => {
       </div>
       <div id='nav-right'>
         {props.isLogged && <>
-          <span>Logged in as {props.username}</span><button>Log out</button>
+          <span>Logged in as {props.username}</span>
+          <button onClick={logout}>Log out</button>
         </>}
         {!props.isLogged && <>
           <button onClick={props.redirectToLogin}>Login</button>

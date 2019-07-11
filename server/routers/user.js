@@ -28,8 +28,4 @@ router.post('/verify', userController.checkJwt, (req, res) => {
 
 router.get('/logout', userController.logout)
 
-
-router.get('*', (req, res) => {
-  res.send('Some catch-all for invalid routes')
-})
 module.exports = router;

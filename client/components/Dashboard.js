@@ -26,9 +26,9 @@ class Dashboard extends Component {
 
     this.handleSchemaName = this.handleSchemaName.bind(this);
     this.createRow = this.createRow.bind(this);
-    this.handleCreateSchema = this.handleCreateSchema.bind(this);
     this.updateRow = this.updateRow.bind(this);
     this.deleteRow = this.deleteRow.bind(this);
+    this.handleCreateSchema = this.handleCreateSchema.bind(this);
     this.handleChangeRequired = this.handleChangeRequired.bind(this);
     this.handleChangeUnique = this.handleChangeUnique.bind(this);
     this.handleChangeKey = this.handleChangeKey.bind(this);
@@ -217,7 +217,6 @@ class Dashboard extends Component {
     // console.log(`Option selected:`, selectedOption.label);
   }
 
-
   componentDidMount() {
     // grab schema from local storage, add to state
     const savedSchema = window.localStorage.getItem('schema');
@@ -226,31 +225,6 @@ class Dashboard extends Component {
         schema: JSON.parse(savedSchema)
       }, this.handleSaveSchema);
     }
-  }
-
-  logout() {
-    fetch('/auth/logout')
-      .then(() => {
-        const reinitDashboardState = {
-          result: '',
-          schema: {
-            schemaName: '',
-            rows: [
-              {
-                key: '',
-                type: '',
-                options: {
-                  required: false,
-                  unique: false
-                }
-              }
-            ]
-          }
-        }
-        this.setState(reinitDashboardState);
-        this.props.clearAppState();
-      })
-      .catch(err => console.log("error logging out", err))
   }
 
   render() {

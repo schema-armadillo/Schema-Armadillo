@@ -108,6 +108,7 @@ class App extends Component {
           redirectToLogin={this.redirectToLogin}
           redirectToDashboard={this.redirectToDashboard}
           redirectToSignup={this.redirectToSignup}
+          clearAppState={this.clearAppState}
           username={this.state.username}
         />
         {this.state.screen === 'dashboard' &&
