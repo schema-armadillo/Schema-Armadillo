@@ -60,6 +60,7 @@ body {
 
 button {
   font-size: 20px;
+  box-shadow: 3px 3px
 }
 
 code {
@@ -69,6 +70,8 @@ code {
 
 .saveButton {
   margin: 20px 0 20px 30px;
+  width: 100px;
+  box-shadow: 2px 2px
 }
 pre {
   margin: 0 0 0 30px;
@@ -123,5 +126,18 @@ pre:hover {
 
 #logout-button{
   float:right;
-  margin-right: 30px
+  margin-right: 30px;
+  margin-top: 20px;
+  box-shadow: 1px 3px
+
+}
+
+
+#deleteButton{
+  margin-top:55px;
+  margin-left: 20px;
+  width: 300px;
+  box-shadow: 3px 3px
+
+
 }
