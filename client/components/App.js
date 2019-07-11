@@ -3,6 +3,7 @@ import { Route, Link, BrowserRouter as Router, Redirect, Switch } from 'react-ro
 import Login from './Login';
 import Nav from './Nav';
 import Dashboard from './Dashboard';
+import Signup from './Signup';
 import '../styles/App.css';
 
 class App extends Component {
@@ -19,6 +20,7 @@ class App extends Component {
     this.getUserSchemaArr = this.getUserSchemaArr.bind(this);
     this.redirectToLogin = this.redirectToLogin.bind(this);
     this.redirectToDashboard = this.redirectToDashboard.bind(this);
+    this.redirectToSignup = this.redirectToSignup.bind(this);
     //reinit app state
     this.clearAppState = this.clearAppState.bind(this)
   }
@@ -69,6 +71,10 @@ class App extends Component {
     this.setState({ ...this.state, screen: 'dashboard' });
   }
 
+  redirectToSignup() {
+    this.setState({ ...this.state, screen: 'signup' });
+  }
+
   componentDidMount() {
     this.checkIfLoggedIn();
   }
@@ -76,7 +82,12 @@ class App extends Component {
   render() {
     return (
       <>
-        <Nav />
+        <Nav
+          isLogged={this.state.isLogged}
+          redirectToLogin={this.redirectToLogin}
+          redirectToDashboard={this.redirectToDashboard}
+          redirectToSignup={this.redirectToSignup}
+        />
         {this.state.screen === 'dashboard' &&
           <Dashboard
             userSchemaArr={this.state.userSchemaArr}
@@ -84,7 +95,6 @@ class App extends Component {
             redirectToLogin={this.redirectToLogin}
             getUserSchemaArr={this.getUserSchemaArr}
             clearAppState={this.clearAppState}
-            //reinit
           />
         }
         {this.state.screen === 'login' &&
@@ -93,6 +103,9 @@ class App extends Component {
             toggleLoggedIn={this.toggleLoggedIn}
             getUserSchemaArr={this.getUserSchemaArr}
             redirectToDashboard={this.redirectToDashboard} />
+        }
+        {this.state.screen === 'signup' &&
+          <Signup />
         }
       </>
     );

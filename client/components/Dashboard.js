@@ -39,14 +39,12 @@ class Dashboard extends Component {
     this.logout = this.logout.bind(this);
   }
   handleCopySchema() {
-    // console.log('Dashboard.js => handleCopySchema => this.state.result', this.state.result)
     // create a fake element
     // don't display it on page
     // need textarea to copy to clipboard
     let copyText = document.createElement('textarea');
     copyText.value = this.state.result;
     document.body.appendChild(copyText);
-    // console.log('Dashboard => handleCopySchema => copyText', copyText);
 
     copyText.select();
     document.execCommand('copy');
@@ -190,10 +188,6 @@ class Dashboard extends Component {
   handleChangeRequired(event, rowIndex) {
     let schema = Object.assign({}, this.state.schema);
     let { rows } = schema;
-    // console.log(
-    //   'Dashboard => handleChangeRequired => event.target',
-    //   event.target.checked
-    // );
     rows[rowIndex].options.required = event.target.checked;
     return this.setState({ schema });
   }
@@ -201,10 +195,6 @@ class Dashboard extends Component {
   handleChangeUnique(event, rowIndex) {
     let schema = Object.assign({}, this.state.schema);
     let { rows } = schema;
-    // console.log(
-    //   'Dashboard => handleChangeUnique => event.target',
-    //   event.target.checked
-    // );
     rows[rowIndex].options.unique = event.target.checked;
     return this.setState({ schema });
   }
@@ -243,35 +233,28 @@ class Dashboard extends Component {
 
   logout() {
     fetch('/auth/logout')
-    .then(() => {
-    //reinit Dashboard state
-    const reinitDashboardState = {
-      result: '',
-      schema: {
-        schemaName: '',
-        rows: [
-          {
-            key: '',
-            type: '',
-            options: {
-              required: false,
-              unique: false
-            }
+      .then(() => {
+        const reinitDashboardState = {
+          result: '',
+          schema: {
+            schemaName: '',
+            rows: [
+              {
+                key: '',
+                type: '',
+                options: {
+                  required: false,
+                  unique: false
+                }
+              }
+            ]
           }
-        ]
-      }
-    }
-    this.setState(reinitDashboardState); //YES   
-    //reinit app state 
-    console.log("before", this.props.userSchemaArr) //PROOF
-    this.props.clearAppState();
-    console.log("after", this.props.userSchemaArr) //YES
-
-    })
+        }
+        this.setState(reinitDashboardState);
+        this.props.clearAppState();
+      })
       .catch(err => console.log("error logging out", err))
   }
-
-
 
   render() {
     // add a clear button that clears local storage
@@ -302,7 +285,7 @@ class Dashboard extends Component {
     return (
       <div>
 
-      <button onClick={() => this.logout()} >LOG OUT</button>
+        <button onClick={() => this.logout()} >LOG OUT</button>
 
         <div className='schemaName'>
           <input

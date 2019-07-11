@@ -88,7 +88,6 @@ const userController = {
 
   redirectToRoot: (req, res) => {
 
-    console.log("NODE ENV", process.env.NODE_ENV)
     if (process.env.NODE_ENV !== "production") { //=== "development"
       return res.cookie('ssid', res.locals.jwtToken).redirect('http://localhost:8080');
     }
@@ -96,11 +95,10 @@ const userController = {
   },
 
   logout: (req, res) => {
-    console.log("IN THE LOGOUT FOO")
     res.clearCookie("ssid")
-    if (req.cookies.googlejwt) {res.clearCookie("googlejwt")}
+    if (req.cookies.googlejwt) res.clearCookie("googlejwt");
     res.status(200).send();
-  }
+  },
 
 };
 
