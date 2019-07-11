@@ -20,7 +20,7 @@ const schemaController = {
               res.locals.schema_id = insertResult.rows[0].schema_id;
               return next();
             });
-        // update the schema instead
+          // update the schema instead
         } else {
           // remove all the current schemas before adding any new ones
           const schemaDelete = pool.query('DELETE FROM schemas WHERE user_id=$1 AND schema_name=$2', [user_id, schemaName]);
@@ -160,34 +160,22 @@ const schemaController = {
       }
     );
   },
-  deleteSchema: (req, res, next) => {
-    // expecting to receive user_id and post_id to find the rows that we want to delete
-    const { user_id, schema_id } = req.body;
-    console.log(user_id, schema_id, 'in controlla')
-    // query for the table
-    pool.query(
-      'DELETE FROM schemas WHERE user_id=$1 AND schema_id=$2',
-      [user_id, schema_id],
-      (err, result) => {
-        if (err) {
-          console.error(err);
-          return res.status(400).json({ error: 'error from delete Schema' });
-        }
-        // return res.status(200).json(result.rows);
-      }
-    );
-    pool.query(
-      'DELETE FROM schema_ids WHERE user_id=$1 AND schema_id=$2',
-      [user_id, schema_id],
-      (err, result) => {
-        if (err) {
-          console.error(err);
-          return res.status(400).json({ error: 'error from delete Schema_ids' });
-        }
-        return res.status(200).json(result.rows);
-      }
-    );
+  deleteSchema: (req, res) => {
+
+    let schemas = req.body
+    let q1;
+    let q2;
+    schemas.forEach(schema => {
+       q1 = pool.query('DELETE FROM schemas WHERE user_id=$1 AND schema_id=$2', [schema.user_id, schema.schema_id])
+       q2 = pool.query('DELETE FROM schema_ids WHERE user_id=$1 AND schema_id=$2', [schema.user_id, schema.schema_id])
+      
+    })
+    Promise.all([q1, q2]).then(() => {
+      res.status(200).send('Deleted')
+    }).catch(() => {
+      res.status(500).send('Unable to delete Schema')
+    })
   }
-};
+}
 
 module.exports = schemaController;

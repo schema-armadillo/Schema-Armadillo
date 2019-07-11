@@ -103,17 +103,13 @@ class Dashboard extends Component {
 
 
   handleDeleteSchema() {
-    let { schema_id, user_id } = this.state.deleteThisSchema;
-    console.log()
     fetch('/api/schema', {
       method: 'DELETE',
       headers: {
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
       },
-      body: JSON.stringify({
-        schema_id,
-        user_id
-      })
+      body: JSON.stringify(this.state.deleteThisSchema)
     })
       .then(this.refreshSchemas);
 
@@ -224,6 +220,7 @@ class Dashboard extends Component {
   }
 
   render() {
+    let schemas = []
     return (
       <div id="dashboard">
         <LogoutButton />
@@ -248,7 +245,13 @@ class Dashboard extends Component {
           <Select 
           options={this.schemaListOptions()} 
           closeMenuOnSelect='true' 
-          onChange={e => this.setState({ deleteThisSchema: e.value })}
+          onChange={(e) => {
+            e.forEach((item)=>{
+              schemas.push(item.value)
+            })
+            this.setState({ deleteThisSchema: schemas })}
+            }
+              
           placeholder="Select Schemas"
           isSearchable={true}
           isMulti={true}
