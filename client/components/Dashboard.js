@@ -218,9 +218,8 @@ class Dashboard extends Component {
     return newArr
   }
 
-  
+
   render() {
-    let schemas = []
     return (
       <div id="dashboard">
         <LogoutButton />
@@ -242,21 +241,15 @@ class Dashboard extends Component {
           <SchemaStorage userSchemaArr={this.state.userSchemaArr} setKeyValueTable={this.setKeyValueTable} />
           <OptionButtons schema={this.state.schema} handleCreateSchema={this.handleCreateSchema} createRow={this.createRow} />
           <DeleteButton handleDeleteSchema={this.handleDeleteSchema} />
-          <Select 
-          options={this.schemaListOptions()} 
-          closeMenuOnSelect='true' 
-          onChange={(e) => {
-            e.forEach((item)=>{
-              schemas.push(item.value)
-            })
-            this.setState({ deleteThisSchema: schemas })}
-            }
-              
-          placeholder="Select Schemas"
-          isSearchable={true}
-          isMulti={true}
+          <Select
+            options={this.schemaListOptions()}
+            closeMenuOnSelect='true'
+            onChange={e => this.setState({ deleteThisSchema: e ? e.map(selection => selection.value) : [] })}
+            placeholder="Select Schemas"
+            isSearchable={true}
+            isMulti={true}
 
-           />
+          />
         </div>
 
         <SaveButton result={this.state.result} handleSaveSchema={this.handleSaveSchema} />
