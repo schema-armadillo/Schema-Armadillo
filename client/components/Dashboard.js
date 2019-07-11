@@ -246,6 +246,7 @@ class Dashboard extends Component {
             createRow={this.createRow}
             result={this.state.result}
             handleSaveSchema={this.handleSaveSchema}
+            handleDeleteSchema={this.handleDeleteSchema}
           />
 
           <Select
@@ -259,7 +260,7 @@ class Dashboard extends Component {
 
         </div>
 
-        <DeleteButton handleDeleteSchema={this.handleDeleteSchema} />
+        {/* <DeleteButton handleDeleteSchema={this.handleDeleteSchema} /> */}
 
         <pre onClick={this.handleCopySchema}>
           <div className='clipboard-message' />

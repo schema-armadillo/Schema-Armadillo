@@ -1,9 +1,10 @@
-import React from 'react'
-import SaveButton from './SaveButton'
+import React from 'react';
+import SaveButton from './SaveButton';
+import DeleteButton from './DeleteButton';
 
 function OptionButtons(props) {
   return (
-    <div>
+    <div id="optionButtons">
       <button
         className="submit"
         onClick={() => props.handleCreateSchema(props.schema)}
@@ -19,7 +20,7 @@ function OptionButtons(props) {
         Add a New Key
       </button>
       <SaveButton result={props.result} handleSaveSchema={props.handleSaveSchema} />
-
+      <DeleteButton handleDeleteSchema={props.handleDeleteSchema} />
     </div>
   )
 }
