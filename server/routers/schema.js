@@ -10,14 +10,13 @@ const userController = require('../controllers/userController')
 /////////////                       ROUTES HERE                        /////////////
 ////////////////////////////////////////////////////////////////////////////////////
 router.post('/schema', userController.checkJwt, schemaController.createSchemaId, schemaController.createSchema, (req, res) => {
-  let { schema_id } = res.locals;
-  res.status(200).json({ schema_id });
+  let { schema_name } = req.body;
+  res.status(200).json({ schema_name });
 });
-router.delete('/schema', schemaController.deleteSchema);
-router.put('/schema', schemaController.updateSchema);
+router.delete('/schema', schemaController.deleteSchema);;
 // returns all stored schema for a specific user
 router.get('/schema', schemaController.getAllSchema);
-router.get('/schema/:schema_id', schemaController.getSchema);
+router.get('/schema/:schema_name', schemaController.getSchema);
 
 module.exports = router;
 

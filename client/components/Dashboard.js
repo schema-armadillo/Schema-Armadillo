@@ -46,10 +46,11 @@ class Dashboard extends Component {
 
   schemaListOptions() {
     let newOptions = [];
+    const { userSchemaArr } = this.state;
     // must have label and value
-    for (let i = 0; i < this.state.userSchemaArr.length; i++) {
-      let { schema_name, schema_id, user_id } = this.state.userSchemaArr[i];
-      newOptions.push({ label: schema_name, value: { schema_id, user_id } })
+    for (let i = 0; i < userSchemaArr.length; i++) {
+      let { schema_name, user_id } = userSchemaArr[i];
+      newOptions.push({ label: schema_name, value: { schema_name, user_id } })
     }
     return newOptions;
   }
@@ -99,14 +100,14 @@ class Dashboard extends Component {
   }
 
   handleDeleteSchema() {
-    let { deleteThisSchema: { schema_id, user_id } } = this.state;
+    const { deleteThisSchema: { user_id, schema_name } } = this.state;
     fetch('/api/schema', {
       method: 'DELETE',
       headers: {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        schema_id,
+        schema_name,
         user_id,
       })
     })
