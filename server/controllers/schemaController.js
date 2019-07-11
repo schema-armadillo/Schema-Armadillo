@@ -13,6 +13,7 @@ function convertKeysToSchemas(keys) {
 }
 
 const schemaController = {
+
   createSchemaId: (req, res, next) => {
     const { schemaName } = req.body;
     const { user_id } = res.locals;
@@ -35,6 +36,7 @@ const schemaController = {
         throw new Error(err);
       });
   },
+
   createSchema: (req, res, next) => {
     const { user_id } = res.locals;
     const { schemaName, rows } = req.body;
@@ -66,7 +68,9 @@ const schemaController = {
     const { ssid } = req.cookies;
     const { schema_name } = req.params;
 
+
     try {
+      // decontructs the result of jwt.verify and uses that user_id to get a specific schema
       const { user_id } = jwt.verify(ssid, 'secretkey');
       pool.query('SELECT * FROM schemas WHERE user_id=$1 AND schema_name=$2', [user_id, schema_name])
         .then(schemaInfo => res.status(200).json(schemaInfo.rows))
@@ -75,13 +79,15 @@ const schemaController = {
       res.status(500).send('jwt has been tampered with');
     }
   },
+
+
   getAllSchema: (req, res, next) => {
     const { ssid } = req.cookies;
 
     try {
       const { user_id } = jwt.verify(ssid, 'secretkey');
 
-      // create schemas table
+      // if table "schemas" does not exist, create one.
       pool.query(
         `CREATE TABLE IF NOT EXISTS schemas(
         user_id INT,
