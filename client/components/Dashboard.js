@@ -101,7 +101,6 @@ class Dashboard extends Component {
   }
 
 
-
   handleDeleteSchema() {
     fetch('/api/schema', {
       method: 'DELETE',
@@ -219,6 +218,7 @@ class Dashboard extends Component {
     return newArr
   }
 
+  
   render() {
     let schemas = []
     return (
