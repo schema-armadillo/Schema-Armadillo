@@ -192,6 +192,7 @@ const schemaController = {
   deleteSchema: (req, res, next) => {
     // expecting to receive user_id and schema_id to find the rows that we want to delete
     const { user_id, schema_id } = req.body;
+    
     // query delete for the table
     pool.query(
       'DELETE FROM schemas WHERE user_id=$1 AND schema_id=$2',
