@@ -79,7 +79,6 @@ const schemaController = {
     }
   },
 
-
   getAllSchema: (req, res, next) => {
     const { ssid } = req.cookies;
 
@@ -106,17 +105,19 @@ const schemaController = {
       return res.status(400).send('jwt is malformed');
     }
   },
-  deleteSchema: (req, res, next) => {
-    // expecting to receive user_id and post_id to find the rows that we want to delete
-    const { user_id, schema_name } = req.body;
-    // query for the table
-    pool.query('DELETE FROM schemas WHERE user_id=$1 AND schema_name=$2', [user_id, schema_name])
-      .then(result => res.status(200).json(result.rows))
-      .catch((err) => {
-        console.error(err);
-        return res.status(400).json({ error: 'error from delete Schema' });
-      });
-  },
-};
+  deleteSchema: (req, res) => {
+
+    let schemas = req.body
+    let queries=  []
+    schemas.forEach(schema => {
+       queries.push(pool.query('DELETE FROM schemas WHERE user_id=$1 AND schema_name=$2', [schema.user_id, schema.schema_name]))
+    })
+    Promise.all(queries).then(() => {
+      res.status(200).send('Deleted')
+    }).catch(() => {
+      res.status(500).send('Unable to delete Schema')
+    })
+  }
+}
 
 module.exports = schemaController;

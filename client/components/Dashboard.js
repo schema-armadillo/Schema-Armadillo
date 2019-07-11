@@ -9,6 +9,7 @@ import Rows from './Rows';
 import OptionButtons from './OptionButtons';
 import SaveButton from './SaveButton';
 import Select from 'react-select';
+import DeleteButton from './DeleteButton'
 
 
 const autoBind = require('auto-bind');
@@ -99,22 +100,20 @@ class Dashboard extends Component {
       .catch(console.log);
   }
 
+
   handleDeleteSchema() {
-    const { deleteThisSchema: { user_id, schema_name } } = this.state;
     fetch('/api/schema', {
       method: 'DELETE',
       headers: {
         'Content-Type': 'application/json',
+        'Accept': 'application/json'
       },
-      body: JSON.stringify({
-        schema_name,
-        user_id,
-      })
+      body: JSON.stringify(this.state.deleteThisSchema)
     })
-      .then(this.refreshSchemas)
-      .catch(console.log);
+      .then(this.refreshSchemas);
 
   }
+
 
   handleCreateSchema(state) {
     const { schema: { schemaName, rows } } = this.state;
@@ -219,7 +218,9 @@ class Dashboard extends Component {
     return newArr
   }
 
+  
   render() {
+    let schemas = []
     return (
       <div id="dashboard">
         <LogoutButton />
@@ -240,15 +241,22 @@ class Dashboard extends Component {
 
           <SchemaStorage userSchemaArr={this.state.userSchemaArr} setKeyValueTable={this.setKeyValueTable} />
           <OptionButtons schema={this.state.schema} handleCreateSchema={this.handleCreateSchema} createRow={this.createRow} />
-          <button
-            className="submit"
-            // should delete from database => refresh schema storage
-            onClick={() => this.handleDeleteSchema()}
-            type="button"
-          >
-            Delete
-        </button>
-          <Select options={this.schemaListOptions()} closeMenuOnSelect='true' onChange={e => this.setState({ deleteThisSchema: e.value })} />
+          <DeleteButton handleDeleteSchema={this.handleDeleteSchema} />
+          <Select 
+          options={this.schemaListOptions()} 
+          closeMenuOnSelect='true' 
+          onChange={(e) => {
+            e.forEach((item)=>{
+              schemas.push(item.value)
+            })
+            this.setState({ deleteThisSchema: schemas })}
+            }
+              
+          placeholder="Select Schemas"
+          isSearchable={true}
+          isMulti={true}
+
+           />
         </div>
 
         <SaveButton result={this.state.result} handleSaveSchema={this.handleSaveSchema} />
