@@ -107,6 +107,7 @@ class Dashboard extends Component {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
+        schema_name,
         user_id,
       })
     })
