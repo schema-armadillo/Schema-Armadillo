@@ -67,6 +67,8 @@ class Login extends Component {
       .then((result) => {
         alert('Welcome back.')
         this.props.toggleLoggedIn(result);
+        console.log('current username:', email);
+        this.props.setUsername(email);
         this.props.redirectToDashboard();
       })
       .catch(err => {

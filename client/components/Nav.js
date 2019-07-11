@@ -42,9 +42,10 @@ const Nav = (props) => {
         <img onClick={props.redirectToDashboard} src='../Armadillo-icon.jpg' style={{ width: '50px', borderRadius: '50%' }} />
       </div>
       <div id='nav-right'>
-        {props.isLogged && <h1>Log out</h1>}
+        {props.isLogged && <>
+          <span>Logged in as {props.username}</span><button>Log out</button>
+        </>}
         {!props.isLogged && <>
-
           <button onClick={props.redirectToLogin}>Login</button>
           <button onClick={props.redirectToSignup}>Signup</button>
         </>}

@@ -52,9 +52,11 @@ class Signup extends React.Component {
       .then((obj) => {
         alert("Welcome");
         this.props.toggleLoggedIn(obj);
+        console.log('new username:', email);
+        this.props.setUsername(email);
         this.props.redirectToDashboard();
       })
-      .catch(err => console.log('login fetch err ', err));
+      .catch(err => console.log('login fetch error', err));
   }
 
 
