@@ -3,7 +3,6 @@ const querystring = require('query-string')
 
 const schemaController = {
   createSchemaId: (req, res, next) => {
-    // console.log('inside create schema id middleware', req.body);
     pool.query(`CREATE TABLE IF NOT EXISTS Schema_IDs (schema_id SERIAL PRIMARY KEY, schema_name VARCHAR(50), user_id INT)`, (err, result) => {
       if (err) {
         console.error('error in creating schema_id table');
@@ -13,15 +12,12 @@ const schemaController = {
       const { schemaName } = req.body;
       const { user_id } = res.locals;
       res.locals.schema_name = schemaName
-      // console.log('schemaController => createSchemaId => schemaName, user_id', schemaName, user_id)
-
       pool.query(`INSERT INTO Schema_IDs (user_id, schema_name) VALUES ('${user_id}', '${schemaName}') RETURNING *`, (err, result) => {
         if (err) {
           console.error('Error in adding table to DB');
           throw new Error(err);
         }
         res.locals.schema_id = result.rows[0].schema_id;
-        // console.log('schemaController => createSchemaId => result', result)
         return next();
       })
     })
@@ -47,12 +43,6 @@ const schemaController = {
           console.error('error in adding table.');
           throw new Error(err);
         }
-
-        // add to table once it has been created
-        // console.log('CREATE TABLE schema', result);
-
-        // populate the table
-
         const queryText =
           'INSERT INTO Schemas (user_id, schema_name, schema_id, key, type, options_check, unique_check, required_check) values ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING *;';
         rows.forEach((row, idx) => {
@@ -81,13 +71,10 @@ const schemaController = {
             isUnique,
             isRequired
           ];
-          // console.log('query values here: ', queryValues);
           pool.query(queryText, queryValues, (rowErr, result) => {
             if (rowErr) {
-              console.log('error in adding row to DB');
               throw new Error(rowErr);
             }
-            console.log('Row added to table.');
           });
         });
         return next();
@@ -97,13 +84,7 @@ const schemaController = {
 
   // gets one specific schema
   getSchema: (req, res, next) => {
-    // expecting to receive user_id and schema_id from req.body
-    console.log('hi from get schema!')
-    console.log('getSchema req.query', req.query)
     const { user_id, schema_id } = req.query;
-    console.log('in getSchema')
-    console.log('getSchema user_id, schema_id ', user_id, schema_id)
-    // query the table using user_id and schema_id
     pool.query(
       'SELECT * FROM Schemas WHERE user_id=$1 AND schema_id=$2',
       [user_id, schema_id],
@@ -112,7 +93,6 @@ const schemaController = {
           console.error(err);
           return res.status(400).json({ error: 'error from getSchema' });
         }
-        // console.log('schemaController => getSchema', result.rows);
         return res.status(200).json(result.rows);
       }
     );
@@ -124,8 +104,8 @@ const schemaController = {
         console.error(err);
         return res.status(400).json({ error: 'error from getAllSchema' });
       }
-      console.log('schemaController => getAllSchema => result', result);
       res.locals.userSchema = result.rows;
+      console.log('schemaController -> getAllSchema -> res.locals.userSchema', res.locals.userSchema);
       return next();
       // return res.status(200).json(result.rows);
 
@@ -179,7 +159,6 @@ const schemaController = {
           console.error(err);
           return res.status(400).json({ error: 'error from updateSchema' });
         }
-        // console.log('schemaController => updateSchema', result.rows);
         return res.status(200).json(result.rows);
       }
     );
@@ -197,7 +176,6 @@ const schemaController = {
           console.error(err);
           return res.status(400).json({ error: 'error from deleteSchema' });
         }
-        // console.log('schemaController => deleteSchema', result.rows);
         return res.status(200).json(result.rows);
       }
     );

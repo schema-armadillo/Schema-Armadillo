@@ -1,23 +1,9 @@
 import React, { Component } from 'react';
-
-import '../styles/App.css';
-import { hot } from 'react-hot-loader';
 import { Route, Link, BrowserRouter as Router, Redirect, Switch } from 'react-router-dom';
-
 import Login from './Login';
+import Nav from './Nav';
 import Dashboard from './Dashboard';
-
-const route = (isLogged, toggleLoggedIn, getUserSchemaArr, userSchemaArr) => {
-  return (<Switch>
-
-    <Route exact path="/" render={() => (isLogged ? <Dashboard userSchemaArr={userSchemaArr} getUserSchemaArr={getUserSchemaArr} /> : <Redirect to="/login" />)} />
-    <Route path="/login" render={() => (isLogged ? <Redirect to="/dashboard" /> : <Login isLoggedIn={isLogged} toggleLoggedIn={toggleLoggedIn} getUserSchemaArr={getUserSchemaArr} />)} />
-    <Route path="/signup" render={() => (isLogged ? <Redirect to="/dashboard" /> : <Login isLoggedIn={isLogged} toggleLoggedIn={toggleLoggedIn} getUserSchemaArr={getUserSchemaArr} />)} />
-    <Route path="/dashboard" render={() => (isLogged ? <Dashboard userSchemaArr={userSchemaArr} getUserSchemaArr={getUserSchemaArr} /> : <Redirect to="/login" />)} />
-    <Route path="/myschema" />
-
-  </Switch>)
-}
+import '../styles/App.css';
 
 class App extends Component {
 
@@ -26,10 +12,13 @@ class App extends Component {
     this.state = {
       userSchemaArr: [],
       isLogged: false,
+      screen: 'dashboard'
     }
     this.checkIfLoggedIn = this.checkIfLoggedIn.bind(this);
     this.toggleLoggedIn = this.toggleLoggedIn.bind(this);
     this.getUserSchemaArr = this.getUserSchemaArr.bind(this);
+    this.redirectToLogin = this.redirectToLogin.bind(this);
+    this.redirectToDashboard = this.redirectToDashboard.bind(this);
   }
 
   getUserSchemaArr(result) {
@@ -61,16 +50,38 @@ class App extends Component {
       })
   }
 
+  redirectToLogin() {
+    this.setState({ ...this.state, screen: 'login' });
+  }
+
+  redirectToDashboard() {
+    this.setState({ ...this.state, screen: 'dashboard' });
+  }
+
   componentDidMount() {
     this.checkIfLoggedIn();
   }
 
   render() {
     return (
-      <Router>
-        {/* invoke route with isLogged */}
-        {route(this.state.isLogged, this.toggleLoggedIn, this.getUserSchemaArr, this.state.userSchemaArr)}
-      </Router>
+      <>
+        <Nav />
+        {this.state.screen === 'dashboard' &&
+          <Dashboard
+            userSchemaArr={this.state.userSchemaArr}
+            isLogged={this.state.isLogged}
+            redirectToLogin={this.redirectToLogin}
+            getUserSchemaArr={this.getUserSchemaArr}
+          />
+        }
+        {this.state.screen === 'login' &&
+          <Login
+            isLoggedIn={this.state.isLogged}
+            toggleLoggedIn={this.toggleLoggedIn}
+            getUserSchemaArr={this.getUserSchemaArr}
+            redirectToDashboard={this.redirectToDashboard} />
+        }
+      </>
     );
   }
 }
