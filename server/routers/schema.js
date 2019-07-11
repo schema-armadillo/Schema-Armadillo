@@ -1,5 +1,4 @@
 const express = require('express');
-
 const router = express.Router();
 const schemaController = require('../controllers/schemaController');
 const userController = require('../controllers/userController')
@@ -7,6 +6,9 @@ const userController = require('../controllers/userController')
 // prefix with api
 
 // save a new schema to database
+////////////////////////////////////////////////////////////////////////////////////
+/////////////                       ROUTES HERE                        /////////////
+////////////////////////////////////////////////////////////////////////////////////
 router.post('/schema', userController.checkJwt, schemaController.createSchemaId, schemaController.createSchema, (req, res) => {
   let { schema_name } = req.body;
   res.status(200).json({ schema_name });
