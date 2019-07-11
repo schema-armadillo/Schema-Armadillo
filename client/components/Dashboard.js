@@ -37,7 +37,6 @@ class Dashboard extends Component {
     this.handleCopySchema = this.handleCopySchema.bind(this);
     this.getSchema = this.getSchema.bind(this);
     this.logout = this.logout.bind(this);
-
   }
   handleCopySchema() {
     // console.log('Dashboard.js => handleCopySchema => this.state.result', this.state.result)
@@ -243,8 +242,32 @@ class Dashboard extends Component {
   }
 
   logout() {
-    console.log(' clicked log out ')
     fetch('/auth/logout')
+    .then(() => {
+    //reinit Dashboard state
+    const reinitDashboardState = {
+      result: '',
+      schema: {
+        schemaName: '',
+        rows: [
+          {
+            key: '',
+            type: '',
+            options: {
+              required: false,
+              unique: false
+            }
+          }
+        ]
+      }
+    }
+    this.setState(reinitDashboardState); //YES   
+    //reinit app state 
+    console.log("before", this.props.userSchemaArr) //PROOF
+    this.props.clearAppState();
+    console.log("after", this.props.userSchemaArr) //YES
+
+    })
       .catch(err => console.log("error logging out", err))
   }
 
