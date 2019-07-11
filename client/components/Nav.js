@@ -1,13 +1,9 @@
 import React from 'react';
+import styled from 'styled-components';
 
-const Form = styled.form`
-    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
-    display: flex;
-    flex-direction: column;
-    height: 450px;
-    width: 600px;
-    padding-top: 150px;
-    align-items: center;
+const NavContainer = styled.div`
+    width: 100%;
+    background-color: lightblue;
     `;
 
 const Nav = (props) => {
@@ -22,7 +18,7 @@ const Nav = (props) => {
   }
 
   return (
-    <div id='nav'>
+    <NavContainer id='nav'>
       <img src='../Armadillo-icon.jpg' style={{ width: '100px' }} />
       <a onClick={props.redirectToDashboard}>Schema Armadillo</a>
       {props.isLogged && <h1>Log out</h1>}
@@ -34,7 +30,7 @@ const Nav = (props) => {
         </a>
         <a onClick={handleGoogleOAuth}>Sign in with Google</a>
       </>}
-    </div>
+    </NavContainer>
   );
 }
 
