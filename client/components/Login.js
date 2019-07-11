@@ -25,6 +25,10 @@ class Login extends Component {
     autoBind(this);
   }
 
+  handleGithubLogin(){
+    window.location.href='https://github.com/login/oauth/authorize?client_id=c00c813fbd8b7e971b26'
+  }
+
   handleChangeLoginEmail(event) {
     this.setState({ loginEmail: event.target.value });
   }
@@ -69,7 +73,7 @@ class Login extends Component {
     )
     return (
       <div className='loginContainer'>
-        <Form className='loginForm' onSubmit={this.handleLoginSubmit}>
+        <Form className='loginForm' onSubmit={this.handleLoginSubmit} action='hello'>
           <img id="armadillo" src="Armadillo-icon.png" alt="armadillo" />
           <h1>Log in to Schema Armadillo</h1>
           <input
@@ -86,8 +90,9 @@ class Login extends Component {
             value={this.state.loginPassword}
             onChange={this.handleChangeLoginPassword}
           />
-          <input className='loginButton' type='submit' value='Giddy-up!' />
-          <button id="signup-button" onClick={this.handleSignupButton}>Signup</button>
+          <input className='loginButton'  type='submit' value='Giddy-up!'/>
+          <button type="button" id="signup-button" onClick={this.handleSignupButton}>Signup</button>
+          <button type="button" id='github-oauth'  onClick={this.handleGithubLogin}>Login with Github</button>
         </Form>
       </div>
     );

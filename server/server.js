@@ -12,6 +12,7 @@ const cookieParser = require('cookie-parser');
 const cors = require('cors'); 
 const schema = require('./routers/schema'); 
 const user = require('./routers/user');
+const githubRouter = require('./routers/githubRouter')
 
 const app = express();
 const port = 3000;
@@ -35,6 +36,7 @@ app.use(express.static('img'));
 
 app.use('/auth', user);
 app.use('/api', schema);
+app.use('/github', githubRouter);
 
 
 // using this as last possible route *NOTICE* how this is last path in the file

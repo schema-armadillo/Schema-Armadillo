@@ -18,7 +18,7 @@ const pool = new Pool({
         // max username upto 50 characters, must also be unique
         // max password upto 100 because a hashed password may expand the smaller password
 pool.query(
-  'CREATE TABLE IF NOT EXISTS users(user_id SERIAL PRIMARY KEY, username VARCHAR(50) UNIQUE, password VARCHAR(100), team_id INT)',
+  `CREATE TABLE IF NOT EXISTS users(user_id SERIAL PRIMARY KEY, username VARCHAR(50) , password VARCHAR(100), team_id INT, type VARCHAR(100) DEFAULT 'Armadillo')`,
   (err, result) => {
     if (err) return console.error(err);
   },
