@@ -58,7 +58,6 @@ class Dashboard extends Component {
   refreshSchemas() {
     fetch('/api/schema')
       .then(data => data.json())
-      // .then(data => {console.log(data); return data;})
       .then(data => this.setState({ userSchemaArr: data }))
       .catch(err => console.log('err in fetch', err));
   }
