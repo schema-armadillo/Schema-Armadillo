@@ -1,5 +1,9 @@
 import React from 'react';
+<<<<<<< HEAD
+import styled from 'styled-components'
+=======
 import styled from 'styled-components';
+>>>>>>> dev
 
 const NavContainer = styled.div`
     height: 50px;

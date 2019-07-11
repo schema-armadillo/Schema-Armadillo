@@ -105,7 +105,7 @@ const schemaController = {
         return res.status(400).json({ error: 'error from getAllSchema' });
       }
       res.locals.userSchema = result.rows;
-      console.log('schemaController -> getAllSchema -> res.locals.userSchema', res.locals.userSchema);
+      // console.log('schemaController -> getAllSchema -> res.locals.userSchema', res.locals.userSchema);
       return next();
       // return res.status(200).json(result.rows);
 
@@ -121,7 +121,7 @@ const schemaController = {
       //  console.log('schemaContorller => getAllSechama', result.rows);
       // need to make data in a more workable format. currently a bigass array
 
-      console.log('schemaController => refreshAllSchema => result', result)
+      // console.log('schemaController => refreshAllSchema => result', result)
       return res.locals.userSchema = result.rows;
 
       // return res.status(200).json(result.rows);
@@ -130,38 +130,65 @@ const schemaController = {
   },
   updateSchema: (req, res, next) => {
     // expecting to receive user_id and post_id and other fields that we want to update from req.body
+    console.log('req.body in update Schema ', req.body)
     const {
       user_id,
       schema_id,
       schemaName,
-      key,
-      type,
-      options_check,
-      unique_check,
-      required_check
+      rows
     } = req.body;
+    console.log('deconstructed variables ', user_id, schema_id, schemaName, rows)
+    const length = rows.length;
+    rows.forEach((row, idx) => {
+      const { key, type } = row;
 
-    // query for the table
-    pool.query(
-      'UPDATE Schemas SET schemaName=$1 key=$2 type=$3 options_check=$4 unique_check=$5 required_check=$6 WHERE user_id=$7 AND schema_id=$8',
-      [
+      console.log('deconstructed variables in row ', key, type)
+
+      const areThereOptions = row.hasOwnProperty('options');
+      // if options is false, this will already be false. if not, have to check if unique and required exist
+      const isUnique =
+        areThereOptions && row.options.hasOwnProperty('unique')
+          ? row.options.unique
+          : false;
+      const isRequired =
+        areThereOptions && row.options.hasOwnProperty('required')
+          ? row.options.required
+          : false;
+      console.log('paramaterized variables ',
         schemaName,
         key,
         type,
-        options_check,
-        unique_check,
-        required_check,
+        areThereOptions,
+        isUnique,
+        isRequired,
         user_id,
         schema_id
-      ],
-      (err, result) => {
-        if (err) {
-          console.error(err);
-          return res.status(400).json({ error: 'error from updateSchema' });
+      )
+      pool.query('INSERT INTO Schemas (user_id, schema_name, schema_id, key, type, options_check, unique_check, required_check) values ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING *;',
+        [
+          user_id,
+          schemaName,
+          schema_id,
+          key,
+          type,
+          areThereOptions,
+          isUnique,
+          isRequired
+        ],
+        (err, result) => {
+          if (err) {
+            console.error(err);
+            return res.status(400).json({ error: 'error from updateSchema at index ', idx });
+          }
+          // else console.log(result)
         }
-        return res.status(200).json(result.rows);
-      }
+      )
+
+    }
+
+
     );
+    // query for the table
   },
   deleteSchema: (req, res, next) => {
     // expecting to receive user_id and post_id to find the rows that we want to delete
@@ -176,7 +203,8 @@ const schemaController = {
           console.error(err);
           return res.status(400).json({ error: 'error from deleteSchema' });
         }
-        return res.status(200).json(result.rows);
+        res.status(200).json(result.rows);
+        next()
       }
     );
   }
