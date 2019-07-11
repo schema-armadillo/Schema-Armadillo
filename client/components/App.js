@@ -108,7 +108,7 @@ class App extends Component {
           <Dashboard
             userSchemaArr={this.state.userSchemaArr}
             isLogged={this.state.isLogged}
-            redirectToLogin={this.redirectToLogin}
+            redirectToSignup={this.redirectToSignup}
             getUserSchemaArr={this.getUserSchemaArr}
             clearAppState={this.clearAppState}
           />
@@ -116,7 +116,6 @@ class App extends Component {
         <SAuthentication>
           {this.state.screen === 'login' &&
             <Login
-              isLoggedIn={this.state.isLogged}
               toggleLoggedIn={this.toggleLoggedIn}
               getUserSchemaArr={this.getUserSchemaArr}
               redirectToDashboard={this.redirectToDashboard}
@@ -125,6 +124,8 @@ class App extends Component {
           }
           {this.state.screen === 'signup' &&
             <Signup
+              toggleLoggedIn={this.toggleLoggedIn}
+              redirectToDashboard={this.redirectToDashboard}
               handleGoogleOAuth={this.handleGoogleOAuth}
             />
           }

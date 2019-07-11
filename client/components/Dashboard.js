@@ -63,7 +63,8 @@ class Dashboard extends Component {
   handleSaveSchema() {
     if (!this.props.isLogged) {
       window.localStorage.setItem('schema', JSON.stringify(this.state.schema));
-      this.props.redirectToLogin();
+      alert('Please sign up with Schema Armadillo, so we can save your work!');
+      this.props.redirectToSignup();
       return;
     }
     fetch('/api/schema', {
@@ -75,7 +76,6 @@ class Dashboard extends Component {
     })
       .then(data => data.json())
       .then(result => {
-        console.log('save schema result ', result)
         let stateCopy = Object.assign(this.state.schema, {});
         stateCopy.rows = [
           {
