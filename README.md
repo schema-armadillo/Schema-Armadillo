@@ -3,13 +3,19 @@
 ## Hate writing Mongoose schemas? Schema-Armadillo is here for you!
 With our easy-to-use model, you can design your own schema and watch them transform into Mongoose syntax!
 
+![Image of App](screenshots/img2.png)
+
 ## You can now SAVE your schema!
 Make a really nice schema and want to refer back to it in the future? Log in and save it for later!
+
+![Image of Schema](screenshots/img3.png)
 
 ## But how do I log in?
 If you already have an account with us, simply click the `Login` button at the top-right corner of your screen!
 If you don't already have an account with us, either click the `Signup` button (also at the top-right corner of your screen) OR `Save` your schema at the bottom of the form to be redirected
 **DON'T WORRY** Your schema will be saved and you'll find it in your new account once you've finished signing up!
+
+![Image of Login](screenshots/img1.png)
 
 ## But how do I get an account?
 Schema-Armadillo now supports **THREE** different methods for signup!
